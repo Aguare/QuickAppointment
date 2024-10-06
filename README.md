@@ -1,2 +1,2 @@
 # QuickAppointment
-This project is a scheduling app for businesses like clinics, salons, barbershops, and sports facilities. It allows customers to book appointments online, choose service providers, and customize settings to fit different industries, managing both schedules and locations.
+This project is a scheduling application designed for various types of businesses, such as medical clinics, salons, barbershops, and sports facilities. The program offers flexibility in managing appointments, allowing customers to book online. It also provides options for selecting a specific service provider if the business allows it. Additionally, the application offers customizable settings to fit the needs of different industries, managing both schedules and available locations.
