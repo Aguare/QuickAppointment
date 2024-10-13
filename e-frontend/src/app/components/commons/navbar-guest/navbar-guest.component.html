@@ -1,0 +1,47 @@
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" [routerLink]="['/home']">
+      <span class="icon is-large">
+        <img
+          src="https://i.pinimg.com/originals/75/fa/9b/75fa9b17f632646e5ae7fae3cf837761.jpg"
+          alt="Logo"
+        />
+      </span>
+      <div class="navbar-item">
+        <p>Bienvenido a nuestro sistema</p>
+      </div>
+    </a>
+
+    <a
+      role="button"
+      class="navbar-burger"
+      aria-label="menu"
+      aria-expanded="false"
+      data-target="navbarBasicExample"
+      (click)="toggleNavbar()"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </a>
+  </div>
+
+  <div
+    id="navbarBasicExample"
+    class="navbar-menu"
+    [ngClass]="{ 'is-active': navbarActive }"
+  >
+    <div class="navbar-start">
+      <div class="navbar-item"></div>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item"></div>
+
+      <div class="navbar-item">
+        <a class="button is-light" href="/login">Ingreso/Registro</a>
+      </div>
+    </div>
+  </div>
+</nav>

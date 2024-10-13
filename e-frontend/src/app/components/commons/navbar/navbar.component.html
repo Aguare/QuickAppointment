@@ -1,0 +1,55 @@
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <div class="navbar-item is-clickable" routerLinkActive="router-link-active" >
+        <span class="image is-32x32" [routerLink]="['/admin/init']">
+          <img src="https://imagenes.elpais.com/resizer/v2/Y3W6QUFBBZLLTALRW6NBRPZ2RA.jpg?auth=d68f18251117888479d8fdc3210796bc86d9d3f41719da72c2877bcafc3504ea&width=1960&height=1103&smart=true" alt="Logo" />
+        </span>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+           [ngClass]="{'is-active': isActive}"
+           (click)="toggleNavbar()">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+    </div>
+  
+    <div id="navbarBasicExample" class="navbar-menu" [ngClass]="{'is-active': isActive}">
+      <div class="navbar-start">
+        <ng-container *ngFor="let module of pagesNavBar">
+          <div class="navbar-item has-dropdown" [ngClass]="{'is-active': activeModule === module.module}">
+            <a class="navbar-link" (click)="toggleSubmenu(module.module)">
+              {{ module.module }}
+              <span class="icon">
+                <i [ngClass]="{'fa-angle-down': activeModule !== module.module, 'fa-angle-up': activeModule === module.module}" class="fas"></i>
+              </span>
+            </a>
+            <div class="navbar-dropdown" *ngIf="activeModule === module.module">
+              <a class="navbar-item" *ngFor="let page of module.pages" [routerLink]="[page.direction]">
+                {{ page.pageName }}
+              </a>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+  
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable mr-3">
+          <a class="navbar-link">
+            <figure class="image is-32x32 is-align-content-center">
+              <img class="is-rounded" src="https://w7.pngwing.com/pngs/81/570/png-transparent-profile-logo-computer-icons-user-user-blue-heroes-logo-thumbnail.png" alt="profile image" />
+            </figure>
+            {{ this.userName }}
+          </a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" (click)="myAccount()">Mi Cuenta</a>
+            <hr class="navbar-divider" />
+            <a class="navbar-item" (click)="logout()">Salir</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  
+  
