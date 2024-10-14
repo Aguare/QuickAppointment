@@ -23,3 +23,24 @@ export interface Company {
   description: string,
   logo: string
 }
+
+export interface Service {
+  id: number,
+  name: string,
+  description: string,
+  duration: number // In Minutes
+}
+
+export interface Employee {
+  id: number,
+  first_name: string,
+  last_name: string,
+  dpi: string,
+  date_birth: Date,
+}
+
+export interface Place {
+  id: number,
+  name: string,
+  place: string
+}

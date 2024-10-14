@@ -5,17 +5,42 @@ import { NavbarComponent } from '../../commons/navbar/navbar.component';
 import { EditCompanySettingsComponent } from '../edit-company-settings/edit-company-settings.component';
 import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
-import { BannerComponent } from "../../commons/banner/banner.component";
+import { BannerComponent } from '../../commons/banner/banner.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { Employee, Place, Service } from '../../../interfaces/interfaces';
+import { employees, places, services } from '../../../db/db';
+import { CommonModule, DatePipe } from '@angular/common';
+import { ViewServicesComponent } from '../view-services/view-services.component';
+import { ViewEmployeesComponent } from '../view-employees/view-employees.component';
+import { ViewPlacesComponent } from '../view-places/view-places.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-home-company',
   standalone: true,
-  imports: [MatIconModule, NavbarComponent, BannerComponent],
+  imports: [
+    MatIconModule,
+    NavbarComponent,
+    BannerComponent,
+    MatTabsModule,
+    MatTableModule,
+    DatePipe,
+    CommonModule,
+    ViewServicesComponent,
+    ViewEmployeesComponent,
+    ViewPlacesComponent,
+    MatToolbarModule
+  ],
   templateUrl: './home-company.component.html',
   styleUrl: './home-company.component.scss',
 })
 export class HomeCompanyComponent {
   idCompany: number | null = null;
+  services: Service[] = [];
+  places: Place[] = [];
+  employees: Employee[] = [];
+  selectedTabIndex: number = 0;
   business = {
     name: 'Nombre del Negocio',
     description:
@@ -34,6 +59,20 @@ export class HomeCompanyComponent {
       this.idCompany = params['id'] ? +params['id'] : null;
       console.log('Company ID:', this.idCompany);
     });
+
+    const savedTabIndex = localStorage.getItem('selectedTabIndex');
+    if (savedTabIndex !== null) {
+      this.selectedTabIndex = +savedTabIndex;
+    }
+
+    this.services = services;
+    this.places = places;
+    this.employees = employees;
+  }
+
+  onTabChange(index: number) {
+    this.selectedTabIndex = index;
+    localStorage.setItem('selectedTabIndex', index.toString());
   }
 
   editCompany(): void {
@@ -54,7 +93,7 @@ export class HomeCompanyComponent {
           const reader = new FileReader();
           reader.onload = () => {
             const logo = reader.result;
-            if(typeof(logo) === 'string'){
+            if (typeof logo === 'string') {
               this.business.logo = logo;
             }
           };
@@ -66,21 +105,31 @@ export class HomeCompanyComponent {
 
   deleteCompany(): void {
     Swal.fire({
-      title: "¿Estas seguro de querer eliminar este negocio?",
-      text: "Se perderan todos los servicios, personal y lugares.",
-      icon: "warning",
+      title: '¿Estas seguro de querer eliminar este negocio?',
+      text: 'Se perderan todos los servicios, personal y lugares.',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Borrar Negocio"
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Borrar Negocio',
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
-          title: "Deleted!",
-          text: "El servicio de elimino",
-          icon: "success"
+          title: 'Deleted!',
+          text: 'El servicio de elimino',
+          icon: 'success',
         });
       }
     });
+  }
+
+  addService(){
+    
+  }
+  addEmployees(){
+
+  }
+  addPlaces(){
+
   }
 }

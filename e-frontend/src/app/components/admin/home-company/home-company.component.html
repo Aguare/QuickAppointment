@@ -23,3 +23,49 @@
     ></app-banner>
   </div>
 </section>
+
+<section>
+  <mat-tab-group
+    [(selectedIndex)]="selectedTabIndex"
+    (selectedIndexChange)="onTabChange($event)"
+  >
+    <mat-tab label="Servicios">
+      <div class="container">
+        <mat-toolbar color="primary">
+          <span class="title-tab">Servicios</span>
+          <span class="spacer"></span>
+          <button mat-icon-button color="accent" (click)="addService()">
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </mat-toolbar>
+      </div>
+      <app-view-services [services]="services"></app-view-services>
+    </mat-tab>
+
+    <mat-tab label="Empleados">
+      <div class="container">
+        <mat-toolbar color="primary">
+          <span class="title-tab">Empleados</span>
+          <span class="spacer"></span>
+          <button mat-icon-button color="accent" (click)="addEmployees()">
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </mat-toolbar>
+      </div>
+      <app-view-employees [employees]="employees"></app-view-employees>
+    </mat-tab>
+
+    <mat-tab label="Lugares">
+      <div class="container">
+        <mat-toolbar color="primary">
+          <span class="title-tab">Lugares</span>
+          <span class="spacer"></span>
+          <button mat-icon-button color="accent" (click)="addPlaces()">
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </mat-toolbar>
+      </div>
+      <app-view-places [places]="places"></app-view-places>
+    </mat-tab>
+  </mat-tab-group>
+</section>

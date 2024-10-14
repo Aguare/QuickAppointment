@@ -1,0 +1,19 @@
+.actions {
+    display: flex;
+    gap: 10px; 
+    justify-content: flex-start;
+  }
+  
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .icon {
+    margin-right: 0;
+  }
+
+  .table{
+    margin: 10px;
+  }
