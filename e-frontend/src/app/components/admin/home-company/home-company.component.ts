@@ -15,6 +15,7 @@ import { ViewServicesComponent } from '../view-services/view-services.component'
 import { ViewEmployeesComponent } from '../view-employees/view-employees.component';
 import { ViewPlacesComponent } from '../view-places/view-places.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { LocalStorageService } from '../../../services/local-storage.service';
 
 @Component({
   selector: 'app-home-company',
@@ -51,7 +52,8 @@ export class HomeCompanyComponent {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private localStorageService: LocalStorageService
   ) {}
 
   ngOnInit(): void {
@@ -60,7 +62,7 @@ export class HomeCompanyComponent {
       console.log('Company ID:', this.idCompany);
     });
 
-    const savedTabIndex = localStorage.getItem('selectedTabIndex');
+    const savedTabIndex = this.localStorageService.getSelectedTabIndex();
     if (savedTabIndex !== null) {
       this.selectedTabIndex = +savedTabIndex;
     }
@@ -72,7 +74,7 @@ export class HomeCompanyComponent {
 
   onTabChange(index: number) {
     this.selectedTabIndex = index;
-    localStorage.setItem('selectedTabIndex', index.toString());
+    this.localStorageService.addSelectedTabIndex(this.selectedTabIndex)
   }
 
   editCompany(): void {
@@ -123,13 +125,11 @@ export class HomeCompanyComponent {
     });
   }
 
-  addService(){
-    
+  addService() {
+    this.router.navigate(['admin/services/new'], {
+      queryParams: { id: this.idCompany },
+    });
   }
-  addEmployees(){
-
-  }
-  addPlaces(){
-
-  }
+  addEmployees() {}
+  addPlaces() {}
 }

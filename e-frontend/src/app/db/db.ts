@@ -45,13 +45,21 @@ export const services: Service[] = [
     name: 'Haircut',
     description: 'Standard men’s haircut',
     duration: 30,
+    fk_company: 10,
   },
-  { id: 2, name: 'Shave', description: 'Full face shave', duration: 20 },
+  {
+    id: 2,
+    name: 'Shave',
+    description: 'Full face shave',
+    duration: 20,
+    fk_company: 10,
+  },
   {
     id: 3,
     name: 'Beard Trim',
     description: 'Trim and shape beard',
     duration: 15,
+    fk_company: 10,
   },
 ];
 

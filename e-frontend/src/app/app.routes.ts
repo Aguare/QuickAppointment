@@ -7,6 +7,7 @@ import { ForgotPasswordComponent } from './components/commons/forgot-password/fo
 import { AdminHomeComponent } from './components/admin/admin-home/admin-home.component';
 import { AddCompanyComponent } from './components/admin/add-company/add-company.component';
 import { HomeCompanyComponent } from './components/admin/home-company/home-company.component';
+import { ServicesFormComponent } from './components/admin/services-form/services-form.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -28,6 +29,8 @@ export const routes: Routes = [
         path: 'homeCompany',
         component: HomeCompanyComponent,
       },
+      { path: 'services/new', component: ServicesFormComponent },
+      { path: 'services/edit/:id', component: ServicesFormComponent },
     ],
   },
   { path: '**', component: NotFoundComponent },

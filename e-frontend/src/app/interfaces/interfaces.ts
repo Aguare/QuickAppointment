@@ -29,6 +29,7 @@ export interface Service {
   name: string,
   description: string,
   duration: number // In Minutes
+  fk_company: number
 }
 
 export interface Employee {
