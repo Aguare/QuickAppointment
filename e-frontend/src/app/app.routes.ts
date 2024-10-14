@@ -8,6 +8,8 @@ import { AdminHomeComponent } from './components/admin/admin-home/admin-home.com
 import { AddCompanyComponent } from './components/admin/add-company/add-company.component';
 import { HomeCompanyComponent } from './components/admin/home-company/home-company.component';
 import { ServicesFormComponent } from './components/admin/services-form/services-form.component';
+import { EmployeeFormComponent } from './components/admin/employee-form/employee-form.component';
+import { PlaceFormComponent } from './components/admin/place-form/place-form.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -31,6 +33,10 @@ export const routes: Routes = [
       },
       { path: 'services/new', component: ServicesFormComponent },
       { path: 'services/edit/:id', component: ServicesFormComponent },
+      { path: 'employees/new', component: EmployeeFormComponent },
+      { path: 'employees/edit/:id', component: EmployeeFormComponent },
+      { path: 'places/new', component: PlaceFormComponent },
+      { path: 'places/edit/:id', component: PlaceFormComponent },
     ],
   },
   { path: '**', component: NotFoundComponent },

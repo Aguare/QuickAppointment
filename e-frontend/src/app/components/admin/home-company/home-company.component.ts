@@ -130,6 +130,14 @@ export class HomeCompanyComponent {
       queryParams: { id: this.idCompany },
     });
   }
-  addEmployees() {}
-  addPlaces() {}
+  addEmployees() {
+    this.router.navigate(['admin/employees/new'], {
+      queryParams: { id: this.idCompany },
+    });
+  }
+  addPlaces() {
+    this.router.navigate(['admin/places/new'], {
+      queryParams: { id: this.idCompany },
+    });
+  }
 }

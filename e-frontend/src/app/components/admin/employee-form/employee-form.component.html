@@ -1,0 +1,105 @@
+<app-navbar></app-navbar>
+
+<div class="section">
+  <mat-toolbar color="primary">
+    <span class="title-tab">{{
+      isEditMode ? "Modificar Empleado" : "Agregar Empleado"
+    }}</span>
+    <span class="spacer"></span>
+    <button class="button is-link" (click)="goBack()">Regresar</button>
+  </mat-toolbar>
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+    <!-- First Name -->
+    <div class="field">
+      <label class="label">Nombre</label>
+      <div class="control">
+        <input
+          class="input"
+          type="text"
+          formControlName="first_name"
+          placeholder="Nombre del empleado"
+        />
+      </div>
+      <p
+        class="help is-danger"
+        *ngIf="
+          employeeForm.get('first_name')?.invalid &&
+          employeeForm.get('first_name')?.touched
+        "
+      >
+        El nombre es obligatorio y debe tener al menos 2 caracteres.
+      </p>
+    </div>
+
+    <!-- Last Name -->
+    <div class="field">
+      <label class="label">Apellido</label>
+      <div class="control">
+        <input
+          class="input"
+          type="text"
+          formControlName="last_name"
+          placeholder="Apellido del empleado"
+        />
+      </div>
+      <p
+        class="help is-danger"
+        *ngIf="
+          employeeForm.get('last_name')?.invalid &&
+          employeeForm.get('last_name')?.touched
+        "
+      >
+        El apellido es obligatorio y debe tener al menos 2 caracteres.
+      </p>
+    </div>
+
+    <!-- DPI -->
+    <div class="field">
+      <label class="label">DPI</label>
+      <div class="control">
+        <input
+          class="input"
+          type="text"
+          formControlName="dpi"
+          placeholder="DPI del empleado"
+        />
+      </div>
+      <p
+        class="help is-danger"
+        *ngIf="
+          employeeForm.get('dpi')?.invalid && employeeForm.get('dpi')?.touched
+        "
+      >
+        El DPI debe contener 13 dígitos numéricos.
+      </p>
+    </div>
+
+    <!-- Date of Birth -->
+    <div class="field">
+      <label class="label">Fecha de Nacimiento</label>
+      <div class="control">
+        <input class="input" type="date" formControlName="date_birth" />
+      </div>
+      <p
+        class="help is-danger"
+        *ngIf="
+          employeeForm.get('date_birth')?.invalid &&
+          employeeForm.get('date_birth')?.touched
+        "
+      >
+        La fecha de nacimiento es obligatoria.
+      </p>
+    </div>
+
+    <!-- Botón de Enviar -->
+    <div class="field">
+      <button
+        class="button is-primary"
+        type="submit"
+        [disabled]="employeeForm.invalid"
+      >
+        {{ isEditMode ? "Guardar Cambios" : "Guardar Empleado" }}
+      </button>
+    </div>
+  </form>
+</div>

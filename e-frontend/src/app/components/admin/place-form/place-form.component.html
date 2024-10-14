@@ -1,0 +1,64 @@
+<app-navbar></app-navbar>
+
+<div class="section">
+  <mat-toolbar color="primary">
+    <span class="title-tab">{{
+      isEditMode ? "Modificar Empleado" : "Agregar Empleado"
+    }}</span>
+    <span class="spacer"></span>
+    <button class="button is-link" (click)="goBack()">Regresar</button>
+  </mat-toolbar>
+
+  <form [formGroup]="placeForm" (ngSubmit)="onSubmit()">
+    <!-- Name -->
+    <div class="field">
+      <label class="label">Nombre del Lugar</label>
+      <div class="control">
+        <input
+          class="input"
+          type="text"
+          formControlName="name"
+          placeholder="Nombre del lugar"
+        />
+      </div>
+      <p
+        class="help is-danger"
+        *ngIf="placeForm.get('name')?.invalid && placeForm.get('name')?.touched"
+      >
+        El nombre es obligatorio y debe tener al menos 3 caracteres.
+      </p>
+    </div>
+
+    <!-- Place -->
+    <div class="field">
+      <label class="label">Ubicación</label>
+      <div class="control">
+        <input
+          class="input"
+          type="text"
+          formControlName="place"
+          placeholder="Ubicación del lugar"
+        />
+      </div>
+      <p
+        class="help is-danger"
+        *ngIf="
+          placeForm.get('place')?.invalid && placeForm.get('place')?.touched
+        "
+      >
+        La ubicación es obligatoria.
+      </p>
+    </div>
+
+    <!-- Botón de Enviar -->
+    <div class="field">
+      <button
+        class="button is-primary"
+        type="submit"
+        [disabled]="placeForm.invalid"
+      >
+        {{ isEditMode ? "Guardar Cambios" : "Guardar Lugar" }}
+      </button>
+    </div>
+  </form>
+</div>

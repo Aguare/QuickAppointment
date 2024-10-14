@@ -8,11 +8,13 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NavbarComponent } from "../../commons/navbar/navbar.component";
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-services-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, NavbarComponent, MatToolbarModule],
   templateUrl: './services-form.component.html',
   styleUrl: './services-form.component.scss',
 })
@@ -79,5 +81,9 @@ export class ServicesFormComponent {
       }
       this.router.navigate(['admin/homeCompany'], { queryParams: { id: this.idCompany } });
     }
+  }
+
+  goBack(){
+    this.router.navigate(['admin/homeCompany'], { queryParams: { id: this.idCompany } });
   }
 }

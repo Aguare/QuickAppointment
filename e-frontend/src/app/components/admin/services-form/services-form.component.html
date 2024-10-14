@@ -1,46 +1,88 @@
+<app-navbar></app-navbar>
+
 <div class="section">
-    <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()">
-      
-      <!-- Nombre -->
-      <div class="field">
-        <label class="label">Nombre del Servicio</label>
-        <div class="control">
-          <input class="input" type="text" formControlName="name" placeholder="Nombre del servicio">
-        </div>
-        <p class="help is-danger" *ngIf="serviceForm.get('name')?.invalid && serviceForm.get('name')?.touched">
-          El nombre es obligatorio y debe tener al menos 3 caracteres.
-        </p>
+  <mat-toolbar color="primary">
+    <span class="title-tab">{{ isEditMode ? "Modificar Servicio" : "Agregar Servicio" }}</span>
+    <span class="spacer"></span>
+    <button class="button is-link" (click)="goBack()">
+      Regresar
+    </button>
+  </mat-toolbar>
+
+  <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()">
+    <!-- Nombre -->
+    <div class="field">
+      <label class="label">Nombre del Servicio</label>
+      <div class="control">
+        <input
+          class="input"
+          type="text"
+          formControlName="name"
+          placeholder="Nombre del servicio"
+        />
       </div>
-  
-      <!-- Descripción -->
-      <div class="field">
-        <label class="label">Descripción del Servicio</label>
-        <div class="control">
-          <textarea class="textarea" formControlName="description" placeholder="Descripción del servicio"></textarea>
-        </div>
-        <p class="help is-danger" *ngIf="serviceForm.get('description')?.invalid && serviceForm.get('description')?.touched">
-          La descripción es obligatoria y debe tener al menos 5 caracteres.
-        </p>
+      <p
+        class="help is-danger"
+        *ngIf="
+          serviceForm.get('name')?.invalid && serviceForm.get('name')?.touched
+        "
+      >
+        El nombre es obligatorio y debe tener al menos 3 caracteres.
+      </p>
+    </div>
+
+    <!-- Descripción -->
+    <div class="field">
+      <label class="label">Descripción del Servicio</label>
+      <div class="control">
+        <textarea
+          class="textarea"
+          formControlName="description"
+          placeholder="Descripción del servicio"
+        ></textarea>
       </div>
-  
-      <!-- Duración -->
-      <div class="field">
-        <label class="label">Duración (en minutos)</label>
-        <div class="control">
-          <input class="input" type="number" formControlName="duration" placeholder="Duración del servicio en minutos">
-        </div>
-        <p class="help is-danger" *ngIf="serviceForm.get('duration')?.invalid && serviceForm.get('duration')?.touched">
-          La duración es obligatoria y debe ser al menos 1 minuto.
-        </p>
+      <p
+        class="help is-danger"
+        *ngIf="
+          serviceForm.get('description')?.invalid &&
+          serviceForm.get('description')?.touched
+        "
+      >
+        La descripción es obligatoria y debe tener al menos 5 caracteres.
+      </p>
+    </div>
+
+    <!-- Duración -->
+    <div class="field">
+      <label class="label">Duración (en minutos)</label>
+      <div class="control">
+        <input
+          class="input"
+          type="number"
+          formControlName="duration"
+          placeholder="Duración del servicio en minutos"
+        />
       </div>
-  
-      <!-- Botón de Enviar -->
-      <div class="field">
-        <button class="button is-primary" type="submit" [disabled]="serviceForm.invalid">
-          {{ isEditMode ? 'Guardar Cambios' : 'Guardar Servicio' }}
-        </button>
-      </div>
-  
-    </form>
-  </div>
-  
+      <p
+        class="help is-danger"
+        *ngIf="
+          serviceForm.get('duration')?.invalid &&
+          serviceForm.get('duration')?.touched
+        "
+      >
+        La duración es obligatoria y debe ser al menos 1 minuto.
+      </p>
+    </div>
+
+    <!-- Botón de Enviar -->
+    <div class="field">
+      <button
+        class="button is-primary"
+        type="submit"
+        [disabled]="serviceForm.invalid"
+      >
+        {{ isEditMode ? "Guardar Cambios" : "Guardar Servicio" }}
+      </button>
+    </div>
+  </form>
+</div>

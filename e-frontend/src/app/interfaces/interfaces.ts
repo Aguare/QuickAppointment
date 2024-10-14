@@ -38,10 +38,12 @@ export interface Employee {
   last_name: string,
   dpi: string,
   date_birth: Date,
+  fk_company: number
 }
 
 export interface Place {
   id: number,
   name: string,
-  place: string
+  place: string,
+  fk_company: number
 }

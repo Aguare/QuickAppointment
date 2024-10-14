@@ -71,6 +71,7 @@ export const employees: Employee[] = [
     last_name: 'Doe',
     dpi: '1234567890101',
     date_birth: new Date('1990-01-01'),
+    fk_company: 15,
   },
   {
     id: 2,
@@ -78,6 +79,7 @@ export const employees: Employee[] = [
     last_name: 'Smith',
     dpi: '9876543210102',
     date_birth: new Date('1985-05-15'),
+    fk_company: 15,
   },
   {
     id: 3,
@@ -85,12 +87,13 @@ export const employees: Employee[] = [
     last_name: 'Brown',
     dpi: '1122334455667',
     date_birth: new Date('1992-09-23'),
+    fk_company: 15,
   },
 ];
 
 // Data for the places table
 export const places: Place[] = [
-  { id: 1, name: 'Barber Shop', place: 'Downtown' },
-  { id: 2, name: 'Salon', place: 'Uptown' },
-  { id: 3, name: 'Spa', place: 'Suburbs' },
+  { id: 1, name: 'Barber Shop', place: 'Downtown', fk_company: 20 },
+  { id: 2, name: 'Salon', place: 'Uptown', fk_company: 20 },
+  { id: 3, name: 'Spa', place: 'Suburbs', fk_company: 20 },
 ];
