@@ -22,7 +22,7 @@
             <a class="navbar-link" (click)="toggleSubmenu(module.module)">
               {{ module.module }}
               <span class="icon">
-                <i [ngClass]="{'fa-angle-down': activeModule !== module.module, 'fa-angle-up': activeModule === module.module}" class="fas"></i>
+                
               </span>
             </a>
             <div class="navbar-dropdown" *ngIf="activeModule === module.module">

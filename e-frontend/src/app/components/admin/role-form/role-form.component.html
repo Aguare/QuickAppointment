@@ -1,0 +1,69 @@
+<app-navbar></app-navbar>
+
+<div class="section">
+
+  <mat-toolbar color="primary">
+    <span class="title-tab">{{
+      isEditMode ? "Modificar Empleado" : "Agregar Empleado"
+    }}</span>
+    <span class="spacer"></span>
+    <button class="button is-link" (click)="goBack()">Regresar</button>
+  </mat-toolbar>
+    <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+  
+      <!-- Name -->
+      <div class="field">
+        <label class="label">Nombre del Rol</label>
+        <div class="control">
+          <input class="input" type="text" formControlName="name" placeholder="Nombre del rol">
+        </div>
+        <p class="help is-danger" *ngIf="roleForm.get('name')?.invalid && roleForm.get('name')?.touched">
+          El nombre es obligatorio y debe tener al menos 3 caracteres.
+        </p>
+      </div>
+  
+      <!-- Description -->
+      <div class="field">
+        <label class="label">Descripción</label>
+        <div class="control">
+          <textarea class="textarea" formControlName="description" placeholder="Descripción del rol"></textarea>
+        </div>
+        <p class="help is-danger" *ngIf="roleForm.get('description')?.invalid && roleForm.get('description')?.touched">
+          La descripción es obligatoria y debe tener al menos 5 caracteres.
+        </p>
+      </div>
+  
+      <!-- Allow Create -->
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox" formControlName="allowCreate">
+          Permitir Crear
+        </label>
+      </div>
+  
+      <!-- Allow Edit -->
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox" formControlName="allowEdit">
+          Permitir Editar
+        </label>
+      </div>
+  
+      <!-- Allow Delete -->
+      <div class="field">
+        <label class="checkbox">
+          <input type="checkbox" formControlName="allowDelete">
+          Permitir Eliminar
+        </label>
+      </div>
+  
+      <!-- Botón de Enviar -->
+      <div class="field">
+        <button class="button is-primary" type="submit" [disabled]="roleForm.invalid">
+          {{ isEditMode ? 'Guardar Cambios' : 'Guardar Rol' }}
+        </button>
+      </div>
+  
+    </form>
+  </div>
+  
