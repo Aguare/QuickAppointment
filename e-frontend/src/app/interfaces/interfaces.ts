@@ -56,3 +56,13 @@ export interface Role {
   allowEdit: boolean;
   allowDelete: boolean;
 }
+
+export interface User { 
+  id: number;
+  email: string;
+  username: string;
+  isClient: boolean;
+  password?: string;
+  idRole: number;
+  roleName: string;
+}

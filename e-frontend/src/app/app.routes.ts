@@ -12,6 +12,8 @@ import { EmployeeFormComponent } from './components/admin/employee-form/employee
 import { PlaceFormComponent } from './components/admin/place-form/place-form.component';
 import { RoleComponent } from './components/admin/role/role.component';
 import { RoleFormComponent } from './components/admin/role-form/role-form.component';
+import { UsersComponent } from './components/admin/users/users.component';
+import { UserFormComponent } from './components/admin/user-form/user-form.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -42,6 +44,9 @@ export const routes: Routes = [
       { path: 'roles', component: RoleComponent },
       { path: 'roles/new', component: RoleFormComponent },
       { path: 'roles/edit/:id', component: RoleFormComponent },
+      { path: 'users', component: UsersComponent },
+      { path: 'users/new', component: UserFormComponent },
+      { path: 'users/edit/:id', component: UserFormComponent },
     ],
   },
   { path: '**', component: NotFoundComponent },

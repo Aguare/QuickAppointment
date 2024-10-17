@@ -1,0 +1,41 @@
+<app-navbar></app-navbar>
+
+<section class="section">
+    <div class="container">
+        <mat-toolbar color="primary">
+            <span class="title">Directorio de Usuarios</span>
+            <span class="spacer"></span>
+            <button mat-icon-button color="accent" (click)="addUser()">
+              <mat-icon>add_circle</mat-icon>
+            </button>
+          </mat-toolbar>
+      <table class="table is-fullwidth is-striped">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Nombre de Usuario</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.email }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.roleName }}</td>
+            <td class="actions">
+              <button class="button is-small is-info" (click)="editUser(user)">
+                <span class="icon"><i class="fas fa-edit"></i></span>
+                <span>Editar</span>
+              </button>
+              <button class="button is-small is-danger" (click)="deleteUser(user)">
+                <span class="icon"><i class="fas fa-trash"></i></span>
+                <span>Eliminar</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  

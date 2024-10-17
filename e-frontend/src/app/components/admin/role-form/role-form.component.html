@@ -4,14 +4,13 @@
 
   <mat-toolbar color="primary">
     <span class="title-tab">{{
-      isEditMode ? "Modificar Empleado" : "Agregar Empleado"
+      isEditMode ? "Modificar Rol" : "Agregar Rol"
     }}</span>
     <span class="spacer"></span>
     <button class="button is-link" (click)="goBack()">Regresar</button>
   </mat-toolbar>
     <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
   
-      <!-- Name -->
       <div class="field">
         <label class="label">Nombre del Rol</label>
         <div class="control">
@@ -22,7 +21,6 @@
         </p>
       </div>
   
-      <!-- Description -->
       <div class="field">
         <label class="label">Descripción</label>
         <div class="control">
@@ -33,7 +31,6 @@
         </p>
       </div>
   
-      <!-- Allow Create -->
       <div class="field">
         <label class="checkbox">
           <input type="checkbox" formControlName="allowCreate">
@@ -41,7 +38,6 @@
         </label>
       </div>
   
-      <!-- Allow Edit -->
       <div class="field">
         <label class="checkbox">
           <input type="checkbox" formControlName="allowEdit">
@@ -49,7 +45,6 @@
         </label>
       </div>
   
-      <!-- Allow Delete -->
       <div class="field">
         <label class="checkbox">
           <input type="checkbox" formControlName="allowDelete">
@@ -57,7 +52,6 @@
         </label>
       </div>
   
-      <!-- Botón de Enviar -->
       <div class="field">
         <button class="button is-primary" type="submit" [disabled]="roleForm.invalid">
           {{ isEditMode ? 'Guardar Cambios' : 'Guardar Rol' }}
