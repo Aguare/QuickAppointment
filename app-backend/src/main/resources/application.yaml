@@ -1,0 +1,14 @@
+server:
+  port: 8000
+spring:
+  profiles:
+    active: dev
+  application:
+    name: app-backend
+  datasource:
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 3
+      idle-timeout: 60000
+      max-lifetime: 1800000
+      connection-timeout: 30000
