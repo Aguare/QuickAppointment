@@ -1,0 +1,45 @@
+<app-navbar></app-navbar>
+
+
+
+<section class="section">
+    <div class="container">
+        <mat-toolbar color="primary">
+            <span class="title">Directorio de Roles</span>
+            <span class="spacer"></span>
+            <button mat-icon-button color="accent" (click)="addRole()">
+              <mat-icon>add_circle</mat-icon>
+            </button>
+          </mat-toolbar>
+      <table class="table is-fullwidth is-striped">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let role of roles">
+            <td>{{ role.name }}</td>
+            <td>{{ role.description | slice : 0 : 50}} {{role.description.length > 50 ? '...' : ''}}</td>
+            <td class="actions">
+              <button class="button is-small is-info" (click)="editRole(role)">
+                <span class="icon"><i class="fas fa-edit"></i></span>
+                <span>Editar</span>
+              </button>
+              <button class="button is-small is-danger" (click)="deleteRole(role)">
+                <span class="icon"><i class="fas fa-trash"></i></span>
+                <span>Eliminar</span>
+              </button>
+              <button class="button is-small is-primary" (click)="assignRole(role)">
+                <span class="icon"><i class="fas fa-user-plus"></i></span>
+                <span>Asignar</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  

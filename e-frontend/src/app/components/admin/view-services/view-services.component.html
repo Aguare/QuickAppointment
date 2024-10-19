@@ -1,0 +1,25 @@
+<table class="table is-fullwidth is-striped">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Descripcion</th>
+      <th>Duracion (min)</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let service of services; let i = index">
+      <td>{{ service.name }}</td>
+      <td>{{ service.description }}</td>
+      <td>{{ service.duration }}</td>
+      <td class="actions">
+        <button class="button is-small is-primary" (click)="editService(i)">
+          <span class="icon"><i class="fas fa-edit"></i></span>
+        </button>
+        <button class="button is-small is-danger" (click)="deleteService(i)">
+          <span class="icon"><i class="fas fa-trash"></i></span>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

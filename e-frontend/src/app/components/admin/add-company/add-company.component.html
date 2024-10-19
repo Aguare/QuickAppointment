@@ -1,0 +1,97 @@
+<app-navbar></app-navbar>
+
+<section class="section">
+  <div class="container">
+    <mat-toolbar color="primary">
+      <span class="title">Agregar un negocio</span>
+      <span class="spacer"></span>
+      <button class="button is-link" (click)="goBack()">Regresar</button>
+    </mat-toolbar>
+
+    <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label class="label">Nombre</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            formControlName="name"
+            placeholder="Nombre del negocio"
+          />
+        </div>
+        <p
+          *ngIf="
+            companyForm.get('name')?.invalid && companyForm.get('name')?.touched
+          "
+          class="help is-danger"
+        >
+          El nombre es obligatorio y debe tener maximo 30 caracteres.
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label">Descripción</label>
+        <div class="control">
+          <textarea
+            class="textarea"
+            formControlName="description"
+            placeholder="Descripción del negocio"
+          ></textarea>
+        </div>
+        <p
+          *ngIf="
+            companyForm.get('description')?.invalid &&
+            companyForm.get('description')?.touched
+          "
+          class="help is-danger"
+        >
+          La descripción es obligatoria.
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label">Logo</label>
+        <div class="file has-name">
+            <label class="file-label">
+              <input
+                class="file-input"
+                type="file"
+                (change)="onLogoSelected($event)"
+                accept="image/*"
+              />
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label"> Sube una Imagen </span>
+              </span>
+              <span class="file-name">
+                {{fileName.length > 0 ? fileName : 'No haz seleccionado una imagen'}}
+              </span>
+            </label>
+          </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Previsualización del Logo</label>
+        <div class="control">
+          <figure class="image is-128x128" *ngIf="logoPreview">
+            <img [src]="logoPreview" alt="Logo preview" />
+          </figure>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="control">
+          <button
+            class="button is-primary"
+            type="submit"
+            [disabled]="companyForm.invalid"
+          >
+            Crear Negocio
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

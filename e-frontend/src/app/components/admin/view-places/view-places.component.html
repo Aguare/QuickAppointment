@@ -1,0 +1,23 @@
+<table class="table is-fullwidth is-striped">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Lugar</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let place of places; let i = index">
+        <td>{{ place.name }}</td>
+        <td>{{ place.place }}</td>
+        <td class="actions">
+          <button class="button is-small is-primary" (click)="editPlace(i)">
+            <span class="icon"><i class="fas fa-edit"></i></span>
+          </button>
+          <button class="button is-small is-danger" (click)="deletePlace(i)">
+            <span class="icon"><i class="fas fa-trash"></i></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>

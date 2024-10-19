@@ -1,0 +1,99 @@
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+  <!-- Pestaña de edición de información -->
+  <mat-tab label="Información">
+    <div class="section">
+      <form [formGroup]="editForm">
+        <div class="field">
+          <label class="label">Nombre</label>
+          <div class="control">
+            <input
+              class="input"
+              formControlName="name"
+              type="text"
+              placeholder="Nombre del negocio"
+            />
+          </div>
+          <p
+            *ngIf="
+              editForm.get('name')?.invalid && editForm.get('name')?.touched
+            "
+            class="help is-danger"
+          >
+            El nombre es obligatorio y debe tener al menos 3 caracteres.
+          </p>
+        </div>
+
+        <div class="field">
+          <label class="label">Descripción</label>
+          <div class="control">
+            <textarea
+              class="textarea"
+              formControlName="description"
+              placeholder="Descripción del negocio"
+            ></textarea>
+          </div>
+          <p
+            *ngIf="
+              editForm.get('description')?.invalid &&
+              editForm.get('description')?.touched
+            "
+            class="help is-danger"
+          >
+            La descripción es obligatoria.
+          </p>
+        </div>
+      </form>
+    </div>
+  </mat-tab>
+
+  <!-- Pestaña de edición del logo -->
+  <mat-tab label="Logo">
+    <div class="section">
+      <div class="field">
+        <label class="label">Logo</label>
+        <div class="file has-name">
+          <label class="file-label">
+            <input
+              class="file-input"
+              type="file"
+              (change)="onLogoSelected($event)"
+              accept="image/*"
+            />
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-upload"></i>
+              </span>
+              <span class="file-label"> Sube una Imagen </span>
+            </span>
+            <span class="file-name">
+              {{
+                fileName.length > 0
+                  ? fileName
+                  : "No haz seleccionado una imagen"
+              }}
+            </span>
+          </label>
+        </div>
+      </div>
+      <!-- Previsualización del logo -->
+      <div class="field" *ngIf="logoPreview">
+        <label class="label">Previsualización del nuevo logo</label>
+        <figure class="image is-128x128">
+          <img [src]="logoPreview" alt="Logo Preview" />
+        </figure>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+
+<!-- Botones de acción -->
+<div class="buttons">
+  <button
+    class="button is-success"
+    (click)="onSubmit()"
+    [disabled]="editForm.invalid"
+  >
+    Guardar
+  </button>
+  <button class="button" (click)="onCancel()">Cancelar</button>
+</div>

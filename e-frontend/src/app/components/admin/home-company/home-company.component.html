@@ -1,0 +1,71 @@
+<app-navbar></app-navbar>
+
+<section class="section">
+  <div class="container">
+    <div class="level">
+      <div class="level-left">
+        <h2 class="title">{{ business.name }}</h2>
+      </div>
+      <div class="level-right">
+        <button class="button is-link mr-2" (click)="editCompany()">
+          <mat-icon>edit</mat-icon>&nbsp; Editar Información
+        </button>
+
+        <button class="button is-danger" (click)="deleteCompany()">
+          <mat-icon>delete</mat-icon>&nbsp; Eliminar Negocio
+        </button>
+      </div>
+    </div>
+
+    <app-banner
+      [logo]="business.logo"
+      [description]="business.description"
+    ></app-banner>
+  </div>
+</section>
+
+<section>
+  <mat-tab-group
+    [(selectedIndex)]="selectedTabIndex"
+    (selectedIndexChange)="onTabChange($event)"
+  >
+    <mat-tab label="Servicios">
+      <div class="container">
+        <mat-toolbar color="primary">
+          <span class="title-tab">Servicios</span>
+          <span class="spacer"></span>
+          <button mat-icon-button color="accent" (click)="addService()">
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </mat-toolbar>
+      </div>
+      <app-view-services [services]="services"></app-view-services>
+    </mat-tab>
+
+    <mat-tab label="Empleados">
+      <div class="container">
+        <mat-toolbar color="primary">
+          <span class="title-tab">Empleados</span>
+          <span class="spacer"></span>
+          <button mat-icon-button color="accent" (click)="addEmployees()">
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </mat-toolbar>
+      </div>
+      <app-view-employees [employees]="employees"></app-view-employees>
+    </mat-tab>
+
+    <mat-tab label="Lugares">
+      <div class="container">
+        <mat-toolbar color="primary">
+          <span class="title-tab">Lugares</span>
+          <span class="spacer"></span>
+          <button mat-icon-button color="accent" (click)="addPlaces()">
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </mat-toolbar>
+      </div>
+      <app-view-places [places]="places"></app-view-places>
+    </mat-tab>
+  </mat-tab-group>
+</section>
