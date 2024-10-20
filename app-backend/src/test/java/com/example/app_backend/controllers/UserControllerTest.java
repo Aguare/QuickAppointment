@@ -5,6 +5,7 @@ import com.example.app_backend.dtos.LoginDto;
 import com.example.app_backend.dtos.UserDto;
 import com.example.app_backend.entities.User;
 import com.example.app_backend.helpers.ApiResponse;
+import com.example.app_backend.repositories.UserHasRoleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,6 +25,9 @@ class UserControllerTest {
 
     @Mock
     private com.example.app_backend.repositories.UserRepository userRepository;
+
+    @Mock
+    private UserHasRoleRepository userHasRoleRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -100,6 +104,37 @@ class UserControllerTest {
         assertEquals("Usuario creado con éxito.", response.getBody().getMessage());
         assertEquals(1, response.getBody().getId());
         verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void testRegisterUser_AssignRoleToUser() {
+        // Arrange
+        UserDto userDto = new UserDto();
+        userDto.setEmail("test@example.com");
+        userDto.setUsername("testuser");
+        userDto.setPassword("password123");
+
+        User savedUser = new User();
+        savedUser.setId(1);
+        savedUser.setEmail(userDto.getEmail());
+        savedUser.setUsername(userDto.getUsername());
+
+        when(userRepository.existsByEmail(userDto.getEmail())).thenReturn(false);
+        when(userRepository.existsByUsername(userDto.getUsername())).thenReturn(false);
+        when(passwordEncoder.encode(userDto.getPassword())).thenReturn("encryptedPassword");
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
+        // Act
+        ResponseEntity<ApiResponse> response = userController.registerUser(userDto);
+
+        // Assert
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals("Usuario creado con éxito.", response.getBody().getMessage());
+
+        // Verificar que el rol se asignó correctamente
+        verify(userHasRoleRepository, times(1)).save(argThat(userHasRole ->
+                userHasRole.getUserId().equals(savedUser.getId()) && userHasRole.getRoleId().equals(2)
+        ));
     }
 
     @Test
