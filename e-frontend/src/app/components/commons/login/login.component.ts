@@ -14,7 +14,8 @@ import { CookieService } from 'ngx-cookie-service';
 
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { log } from 'console';
+import { error, log } from 'console';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -48,7 +49,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private _router: Router,
-    private _cookieService: CookieService
+    private _cookieService: CookieService,
+    private userService: UserService
   ) {
     this.loginForm = this.fb.group({
       usernameOrEmail: ['', Validators.required],
@@ -92,7 +94,14 @@ export class LoginComponent {
         password: this.registerForm.get('password')?.value,
       };
 
-      console.log(data);
+      this.userService.register(data).subscribe({
+        next: (data) => {
+          console.log(data);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
 
       this.registerForm.reset();
     } else {
@@ -119,7 +128,7 @@ export class LoginComponent {
   }
 
   onLogin() {
-    this.isLoading = true;
+    //this.isLoading = true;
 
     if (this.loginForm.invalid) {
       Swal.fire('Error', 'Por favor, complete los campos requeridos', 'error');
@@ -132,7 +141,16 @@ export class LoginComponent {
     };
 
     console.log(data);
+    this.userService.login(data).subscribe({
+      next: (resp) => {
+        console.log(resp);
+        
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
 
-    this._router.navigate(['/admin/init'])
+    //this._router.navigate(['/admin/init']);
   }
 }
