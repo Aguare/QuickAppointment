@@ -7,7 +7,6 @@ import com.example.app_backend.helpers.ApiResponse;
 import com.example.app_backend.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -59,29 +58,26 @@ public class UserController {
     public ResponseEntity<ApiResponse> loginUser(@RequestBody LoginDto loginDto) {
         User user = null;
 
-        // Buscar por email o username
         if (loginDto.getUsername().contains("@")) {
-            // Buscar por email
+
             user = userRepository.findByEmail(loginDto.getUsername());
             if (user == null) {
                 ApiResponse response = new ApiResponse("El email no existe.", null);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
         } else {
-            // Buscar por username
             user = userRepository.findByUsername(loginDto.getUsername());
             if (user == null) {
                 ApiResponse response = new ApiResponse("El nombre de usuario no existe.", null);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
         }
-        
+
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             ApiResponse response = new ApiResponse("La contraseña es incorrecta.", null);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
 
-        // Devolver respuesta de éxito
         ApiResponse response = new ApiResponse("Login exitoso.", user.getId());
         return ResponseEntity.ok(response);
     }
