@@ -8,7 +8,12 @@ import Swal from 'sweetalert2';
 import { BannerComponent } from '../../commons/banner/banner.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
-import { Employee, Place, Service } from '../../../interfaces/interfaces';
+import {
+  Company,
+  Employee,
+  Place,
+  Service,
+} from '../../../interfaces/interfaces';
 import { employees, places, services } from '../../../db/db';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ViewServicesComponent } from '../view-services/view-services.component';
@@ -16,6 +21,8 @@ import { ViewEmployeesComponent } from '../view-employees/view-employees.compone
 import { ViewPlacesComponent } from '../view-places/view-places.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { LocalStorageService } from '../../../services/local-storage.service';
+import { AdminService } from '../../../services/admin.service';
+import { ImagePipe } from '../../../pipes/image.pipe';
 
 @Component({
   selector: 'app-home-company',
@@ -31,7 +38,8 @@ import { LocalStorageService } from '../../../services/local-storage.service';
     ViewServicesComponent,
     ViewEmployeesComponent,
     ViewPlacesComponent,
-    MatToolbarModule
+    MatToolbarModule,
+    ImagePipe,
   ],
   templateUrl: './home-company.component.html',
   styleUrl: './home-company.component.scss',
@@ -42,7 +50,8 @@ export class HomeCompanyComponent {
   places: Place[] = [];
   employees: Employee[] = [];
   selectedTabIndex: number = 0;
-  business = {
+  company: Company = {
+    id: 2,
     name: 'Nombre del Negocio',
     description:
       'Esta es la descripción de tu negocio. Aquí puedes hablar sobre lo que ofreces.',
@@ -53,14 +62,25 @@ export class HomeCompanyComponent {
     private route: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private adminService: AdminService
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.idCompany = params['id'] ? +params['id'] : null;
-      console.log('Company ID:', this.idCompany);
     });
+
+    if (this.idCompany) {
+      this.adminService.getCompanyById(this.idCompany).subscribe({
+        next: (value: Company) => {
+          this.company = value;
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
 
     const savedTabIndex = this.localStorageService.getSelectedTabIndex();
     if (savedTabIndex !== null) {
@@ -74,33 +94,80 @@ export class HomeCompanyComponent {
 
   onTabChange(index: number) {
     this.selectedTabIndex = index;
-    this.localStorageService.addSelectedTabIndex(this.selectedTabIndex)
+    this.localStorageService.addSelectedTabIndex(this.selectedTabIndex);
   }
 
   editCompany(): void {
     const dialogRef = this.dialog.open(EditCompanySettingsComponent, {
       width: '800px',
       data: {
-        name: this.business.name,
-        description: this.business.description,
+        name: this.company.name,
+        description: this.company.description,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log('Datos actualizados:', result);
-        this.business.name = result.name;
-        this.business.description = result.description;
-        if (result.logo) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const logo = reader.result;
-            if (typeof logo === 'string') {
-              this.business.logo = logo;
-            }
-          };
-          reader.readAsDataURL(result.logo);
-        }
+      if (result.logo) {
+        const formData: FormData = new FormData();
+        formData.append('file', result.logo);
+        this.adminService.saveImage(formData).subscribe({
+          next: (resp: any) => {
+            console.log(resp.relativePath);
+            const body = {
+              oldPath: this.company.logo,
+              newPath: resp.relativePath,
+            };
+            this.adminService
+              .updateLogoCompany(this.idCompany!, body)
+              .subscribe({
+                next: (value: any) => {
+                  Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: value.message,
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 1500);
+                },
+                error: (err) => {
+                  console.log(err);
+                },
+              });
+          },
+          error: (error: any) => {
+            console.log(error);
+          },
+        });
+      } else {
+        const body = {
+          name: result.name,
+          description: result.description,
+        };
+
+        this.adminService
+          .updateNameDescCompany(this.idCompany!, body)
+          .subscribe({
+            next: (value: any) => {
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: value.message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+
+              setTimeout(() => {
+                window.location.reload();
+              }, 1500);
+            },
+            error: (err) => {
+              console.log(err);
+            },
+          });
       }
     });
   }
@@ -116,11 +183,27 @@ export class HomeCompanyComponent {
       confirmButtonText: 'Borrar Negocio',
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Deleted!',
-          text: 'El servicio de elimino',
-          icon: 'success',
+        this.adminService.deleteCompany(this.idCompany!).subscribe({
+          next: (value: any) => {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: value.message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+
+            setTimeout(() => {
+              this.router.navigate(['admin/init']);
+            }, 1500)
+          },
+          error: (err) => {
+            console.log(err);
+            
+          },
         });
+
+        
       }
     });
   }

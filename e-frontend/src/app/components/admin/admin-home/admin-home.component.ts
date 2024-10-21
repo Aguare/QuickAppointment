@@ -9,7 +9,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { companies } from '../../../db/db';
-
+import { AdminService } from '../../../services/admin.service';
+import { ImagePipe } from '../../../pipes/image.pipe';
 
 @Component({
   selector: 'app-admin-home',
@@ -20,15 +21,23 @@ import { companies } from '../../../db/db';
     MatCardModule,
     MatToolbarModule,
     MatIconModule,
+    ImagePipe
   ],
   templateUrl: './admin-home.component.html',
   styleUrl: './admin-home.component.scss',
 })
 export class AdminHomeComponent implements OnInit {
   companies: Company[] = [];
-  constructor(private router: Router) {}
+
+  constructor(private router: Router, private adminService: AdminService) {}
+
   ngOnInit(): void {
-    this.companies = companies;
+    this.adminService.getCompanies().subscribe({
+      next: (value: Company[]) => {
+        this.companies = value;
+      },
+      error: (err) => {},
+    });
   }
 
   goToBusiness(id: number): void {

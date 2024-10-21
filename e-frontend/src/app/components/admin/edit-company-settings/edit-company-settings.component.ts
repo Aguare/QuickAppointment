@@ -45,7 +45,6 @@ export class EditCompanySettingsComponent {
 
   onSubmit(): void {
     if (this.editForm.valid) {
-      console.log(this.editForm.value);
       const body = this.editForm.value;
       body.logo = this.logo
       this.dialogRef.close(body); 

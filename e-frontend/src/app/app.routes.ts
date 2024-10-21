@@ -47,6 +47,7 @@ export const routes: Routes = [
       { path: 'users', component: UsersComponent },
       { path: 'users/new', component: UserFormComponent },
       { path: 'users/edit/:id', component: UserFormComponent },
+      { path: '**', redirectTo: 'init' },
     ],
   },
   { path: '**', component: NotFoundComponent },
