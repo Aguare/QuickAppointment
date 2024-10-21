@@ -44,7 +44,7 @@ class UserControllerTest {
         userDto.setEmail("test@example.com");
         userDto.setUsername("testuser");
         userDto.setPassword("password123");
-
+        
         when(userRepository.existsByEmail(userDto.getEmail())).thenReturn(true);
 
         // Act
