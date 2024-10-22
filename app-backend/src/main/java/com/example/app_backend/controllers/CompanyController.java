@@ -39,8 +39,8 @@ public class CompanyController {
         company.setIsAvailable(true);
         company.setCreatedAt(LocalDateTime.now());
 
-        companyRepository.save(company);
-        ApiResponse response = new ApiResponse("Negocio creado con exito", company.getId());
+        Company savedCompany = companyRepository.save(company);
+        ApiResponse response = new ApiResponse("Negocio creado con exito", savedCompany.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
