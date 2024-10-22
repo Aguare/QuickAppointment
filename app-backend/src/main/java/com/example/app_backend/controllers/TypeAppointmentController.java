@@ -110,4 +110,6 @@ public class TypeAppointmentController {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
+
+
 }
