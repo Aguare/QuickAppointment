@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { File } from 'buffer';
-import { Company } from '../interfaces/interfaces';
+import { Company, Service } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +9,7 @@ import { Company } from '../interfaces/interfaces';
 export class AdminService {
   apiImage: string = 'http://localhost:8000/api/upload';
   apiCompany: string = 'http://localhost:8000/companies';
+  apiTypeAppointment: string = 'http://localhost:8000/type-appointments';
 
   constructor(private http: HttpClient) {}
 
@@ -38,5 +39,25 @@ export class AdminService {
   
   deleteCompany(id:number){
     return this.http.delete(`${this.apiCompany}/${id}`);
+  }
+
+  saveTypeAppointment(body: any){
+    return this.http.post(`${this.apiTypeAppointment}/create`, body);
+  }
+  
+  getTypeAppointemstCompany(fkCompany: number){
+    return this.http.get<Service[]>(`${this.apiTypeAppointment}/company/${fkCompany}`);
+  }
+  
+  getTypeAppointemById(id: number){
+    return this.http.get<Service>(`${this.apiTypeAppointment}/${id}`);
+  }
+  
+  updateTypeAppointment(id: number, body: any){
+    return this.http.put(`${this.apiTypeAppointment}/update/${id}`, body);
+  }
+  
+  deleteTypeAppointment(id: number){
+    return this.http.delete(`${this.apiTypeAppointment}/${id}`);
   }
 }

@@ -14,7 +14,7 @@ import {
   Place,
   Service,
 } from '../../../interfaces/interfaces';
-import { employees, places, services } from '../../../db/db';
+import { employees, places } from '../../../db/db';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ViewServicesComponent } from '../view-services/view-services.component';
 import { ViewEmployeesComponent } from '../view-employees/view-employees.component';
@@ -87,9 +87,18 @@ export class HomeCompanyComponent {
       this.selectedTabIndex = +savedTabIndex;
     }
 
-    this.services = services;
-    this.places = places;
-    this.employees = employees;
+    if(this.idCompany){
+      this.adminService.getTypeAppointemstCompany(this.idCompany).subscribe({
+        next: (value: Service[])=> {
+          this.services = value;
+        },
+        error :(err) =>{
+          console.log(err);
+          
+        },
+      })
+    }
+
   }
 
   onTabChange(index: number) {

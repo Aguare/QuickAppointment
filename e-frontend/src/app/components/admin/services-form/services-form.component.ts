@@ -8,13 +8,21 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavbarComponent } from "../../commons/navbar/navbar.component";
+import { NavbarComponent } from '../../commons/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { AdminService } from '../../../services/admin.service';
+import Swal from 'sweetalert2';
+import { log } from 'console';
 
 @Component({
   selector: 'app-services-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, NavbarComponent, MatToolbarModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    NavbarComponent,
+    MatToolbarModule,
+  ],
   templateUrl: './services-form.component.html',
   styleUrl: './services-form.component.scss',
 })
@@ -22,12 +30,13 @@ export class ServicesFormComponent {
   serviceForm: FormGroup;
   isEditMode: boolean = false;
   serviceId: number | null = null;
-  idCompany: number | null = null;
+  idCompany: number | undefined;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private adminService: AdminService
   ) {
     this.serviceForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -37,53 +46,86 @@ export class ServicesFormComponent {
   }
 
   ngOnInit(): void {
-
     this.route.queryParams.subscribe((params) => {
-      this.idCompany = params['id'] ? +params['id'] : null;
-      console.log('Company ID:', this.idCompany);
+      this.idCompany = params['id'] ? +params['id'] : undefined;
     });
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
         this.isEditMode = true;
-        this.serviceId = +id; // Convertimos el id a número
-        this.loadService(this.serviceId); // Cargamos los datos del servicio
+        this.serviceId = +id;
+        this.loadService(this.serviceId);
       }
     });
   }
 
   loadService(id: number) {
-
-    const existingService: Service = {
-      id: id,
-      name: 'Service Name',
-      description: 'Service Description',
-      duration: 30,
-      fk_company: 10
-    };
-    this.idCompany = existingService.fk_company;
-    this.serviceForm.patchValue(existingService);
+    let existingService: Service | undefined;
+    this.adminService.getTypeAppointemById(id).subscribe({
+      next: (value: Service) => {
+        existingService = value;
+        this.idCompany = value.fkCompany;
+        this.serviceForm.patchValue(existingService);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   onSubmit(): void {
     if (this.serviceForm.valid) {
       const formValue = this.serviceForm.value;
       if (this.isEditMode) {
-        console.log(
-          'Guardar Cambios para el servicio con ID:',
-          this.serviceId,
-          formValue,
-          this.idCompany
-        );
+        this.adminService
+          .updateTypeAppointment(this.serviceId!, formValue)
+          .subscribe({
+            next: (value: any) => {
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: value.message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            },
+            error: (err) => {
+              console.log(err);
+            },
+          });
       } else {
-        console.log('Guardar Nuevo Servicio:', formValue, this.idCompany);
+        const body = formValue;
+        body.fkCompany = this.idCompany;
+
+        this.adminService.saveTypeAppointment(body).subscribe({
+          next: (value: any) => {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: value.message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
       }
-      this.router.navigate(['admin/homeCompany'], { queryParams: { id: this.idCompany } });
+      setTimeout(() => {
+        this.router.navigate(['admin/homeCompany'], {
+          queryParams: { id: this.idCompany },
+        });
+      }, 1500);
     }
   }
 
-  goBack(){
-    this.router.navigate(['admin/homeCompany'], { queryParams: { id: this.idCompany } });
+  goBack() {
+    console.log('fff', this.idCompany);
+
+    this.router.navigate(['admin/homeCompany'], {
+      queryParams: { id: this.idCompany },
+    });
   }
 }
