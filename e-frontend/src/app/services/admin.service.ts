@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { File } from 'buffer';
-import { Company, Employee, Service } from '../interfaces/interfaces';
+import { Company, Employee, Place, Service } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +11,7 @@ export class AdminService {
   apiCompany: string = 'http://localhost:8000/companies';
   apiTypeAppointment: string = 'http://localhost:8000/type-appointments';
   apiEmployee: string = 'http://localhost:8000/employees';
+  apiPlace: string = 'http://localhost:8000/places';
 
   constructor(private http: HttpClient) {}
 
@@ -80,5 +81,25 @@ export class AdminService {
 
   deleteEmployee(id: number){
     return this.http.delete(`${this.apiEmployee}/${id}`);
+  }
+
+  savePlace(body: any){
+    return this.http.post(`${this.apiPlace}/create`, body);
+  }
+
+  getPlacesCompany(fkCompany: number){
+    return this.http.get<Place[]>(`${this.apiPlace}/company/${fkCompany}`);
+  }
+
+  getPlaceById(id: number){
+    return this.http.get<Place>(`${this.apiPlace}/${id}`);
+  }
+
+  updatePlace(id: number, body: any){
+    return this.http.put(`${this.apiPlace}/update/${id}`, body);
+  }
+
+  deletePlace(id: number){
+    return this.http.delete(`${this.apiPlace}/${id}`);
   }
 }

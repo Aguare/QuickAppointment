@@ -104,6 +104,15 @@ export class HomeCompanyComponent {
           console.log(err);
         },
       });
+      
+      this.adminService.getPlacesCompany(this.idCompany).subscribe({
+        next: (value: Place[]) => {
+          this.places = value;
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
     }
   }
 

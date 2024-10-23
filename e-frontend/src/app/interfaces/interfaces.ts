@@ -45,7 +45,7 @@ export interface Place {
   id: number;
   name: string;
   place: string;
-  fk_company: number;
+  fkCompany: number;
 }
 
 export interface Role { 

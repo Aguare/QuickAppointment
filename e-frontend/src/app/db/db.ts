@@ -70,7 +70,7 @@ export const employees: Employee[] = [
 
 // Data for the places table
 export const places: Place[] = [
-  { id: 1, name: 'Barber Shop', place: 'Downtown', fk_company: 20 },
-  { id: 2, name: 'Salon', place: 'Uptown', fk_company: 20 },
-  { id: 3, name: 'Spa', place: 'Suburbs', fk_company: 20 },
+  { id: 1, name: 'Barber Shop', place: 'Downtown', fkCompany: 20 },
+  { id: 2, name: 'Salon', place: 'Uptown', fkCompany: 20 },
+  { id: 3, name: 'Spa', place: 'Suburbs', fkCompany: 20 },
 ];
