@@ -1,6 +1,7 @@
 package com.example.app_backend.controllers;
 
 import com.example.app_backend.dtos.LoginDto;
+import com.example.app_backend.dtos.PageInfoDto;
 import com.example.app_backend.dtos.UserDto;
 import com.example.app_backend.entities.User;
 import com.example.app_backend.entities.UserHasRole;
@@ -16,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -99,6 +102,27 @@ public class UserController {
 
         LoginResponse response = new LoginResponse("Login exitoso", user.getId(), userRole.getFkRole());
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/pages/{userId}")
+    public ResponseEntity<List<PageInfoDto>> getPagesByUserId(@PathVariable("userId") Integer userId) {
+        List<Object[]> results = userHasRoleRepository.findPageInfoByUserId(userId);
+
+        List<PageInfoDto> pageInfoList = results.stream()
+                .map(result -> new PageInfoDto(
+                        (Integer) result[0],         // id
+                        (String) result[1],          // pageName
+                        (String) result[2],          // direction
+                        (Boolean) result[3],         // isAvailable
+                        (String) result[4]           // moduleName
+                ))
+                .collect(Collectors.toList());
+
+        if (pageInfoList.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(pageInfoList);
     }
 }
 

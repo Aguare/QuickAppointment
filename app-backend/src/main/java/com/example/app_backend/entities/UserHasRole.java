@@ -1,5 +1,6 @@
 package com.example.app_backend.entities;
 
+import com.example.app_backend.dtos.PageInfoDto;
 import jakarta.persistence.*;
 
 @Entity

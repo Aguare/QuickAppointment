@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Page } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,10 @@ export class UserService {
   
   login(body: any){
     return this.http.post(`${this.apiUser}/login`, body);
+  }
+
+  getPages(idUser: number){
+    return this.http.get<Page[]>(`${this.apiUser}/pages/${idUser}`);
   }
 
 }

@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { error, log } from 'console';
 import { UserService } from '../../../services/user.service';
+import { LocalStorageService } from '../../../services/local-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -49,7 +50,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private _router: Router,
-    private _cookieService: CookieService,
+    private localStorageService: LocalStorageService,
     private userService: UserService
   ) {
     this.loginForm = this.fb.group({
@@ -155,7 +156,11 @@ export class LoginComponent {
             title: resp.message,
             showConfirmButton: false,
             timer: 1500,
-          });
+          });          
+
+          this.localStorageService.setUserId(resp.idUser);
+          this.localStorageService.setUserRole(resp.idRole);
+
           setTimeout(() => {
             this._router.navigate(['/admin/init']);
           }, 1500);

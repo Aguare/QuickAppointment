@@ -2,6 +2,7 @@ package com.example.app_backend.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "company")
@@ -26,8 +27,13 @@ public class Company {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    // Getters y Setters
+    @Column(name = "opening_time", nullable = false)
+    private LocalTime openingTime;
 
+    @Column(name = "closing_time", nullable = false)
+    private LocalTime closingTime;
+
+    // Getters y Setters
 
     public Integer getId() {
         return id;
@@ -75,6 +81,30 @@ public class Company {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Boolean getAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(Boolean available) {
+        isAvailable = available;
+    }
+
+    public LocalTime getOpeningTime() {
+        return openingTime;
+    }
+
+    public void setOpeningTime(LocalTime openingTime) {
+        this.openingTime = openingTime;
+    }
+
+    public LocalTime getClosingTime() {
+        return closingTime;
+    }
+
+    public void setClosingTime(LocalTime closingTime) {
+        this.closingTime = closingTime;
     }
 }
 

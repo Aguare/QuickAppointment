@@ -2,6 +2,7 @@ package com.example.app_backend.controllers;
 
 
 import com.example.app_backend.dtos.LoginDto;
+import com.example.app_backend.dtos.PageInfoDto;
 import com.example.app_backend.dtos.UserDto;
 import com.example.app_backend.entities.User;
 import com.example.app_backend.entities.UserHasRole;
@@ -17,6 +18,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -223,4 +228,55 @@ class UserControllerTest {
         verify(userHasRoleRepository).findByFkUser(user.getId());
     }
 
+    @Test
+    void testGetPagesByUserId_UserHasPages() {
+        // Arrange
+        Integer userId = 7;
+        List<Object[]> mockResult = Arrays.asList(
+                new Object[]{1, "Dashboard", "/dashboard", true, "Main Module"},
+                new Object[]{2, "Settings", "/settings", true, "Settings Module"}
+        );
+
+        when(userHasRoleRepository.findPageInfoByUserId(userId)).thenReturn(mockResult);
+
+        // Act
+        ResponseEntity<List<PageInfoDto>> response = userController.getPagesByUserId(userId);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(2, response.getBody().size());
+
+        PageInfoDto page1 = response.getBody().get(0);
+        assertEquals(1, page1.getId());
+        assertEquals("Dashboard", page1.getPageName());
+        assertEquals("/dashboard", page1.getDirection());
+        assertTrue(page1.getIsAvailable());
+        assertEquals("Main Module", page1.getModuleName());
+
+        PageInfoDto page2 = response.getBody().get(1);
+        assertEquals(2, page2.getId());
+        assertEquals("Settings", page2.getPageName());
+        assertEquals("/settings", page2.getDirection());
+        assertTrue(page2.getIsAvailable());
+        assertEquals("Settings Module", page2.getModuleName());
+
+        verify(userHasRoleRepository).findPageInfoByUserId(userId);
+    }
+
+    @Test
+    void testGetPagesByUserId_UserHasNoPages() {
+        // Arrange
+        Integer userId = 7;
+        when(userHasRoleRepository.findPageInfoByUserId(userId)).thenReturn(Collections.emptyList());
+
+        // Act
+        ResponseEntity<List<PageInfoDto>> response = userController.getPagesByUserId(userId);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+
+        verify(userHasRoleRepository).findPageInfoByUserId(userId);
+    }
 }

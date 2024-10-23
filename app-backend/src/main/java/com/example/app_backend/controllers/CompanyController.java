@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,6 +39,8 @@ public class CompanyController {
         company.setLogo(companyDto.getLogo());
         company.setIsAvailable(true);
         company.setCreatedAt(LocalDateTime.now());
+        company.setOpeningTime(LocalTime.of(8, 0, 0));
+        company.setClosingTime(LocalTime.of(18, 0));
 
         Company savedCompany = companyRepository.save(company);
         ApiResponse response = new ApiResponse("Negocio creado con exito", savedCompany.getId());
