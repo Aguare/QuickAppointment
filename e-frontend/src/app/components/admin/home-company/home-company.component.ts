@@ -87,18 +87,24 @@ export class HomeCompanyComponent {
       this.selectedTabIndex = +savedTabIndex;
     }
 
-    if(this.idCompany){
+    if (this.idCompany) {
       this.adminService.getTypeAppointemstCompany(this.idCompany).subscribe({
-        next: (value: Service[])=> {
+        next: (value: Service[]) => {
           this.services = value;
         },
-        error :(err) =>{
+        error: (err) => {
           console.log(err);
-          
         },
-      })
+      });
+      this.adminService.getEmployeesCompany(this.idCompany).subscribe({
+        next: (value: Employee[]) => {
+          this.employees = value;
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
     }
-
   }
 
   onTabChange(index: number) {
@@ -204,15 +210,12 @@ export class HomeCompanyComponent {
 
             setTimeout(() => {
               this.router.navigate(['admin/init']);
-            }, 1500)
+            }, 1500);
           },
           error: (err) => {
             console.log(err);
-            
           },
         });
-
-        
       }
     });
   }

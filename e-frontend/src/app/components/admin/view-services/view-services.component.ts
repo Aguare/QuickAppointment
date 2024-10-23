@@ -41,7 +41,7 @@ export class ViewServicesComponent {
               text: value.message,
               icon: 'success',
             });
-            this.services.slice(i, 1);
+            this.services.splice(i, 1);
           },
           error: (err) => {
             console.log(err);

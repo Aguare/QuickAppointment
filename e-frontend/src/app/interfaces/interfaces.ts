@@ -38,7 +38,7 @@ export interface Employee {
   last_name: string;
   dpi: string;
   date_birth: Date;
-  fk_company: number;
+  fkCompany: number;
 }
 
 export interface Place {

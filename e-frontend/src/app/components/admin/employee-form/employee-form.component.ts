@@ -1,15 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Employee } from '../../../interfaces/interfaces';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { NavbarComponent } from "../../commons/navbar/navbar.component";
+import { NavbarComponent } from '../../commons/navbar/navbar.component';
+import { AdminService } from '../../../services/admin.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatToolbarModule, NavbarComponent],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    MatToolbarModule,
+    NavbarComponent,
+  ],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss',
 })
@@ -22,7 +34,8 @@ export class EmployeeFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private adminService: AdminService
   ) {
     // Inicializamos el formulario
     this.employeeForm = this.fb.group({
@@ -50,39 +63,68 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   loadEmployee(id: number) {
-    const existingEmployee: Employee = {
-      id: id,
-      first_name: 'John',
-      last_name: 'Doe',
-      dpi: '1234567890123',
-      date_birth: new Date('1990-01-01'),
-      fk_company: 15,
-    };
-    this.idCompany = existingEmployee.fk_company;
-    this.employeeForm.patchValue(existingEmployee);
+    let existingEmploye: Employee | undefined;
+    this.adminService.getEmployeeById(id).subscribe({
+      next: (value: Employee) => {
+        existingEmploye = value;
+        this.idCompany = value.fkCompany;
+        this.employeeForm.patchValue(existingEmploye);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   onSubmit(): void {
     if (this.employeeForm.valid) {
       const formValue = this.employeeForm.value;
       if (this.isEditMode) {
-        console.log(
-          'Guardar Cambios para el empleado con ID:',
-          this.employeeId,
-          formValue
-        );
+        this.adminService
+          .updateEmployee(this.employeeId!, formValue)
+          .subscribe({
+            next: (value: any) => {
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: value.message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            },
+            error: (err) => {
+              console.log(err);
+            },
+          });
       } else {
-        console.log('Guardar Nuevo Empleado:', formValue);
-      }
+        const body = formValue;
+        body.fkCompany = this.idCompany;
+        console.log(body);
 
-      this.router.navigate(['admin/homeCompany'], {
-        queryParams: { id: this.idCompany },
-      });
+        this.adminService.saveEmployee(body).subscribe({
+          next: (value: any) => {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: value.message,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+      }
+      setTimeout(() => {
+        this.router.navigate(['admin/homeCompany'], {
+          queryParams: { id: this.idCompany },
+        });
+      }, 1500);
     }
   }
 
   goBack() {
-    
     this.router.navigate(['admin/homeCompany'], {
       queryParams: { id: this.idCompany },
     });
