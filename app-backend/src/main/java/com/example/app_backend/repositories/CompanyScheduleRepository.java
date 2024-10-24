@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CompanyRepository extends JpaRepository<Company, Long> {
+public interface CompanyScheduleRepository extends JpaRepository<CompanySchedule, Integer> {
 
+    List<CompanySchedule> findByFkCompany(Integer fkCompany);
+    void deleteByFkCompany(Integer fkCompany);
 
 }

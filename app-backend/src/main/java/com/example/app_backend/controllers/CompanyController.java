@@ -1,12 +1,12 @@
 package com.example.app_backend.controllers;
 
-import com.example.app_backend.dtos.CompanyDto;
-import com.example.app_backend.dtos.CompanyResponseDto;
-import com.example.app_backend.dtos.UpdateCompanyLogoDto;
-import com.example.app_backend.dtos.UpdateNameDescCompanyDto;
+import com.example.app_backend.dtos.*;
 import com.example.app_backend.entities.Company;
+import com.example.app_backend.entities.CompanySchedule;
 import com.example.app_backend.helpers.ApiResponse;
 import com.example.app_backend.repositories.CompanyRepository;
+import com.example.app_backend.repositories.CompanyScheduleRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,6 +29,8 @@ public class CompanyController {
     private CompanyRepository companyRepository;
 
     private static final String IMAGE_DIRECTORY = "src/main/resources/public/";
+    @Autowired
+    private CompanyScheduleRepository companyScheduleRepository;
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createCompany(@RequestBody CompanyDto companyDto) {
@@ -39,9 +40,6 @@ public class CompanyController {
         company.setLogo(companyDto.getLogo());
         company.setIsAvailable(true);
         company.setCreatedAt(LocalDateTime.now());
-        company.setOpeningTime(LocalTime.of(8, 0, 0));
-        company.setClosingTime(LocalTime.of(18, 0));
-
         Company savedCompany = companyRepository.save(company);
         ApiResponse response = new ApiResponse("Negocio creado con exito", savedCompany.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -144,4 +142,48 @@ public class CompanyController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+
+    @GetMapping("/schedule/{fkCompany}")
+    public ResponseEntity<List<ScheduleDto>> getCompanySchedule(@PathVariable Integer fkCompany) {
+        List<CompanySchedule> schedules = companyScheduleRepository.findByFkCompany(fkCompany);
+
+        List<ScheduleDto> scheduleDtos = schedules.stream()
+                .map(schedule  -> {
+                    ScheduleDto dto = new ScheduleDto();
+                    dto.setFkCompany(schedule.getFkCompany());
+                    dto.setFkDay(schedule.getFkDay());
+                    dto.setOpeningTime(schedule.getOpeningTime());
+                    dto.setClosingTime(schedule.getClosingTime());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(scheduleDtos, HttpStatus.OK);
+    }
+
+    @PostMapping("/addSchedule/{fkCompany}")
+    @Transactional
+    public ResponseEntity<ApiResponse> updateCompanySchedule(
+            @PathVariable Integer fkCompany,
+            @RequestBody List<ScheduleDto> newSchedules) {
+
+        companyScheduleRepository.deleteByFkCompany(fkCompany);
+
+        List<CompanySchedule> schedulesToSave = newSchedules.stream()
+                .map(dto -> {
+                    CompanySchedule schedule = new CompanySchedule();
+                    schedule.setFkCompany(dto.getFkCompany());
+                    schedule.setFkDay(dto.getFkDay());
+                    schedule.setOpeningTime(dto.getOpeningTime());
+                    schedule.setClosingTime(dto.getClosingTime());
+                    return schedule;
+                })
+                .collect(Collectors.toList());
+
+        companyScheduleRepository.saveAll(schedulesToSave);
+
+        ApiResponse response = new ApiResponse("Horarios actualizados correctamente.", null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
 }

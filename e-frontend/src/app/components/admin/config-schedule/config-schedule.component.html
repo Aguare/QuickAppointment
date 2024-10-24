@@ -1,0 +1,86 @@
+<app-navbar></app-navbar>
+<mat-toolbar color="primary">
+  <span class="title">Configuración de Horario</span>
+  <span class="spacer"></span>
+</mat-toolbar>
+<div class="schedule">
+  <div class="box container schedule">
+    <form [formGroup]="scheduleForm" (ngSubmit)="addDay()">
+      <div class="field">
+        <label class="label">Día de la semana</label>
+        <div class="control">
+          <mat-form-field appearance="fill" class="is-fullwidth">
+            <mat-select formControlName="day" placeholder="Seleccione un día">
+              <mat-option *ngFor="let day of daysOfWeek" [value]="day.id">{{
+                day.name
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column">
+          <div class="field">
+            <label class="label">Hora de Apertura</label>
+            <div class="control">
+              <input
+                matInput
+                formControlName="openingTime"
+                type="time"
+                class="input"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="field">
+            <label class="label">Hora de Cierre</label>
+            <div class="control">
+              <input
+                matInput
+                formControlName="closingTime"
+                type="time"
+                class="input"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="control">
+        <button
+          class="button is-link"
+          type="submit"
+          [disabled]="!scheduleForm.valid"
+        >
+          Agregar Día
+        </button>
+      </div>
+    </form>
+
+    <hr />
+
+    <div *ngFor="let schedule of scheduleArray; let i = index" class="box m-5">
+      <p>
+        <strong>{{ getDay(schedule.fkDay) }}:</strong> {{ schedule.openingTime }} -
+        {{ schedule.closingTime }}
+      </p>
+      <div class="buttons">
+        <button class="button is-info is-small" (click)="openEditModal(i)">
+          Modificar
+        </button>
+        <button class="button is-danger is-small" (click)="deleteDay(i)">
+          Eliminar
+        </button>
+      </div>
+    </div>
+
+    <div class="control">
+      <button class="button is-success" (click)="saveChanges()">
+        Guardar Cambios
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<h2 class="title is-4 mx-3">Modificar Horario</h2>
+<div class="box">
+  <form [formGroup]="editForm">
+    <div class="field">
+      <label class="label">Hora de Apertura</label>
+      <div class="control">
+        <input type="time" formControlName="openingTime" class="input" required>
+        <p *ngIf="editForm.get('openingTime')?.invalid && editForm.get('openingTime')?.touched" class="help is-danger">
+          La hora de apertura es requerida.
+        </p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Hora de Cierre</label>
+      <div class="control">
+        <input type="time" formControlName="closingTime" class="input" required>
+        <p *ngIf="editForm.get('closingTime')?.invalid && editForm.get('closingTime')?.touched" class="help is-danger">
+          La hora de cierre es requerida.
+        </p>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="buttons m-5">
+  <button class="button is-light" (click)="close()">Cancelar</button>
+  <button class="button is-link" (click)="save()" [disabled]="editForm.invalid">Guardar</button>
+</div>

@@ -27,12 +27,6 @@ public class Company {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "opening_time", nullable = false)
-    private LocalTime openingTime;
-
-    @Column(name = "closing_time", nullable = false)
-    private LocalTime closingTime;
-
     // Getters y Setters
 
     public Integer getId() {
@@ -91,20 +85,5 @@ public class Company {
         isAvailable = available;
     }
 
-    public LocalTime getOpeningTime() {
-        return openingTime;
-    }
-
-    public void setOpeningTime(LocalTime openingTime) {
-        this.openingTime = openingTime;
-    }
-
-    public LocalTime getClosingTime() {
-        return closingTime;
-    }
-
-    public void setClosingTime(LocalTime closingTime) {
-        this.closingTime = closingTime;
-    }
 }
 

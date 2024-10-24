@@ -14,6 +14,7 @@ import { RoleComponent } from './components/admin/role/role.component';
 import { RoleFormComponent } from './components/admin/role-form/role-form.component';
 import { UsersComponent } from './components/admin/users/users.component';
 import { UserFormComponent } from './components/admin/user-form/user-form.component';
+import { ConfigScheduleComponent } from './components/admin/config-schedule/config-schedule.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -47,6 +48,7 @@ export const routes: Routes = [
       { path: 'users', component: UsersComponent },
       { path: 'users/new', component: UserFormComponent },
       { path: 'users/edit/:id', component: UserFormComponent },
+      { path: 'config', component: ConfigScheduleComponent },
       { path: '**', redirectTo: 'init' },
     ],
   },

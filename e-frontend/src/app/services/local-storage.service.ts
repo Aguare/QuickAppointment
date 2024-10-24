@@ -40,6 +40,12 @@ export class LocalStorageService {
     }
     return null;
   }
+ 
+  deleteItem(key: string): any {
+    if (this.isLocalStorageAvailable()) {
+      localStorage.removeItem(key)
+    }
+  }
 
   setUserId(id: number): void {
     this.setItem(this.USER_ID, id);

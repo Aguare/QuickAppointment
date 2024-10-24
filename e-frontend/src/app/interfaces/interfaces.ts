@@ -66,3 +66,10 @@ export interface User {
   idRole: number;
   roleName: string;
 }
+
+export interface Schedule {
+  fkCompany: number;
+  fkDay: number;
+  openingTime: string;
+  closingTime: string;
+}

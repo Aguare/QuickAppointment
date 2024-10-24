@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { File } from 'buffer';
-import { Company, Employee, Place, Service } from '../interfaces/interfaces';
+import { Company, Employee, Place, Schedule, Service } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -101,5 +101,13 @@ export class AdminService {
 
   deletePlace(id: number){
     return this.http.delete(`${this.apiPlace}/${id}`);
+  }
+
+  getScheduleCompany(fkCompany: number){
+    return this.http.get<Schedule[]>(`${this.apiCompany}/schedule/${fkCompany}`);
+  }
+  
+  saveSchedule(fkCompany: number, schedule: Schedule[]){
+    return this.http.post(`${this.apiCompany}/addSchedule/${fkCompany}`, schedule);
   }
 }
