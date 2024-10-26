@@ -1,12 +1,11 @@
 package com.example.app_backend.controllers;
 
-import com.example.app_backend.dtos.CompanyDto;
-import com.example.app_backend.dtos.CompanyResponseDto;
-import com.example.app_backend.dtos.UpdateCompanyLogoDto;
-import com.example.app_backend.dtos.UpdateNameDescCompanyDto;
+import com.example.app_backend.dtos.*;
 import com.example.app_backend.entities.Company;
+import com.example.app_backend.entities.CompanySchedule;
 import com.example.app_backend.helpers.ApiResponse;
 import com.example.app_backend.repositories.CompanyRepository;
+import com.example.app_backend.repositories.CompanyScheduleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,11 +20,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -33,6 +34,10 @@ public class CompanyControllerTest {
 
     @InjectMocks
     private CompanyController companyController; // Clase bajo prueba
+
+    @Mock
+    private CompanyScheduleRepository companyScheduleRepository;
+
 
     @Mock
     private CompanyRepository companyRepository; // Dependencia que vamos a mockear
@@ -305,5 +310,118 @@ public class CompanyControllerTest {
 
         verify(companyRepository, never()).deleteById(1L);
         verify(companyRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void testGetCompanySchedule() {
+        // Arrange
+        Integer fkCompany = 1;
+
+        // Crear datos simulados para CompanySchedule
+        CompanySchedule schedule1 = new CompanySchedule();
+        schedule1.setFkCompany(1);
+        schedule1.setFkDay(1);
+        schedule1.setOpeningTime(LocalTime.parse("09:00"));
+        schedule1.setClosingTime(LocalTime.parse("17:00"));
+
+        CompanySchedule schedule2 = new CompanySchedule();
+        schedule2.setFkCompany(1);
+        schedule2.setFkDay(2);
+        schedule2.setOpeningTime(LocalTime.parse("10:00"));
+        schedule2.setClosingTime(LocalTime.parse("18:00"));
+
+        when(companyScheduleRepository.findByFkCompany(fkCompany))
+                .thenReturn(Arrays.asList(schedule1, schedule2));
+
+        ResponseEntity<List<ScheduleDto>> response = companyController.getCompanySchedule(fkCompany);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(2, response.getBody().size());
+
+        ScheduleDto scheduleDto1 = response.getBody().get(0);
+        assertEquals(1, scheduleDto1.getFkCompany());
+        assertEquals(1, scheduleDto1.getFkDay());
+        assertEquals(LocalTime.parse("09:00"), scheduleDto1.getOpeningTime());
+        assertEquals(LocalTime.parse("17:00"), scheduleDto1.getClosingTime());
+
+        ScheduleDto scheduleDto2 = response.getBody().get(1);
+        assertEquals(1, scheduleDto2.getFkCompany());
+        assertEquals(2, scheduleDto2.getFkDay());
+        assertEquals(LocalTime.parse("10:00"), scheduleDto2.getOpeningTime());
+        assertEquals(LocalTime.parse("18:00"), scheduleDto2.getClosingTime());
+
+        verify(companyScheduleRepository).findByFkCompany(fkCompany);
+    }
+
+    @Test
+    void testGetCompanySchedule_EmptySchedule() {
+        // Arrange
+        Integer fkCompany = 2;
+
+        when(companyScheduleRepository.findByFkCompany(fkCompany))
+                .thenReturn(Arrays.asList());
+
+        // Act
+        ResponseEntity<List<ScheduleDto>> response = companyController.getCompanySchedule(fkCompany);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().isEmpty());
+
+        verify(companyScheduleRepository).findByFkCompany(fkCompany);
+    }
+
+    @Test
+    void testUpdateCompanySchedule_Success() {
+        // Arrange
+        Integer fkCompany = 1;
+
+        ScheduleDto scheduleDto1 = new ScheduleDto();
+        scheduleDto1.setFkCompany(1);
+        scheduleDto1.setFkDay(1);
+        scheduleDto1.setOpeningTime(LocalTime.parse("09:00"));
+        scheduleDto1.setClosingTime(LocalTime.parse("17:00"));
+
+        ScheduleDto scheduleDto2 = new ScheduleDto();
+        scheduleDto2.setFkCompany(1);
+        scheduleDto2.setFkDay(2);
+        scheduleDto2.setOpeningTime(LocalTime.parse("10:00"));
+        scheduleDto2.setClosingTime(LocalTime.parse("18:00"));
+
+        List<ScheduleDto> newSchedules = Arrays.asList(scheduleDto1, scheduleDto2);
+
+        // Act
+        ResponseEntity<ApiResponse> response = companyController.updateCompanySchedule(fkCompany, newSchedules);
+
+        // Assert
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Horarios actualizados correctamente.", response.getBody().getMessage());
+
+        verify(companyScheduleRepository).deleteByFkCompany(fkCompany);
+
+        verify(companyScheduleRepository).saveAll(anyList());
+    }
+
+    @Test
+    void testUpdateCompanySchedule_SaveEmptyList() {
+        // Arrange
+        Integer fkCompany = 1;
+
+        List<ScheduleDto> newSchedules = Arrays.asList();
+
+        // Act
+        ResponseEntity<ApiResponse> response = companyController.updateCompanySchedule(fkCompany, newSchedules);
+
+        // Assert
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("Horarios actualizados correctamente.", response.getBody().getMessage());
+
+        verify(companyScheduleRepository).deleteByFkCompany(fkCompany);
+
+        verify(companyScheduleRepository).saveAll(anyList());
     }
 }

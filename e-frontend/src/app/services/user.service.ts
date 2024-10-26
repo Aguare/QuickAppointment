@@ -19,7 +19,7 @@ export class UserService {
     return this.http.post(`${this.apiUser}/login`, body);
   }
 
-  getPages(idUser: number){
+  getPages(idUser: number){    
     return this.http.get<Page[]>(`${this.apiUser}/pages/${idUser}`);
   }
 

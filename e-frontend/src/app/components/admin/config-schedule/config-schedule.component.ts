@@ -16,8 +16,9 @@ import { LocalStorageService } from '../../../services/local-storage.service';
 import { NavbarComponent } from '../../commons/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Schedule } from '../../../interfaces/interfaces';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-config-schedule',
@@ -53,7 +54,8 @@ export class ConfigScheduleComponent implements OnInit {
     public dialog: MatDialog,
     private localStorageService: LocalStorageService,
     private route: ActivatedRoute,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private routerN: Router,
   ) {}
 
   ngOnInit() {
@@ -77,10 +79,13 @@ export class ConfigScheduleComponent implements OnInit {
               closingTime: this.removeSeconds(schedule.closingTime),
             };
           });
-          console.log(this.scheduleArray);
         },
         error: (err) => {
-          console.log(err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error al Obtener los horarios',
+          });
         },
       });
     }
@@ -141,13 +146,35 @@ export class ConfigScheduleComponent implements OnInit {
           .saveSchedule(this.idCompany, this.scheduleArray)
           .subscribe({
             next: (value: any) => {
-              console.log(value);
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: value.message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+
+              setTimeout(() => {
+                window.location.reload();
+              }, 1500);
             },
             error: (err) => {
-              console.log(err);
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Error al Guardar un Horario',
+              });
             },
           });
       }
     }
+  }
+
+  goBack() {
+    console.log('fff', this.idCompany);
+
+    this.routerN.navigate(['admin/homeCompany'], {
+      queryParams: { id: this.idCompany },
+    });
   }
 }

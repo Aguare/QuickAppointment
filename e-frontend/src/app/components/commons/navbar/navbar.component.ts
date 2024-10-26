@@ -5,6 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { MenuItem, Page, PageItem } from '../../../interfaces/interfaces';
 import { LocalStorageService } from '../../../services/local-storage.service';
 import { UserService } from '../../../services/user.service';
+import { log } from 'console';
 
 @Component({
   selector: 'app-navbar',
@@ -28,17 +29,19 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
   
-    const idUser = this.locaStorageService.getUserId();
+    const idUser = this.locaStorageService.getUserId();    
 
-    this.userService.getPages(idUser).subscribe({
-      next: (value: Page[]) => {
-        this.pages = value;
-        this.pagesNavBar = this.groupPagesByModule(this.pages);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    if(idUser){
+      this.userService.getPages(idUser).subscribe({
+        next: (value: Page[]) => {
+          this.pages = value;
+          this.pagesNavBar = this.groupPagesByModule(this.pages);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
 
   }
 
