@@ -171,8 +171,6 @@ export class ConfigScheduleComponent implements OnInit {
   }
 
   goBack() {
-    console.log('fff', this.idCompany);
-
     this.routerN.navigate(['admin/homeCompany'], {
       queryParams: { id: this.idCompany },
     });
