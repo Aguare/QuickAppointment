@@ -42,6 +42,7 @@ export class ServicesFormComponent {
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(5)]],
       duration: [0, [Validators.required, Validators.min(1)]],
+      price: [0, [Validators.required, Validators.min(1)]],
     });
   }
 

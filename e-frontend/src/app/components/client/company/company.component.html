@@ -1,0 +1,34 @@
+<app-navbar></app-navbar>
+
+<section class="section">
+  <div class="container">
+    <div class="level">
+      <div class="level-left">
+        <h2 class="title">{{ company.name }}</h2>
+      </div>
+    </div>
+
+    <app-banner
+      [logo]="company.logo | image"
+      [description]="company.description"
+    ></app-banner>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2 class="title is-2">Servicios</h2>
+    
+    <div class="columns is-multiline">
+      <div class="column is-one-third" *ngFor="let service of services">
+        <div class="box">
+          <h3 class="title is-4">{{ service.name }}</h3>
+          <p>{{ service.duration }} min</p>
+          <p>{{ service.description }}</p>
+          <p><strong>{{ service.price | currency:'GTQ':'symbol':'1.2-2' }}</strong></p>
+          <button mat-raised-button color="primary">Reservar</button>
+        </div>
+      </div>
+    </div>
+  </div>  
+</section>

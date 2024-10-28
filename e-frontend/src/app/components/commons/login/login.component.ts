@@ -148,26 +148,32 @@ export class LoginComponent {
 
     this.userService.login(data).subscribe({
       next: (resp: any) => {
-        if (resp.idRole == 2) {
-        } else {
-          Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: resp.message,
-            showConfirmButton: false,
-            timer: 1500,
-          });          
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: resp.message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
 
-          this.localStorageService.setUserId(resp.idUser);
-          this.localStorageService.setUserRole(resp.idRole);
+        this.localStorageService.setUserId(resp.idUser);
+        this.localStorageService.setUserRole(resp.idRole);
 
-          setTimeout(() => {
+        setTimeout(() => {
+          if (resp.idRole == '2') {
+            this._router.navigate(['/client/init']);
+          } else {
             this._router.navigate(['/admin/init']);
-          }, 1500);
-        }
+          }
+        }, 1500);
       },
       error: (error) => {
         console.log(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Error al ingresar a la página',
+        });
       },
     });
   }

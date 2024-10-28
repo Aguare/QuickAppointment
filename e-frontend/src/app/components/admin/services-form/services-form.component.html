@@ -73,6 +73,28 @@
         La duración es obligatoria y debe ser al menos 1 minuto.
       </p>
     </div>
+    
+    <!-- Price -->
+    <div class="field">
+      <label class="label">Precio</label>
+      <div class="control">
+        <input
+          class="input"
+          type="number"
+          formControlName="price"
+          placeholder="Precio del servicio"
+        />
+      </div>
+      <p
+        class="help is-danger"
+        *ngIf="
+          serviceForm.get('duration')?.invalid &&
+          serviceForm.get('duration')?.touched
+        "
+      >
+        El precio es obligatorio
+      </p>
+    </div>
 
     <!-- Botón de Enviar -->
     <div class="field">

@@ -38,6 +38,7 @@ public class CompanyController {
         company.setName(companyDto.getName());
         company.setDescription(companyDto.getDescription());
         company.setLogo(companyDto.getLogo());
+        company.setCourtRental(companyDto.getCourtRental());
         company.setIsAvailable(true);
         company.setCreatedAt(LocalDateTime.now());
         Company savedCompany = companyRepository.save(company);
@@ -54,7 +55,8 @@ public class CompanyController {
                         company.getId(),
                         company.getName(),
                         company.getDescription(),
-                        company.getLogo()
+                        company.getLogo(),
+                        company.getCourtRental()
                 ))
                 .collect(Collectors.toList());
 
@@ -72,7 +74,8 @@ public class CompanyController {
                     company.getId(),
                     company.getName(),
                     company.getDescription(),
-                    company.getLogo()
+                    company.getLogo(),
+                    company.getCourtRental()
             );
             return new ResponseEntity<>(companyDto, HttpStatus.OK);
         } else {
@@ -89,6 +92,7 @@ public class CompanyController {
             Company company = companyOptional.get();
             company.setName(updateCompanyDto.getName());
             company.setDescription(updateCompanyDto.getDescription());
+            company.setCourtRental(updateCompanyDto.getCourtRental());
 
             companyRepository.save(company);
             ApiResponse response = new ApiResponse("Negocio actualizado con éxito", company.getId());

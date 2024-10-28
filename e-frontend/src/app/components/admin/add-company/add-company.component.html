@@ -25,7 +25,7 @@
           "
           class="help is-danger"
         >
-          El nombre es obligatorio y debe tener maximo 30 caracteres.
+          El nombre es obligatorio y debe tener máximo 30 caracteres.
         </p>
       </div>
 
@@ -49,27 +49,41 @@
         </p>
       </div>
 
+      <!-- Checkbox para Court Rental -->
+      <div class="field">
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" formControlName="courtRental" />
+            Negocio de Alquiler de Canchas
+          </label>
+        </div>
+      </div>
+
       <div class="field">
         <label class="label">Logo</label>
         <div class="file has-name">
-            <label class="file-label">
-              <input
-                class="file-input"
-                type="file"
-                (change)="onLogoSelected($event)"
-                accept="image/*"
-              />
-              <span class="file-cta">
-                <span class="file-icon">
-                  <i class="fas fa-upload"></i>
-                </span>
-                <span class="file-label"> Sube una Imagen </span>
+          <label class="file-label">
+            <input
+              class="file-input"
+              type="file"
+              (change)="onLogoSelected($event)"
+              accept="image/*"
+            />
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-upload"></i>
               </span>
-              <span class="file-name">
-                {{fileName.length > 0 ? fileName : 'No haz seleccionado una imagen'}}
-              </span>
-            </label>
-          </div>
+              <span class="file-label"> Sube una Imagen </span>
+            </span>
+            <span class="file-name">
+              {{
+                fileName.length > 0
+                  ? fileName
+                  : "No haz seleccionado una imagen"
+              }}
+            </span>
+          </label>
+        </div>
       </div>
 
       <div class="field">

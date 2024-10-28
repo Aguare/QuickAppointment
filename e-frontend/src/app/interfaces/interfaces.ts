@@ -22,6 +22,7 @@ export interface Company {
   name: string;
   description: string;
   logo: string;
+  courtRental: boolean;
 }
 
 export interface Service {
@@ -29,6 +30,7 @@ export interface Service {
   name: string;
   description: string;
   duration: number; // In Minutes
+  price: number; // In Minutes
   fkCompany: number;
 }
 

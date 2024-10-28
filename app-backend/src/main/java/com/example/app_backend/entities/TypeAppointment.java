@@ -20,6 +20,9 @@ public class TypeAppointment {
     @Column(name = "duration", nullable = false)
     private Integer duration;
 
+    @Column(name = "price", nullable = false)
+    private Double price;
+
     @Column(name = "isAvailable", nullable = false)
     private Boolean isAvailable = true;
 
@@ -61,6 +64,14 @@ public class TypeAppointment {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public Boolean getIsAvailable() {

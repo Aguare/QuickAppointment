@@ -15,6 +15,8 @@ import { RoleFormComponent } from './components/admin/role-form/role-form.compon
 import { UsersComponent } from './components/admin/users/users.component';
 import { UserFormComponent } from './components/admin/user-form/user-form.component';
 import { ConfigScheduleComponent } from './components/admin/config-schedule/config-schedule.component';
+import { ClientHomeComponent } from './components/client/client-home/client-home.component';
+import { CompanyComponent } from './components/client/company/company.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -51,6 +53,23 @@ export const routes: Routes = [
       { path: 'config', component: ConfigScheduleComponent },
       { path: '**', redirectTo: 'init' },
     ],
+  },
+  {
+    path: 'client',
+    children: [
+      {
+        path: 'init',
+        component: ClientHomeComponent
+      },
+      {
+        path: 'company',
+        component: CompanyComponent
+      },
+      {
+        path: '**',
+        redirectTo: 'init'
+      }
+    ]
   },
   { path: '**', component: NotFoundComponent },
 ];

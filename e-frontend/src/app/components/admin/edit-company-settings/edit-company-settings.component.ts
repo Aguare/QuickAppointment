@@ -3,6 +3,7 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
+import { countReset } from 'console';
 
 @Component({
   selector: 'app-edit-company-settings',
@@ -27,6 +28,7 @@ export class EditCompanySettingsComponent {
     this.editForm = this.fb.group({
       name: [data.name, [Validators.required, Validators.maxLength(30)]],
       description: [data.description, Validators.required],
+      courtRental: [data.courtRental, Validators.required],
     });
   }
 

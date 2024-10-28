@@ -8,7 +8,6 @@ import { Company } from '../../../interfaces/interfaces';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { companies } from '../../../db/db';
 import { AdminService } from '../../../services/admin.service';
 import { ImagePipe } from '../../../pipes/image.pipe';
 
