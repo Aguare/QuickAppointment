@@ -46,10 +46,10 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
 
         return new Pbkdf2PasswordEncoder(
-                "levis",
+                "asdf;lj12@#4%%asd>1",
                 1,
                 32,
-                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA512  // Algoritmo de hashing
+                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA512
         );
     }
 
