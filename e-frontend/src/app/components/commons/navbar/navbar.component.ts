@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { MenuItem, Page, PageItem } from '../../../interfaces/interfaces';
+import { LocalStorageService } from '../../../services/local-storage.service';
+import { UserService } from '../../../services/user.service';
+import { log } from 'console';
 
 @Component({
   selector: 'app-navbar',
@@ -18,49 +21,28 @@ export class NavbarComponent implements OnInit {
   isActive: boolean = false;
   activeModule: string | null = null;
 
-  constructor(private _router: Router, private _cookieService: CookieService) {}
+  constructor(
+    private _router: Router,
+    private locaStorageService: LocalStorageService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
-    this.pages = [
-      {
-        id: 1,
-        pageName: 'Home',
-        direction: '/home',
-        isAvailable: 1,
-        moduleName: 'MainModule',
-      },
-      {
-        id: 2,
-        pageName: 'About',
-        direction: '/about',
-        isAvailable: 1,
-        moduleName: 'MainModule',
-      },
-      {
-        id: 3,
-        pageName: 'Contact',
-        direction: '/contact',
-        isAvailable: 0,
-        moduleName: 'MainModule',
-      },
+  
+    const idUser = this.locaStorageService.getUserId();    
 
-      {
-        id: 4,
-        pageName: 'Dashboard',
-        direction: '/dashboard',
-        isAvailable: 1,
-        moduleName: 'AdminModule',
-      },
-      {
-        id: 5,
-        pageName: 'Settings',
-        direction: '/settings',
-        isAvailable: 1,
-        moduleName: 'AdminModule',
-      },
-    ];
+    if(idUser){
+      this.userService.getPages(idUser).subscribe({
+        next: (value: Page[]) => {
+          this.pages = value;
+          this.pagesNavBar = this.groupPagesByModule(this.pages);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
 
-    this.pagesNavBar = this.groupPagesByModule(this.pages);
   }
 
   /**
@@ -89,8 +71,8 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    this._cookieService.delete('token');
-    this._router.navigate(['/home']);
+    this.locaStorageService.logout();
+    this._router.navigate(['/']);
   }
 
   toggleNavbar() {

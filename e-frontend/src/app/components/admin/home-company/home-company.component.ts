@@ -244,4 +244,10 @@ export class HomeCompanyComponent {
       queryParams: { id: this.idCompany },
     });
   }
+
+  editSchedule(){
+    this.router.navigate(['admin/config'], {
+      queryParams: { id: this.idCompany },
+    });
+  }
 }

@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { error, log } from 'console';
 import { UserService } from '../../../services/user.service';
+import { LocalStorageService } from '../../../services/local-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -49,7 +50,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private _router: Router,
-    private _cookieService: CookieService,
+    private localStorageService: LocalStorageService,
     private userService: UserService
   ) {
     this.loginForm = this.fb.group({
@@ -95,8 +96,15 @@ export class LoginComponent {
       };
 
       this.userService.register(data).subscribe({
-        next: (data) => {
-          console.log(data);
+        next: (data: any) => {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: data.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          this.closeRegisterModal();
         },
         error: (err) => {
           console.log(err);
@@ -128,8 +136,6 @@ export class LoginComponent {
   }
 
   onLogin() {
-    //this.isLoading = true;
-
     if (this.loginForm.invalid) {
       Swal.fire('Error', 'Por favor, complete los campos requeridos', 'error');
       return;
@@ -140,17 +146,29 @@ export class LoginComponent {
       password: this.loginForm.get('password')?.value,
     };
 
-    console.log(data);
     this.userService.login(data).subscribe({
-      next: (resp) => {
-        console.log(resp);
-        
+      next: (resp: any) => {
+        if (resp.idRole == 2) {
+        } else {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: resp.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });          
+
+          this.localStorageService.setUserId(resp.idUser);
+          this.localStorageService.setUserRole(resp.idRole);
+
+          setTimeout(() => {
+            this._router.navigate(['/admin/init']);
+          }, 1500);
+        }
       },
       error: (error) => {
         console.log(error);
       },
     });
-
-    //this._router.navigate(['/admin/init']);
   }
 }

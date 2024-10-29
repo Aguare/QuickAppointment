@@ -1,5 +1,6 @@
 package com.example.app_backend.entities;
 
+import com.example.app_backend.dtos.PageInfoDto;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,22 +11,14 @@ public class UserHasRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "FK_User", nullable = false)
-    private Integer userId;
+    @Column(name = "FK_User")
+    private Integer fkUser;
 
-    @Column(name = "FK_Role", nullable = false)
-    private Integer roleId;
+    @Column(name = "FK_Role")
+    private Integer fkRole;
 
-    // Constructores
-    public UserHasRole() {
-    }
 
-    public UserHasRole(Integer userId, Integer roleId) {
-        this.userId = userId;
-        this.roleId = roleId;
-    }
 
-    // Getters y setters
     public Integer getId() {
         return id;
     }
@@ -34,20 +27,20 @@ public class UserHasRole {
         this.id = id;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getFkUser() {
+        return fkUser;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setFkUser(Integer fkUser) {
+        this.fkUser = fkUser;
     }
 
-    public Integer getRoleId() {
-        return roleId;
+    public Integer getFkRole() {
+        return fkRole;
     }
 
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public void setFkRole(Integer fkRole) {
+        this.fkRole = fkRole;
     }
 }
 
