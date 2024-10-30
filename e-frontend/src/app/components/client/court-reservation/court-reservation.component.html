@@ -40,22 +40,22 @@
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
-      <div *ngIf="!employeeSelected && selectedDate">
+      <div *ngIf="!placeSelected && selectedDate">
         <mat-toolbar color="primary">
-          <span class="title">Colaboradores</span>
+          <span class="title">Lugares Disponibles</span>
         </mat-toolbar>
         <div class="columns is-multiline">
           <div
             class="column is-one-third"
-            *ngFor="let employee of employees; let i = index"
+            *ngFor="let place of places; let i = index"
           >
             <div class="box">
               <h3 class="title is-4">
-                {{ employee.first_name }} {{ employee.last_name }}
+                {{ place.name }} 
               </h3>
               <p>
-                Fecha de nacimiento:
-                {{ employee.date_birth | date : "longDate" }}
+                Ubicacion
+                {{ place.place }} 
               </p>
               <button
                 mat-raised-button
@@ -67,7 +67,7 @@
             </div>
           </div>
 
-          <div class="column is-one-third" *ngIf="employees.length > 1">
+          <div class="column is-one-third" *ngIf="places.length > 1">
             <div class="box has-background-info-light">
               <h3 class="title is-4">Seleccionar Aleatorio</h3>
               <p>Haz clic para seleccionar un empleado de manera aleatoria</p>
@@ -84,7 +84,7 @@
       </div>
 
       <div>
-        <div *ngIf="availableSlots.length > 0 && employeeSelected">
+        <div *ngIf="availableSlots.length > 0 && placeSelected">
           <h3 class="subtitle">Horas disponibles:</h3>
 
           <div class="columns is-multiline">
@@ -114,8 +114,8 @@
       <div class="box has-background-light">
         <h3 class="title is-4">Resumen de la Reservación</h3>
         <p>
-          <strong>Colaborador Seleccionado:</strong>
-          {{ employeeSelected?.first_name }} {{ employeeSelected?.last_name }}
+          <strong>Lugar Seleccionado:</strong>
+          {{placeSelected?.name}}
         </p>
         <p><strong>Hora Seleccionada:</strong> {{ selectedSlot }}</p>
         <p>

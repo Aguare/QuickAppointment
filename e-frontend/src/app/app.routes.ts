@@ -17,6 +17,8 @@ import { UserFormComponent } from './components/admin/user-form/user-form.compon
 import { ConfigScheduleComponent } from './components/admin/config-schedule/config-schedule.component';
 import { ClientHomeComponent } from './components/client/client-home/client-home.component';
 import { CompanyComponent } from './components/client/company/company.component';
+import { ReservationComponent } from './components/client/reservation/reservation.component';
+import { CourtReservationComponent } from './components/client/court-reservation/court-reservation.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -64,6 +66,15 @@ export const routes: Routes = [
       {
         path: 'company',
         component: CompanyComponent
+      },
+      {
+        path: 'reservation',
+        component: ReservationComponent
+      },
+      
+      {
+        path: 'courtReservation',
+        component: CourtReservationComponent
       },
       {
         path: '**',

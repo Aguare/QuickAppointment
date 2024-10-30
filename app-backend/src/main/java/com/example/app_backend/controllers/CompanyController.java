@@ -29,6 +29,7 @@ public class CompanyController {
     private CompanyRepository companyRepository;
 
     private static final String IMAGE_DIRECTORY = "src/main/resources/public/";
+
     @Autowired
     private CompanyScheduleRepository companyScheduleRepository;
 

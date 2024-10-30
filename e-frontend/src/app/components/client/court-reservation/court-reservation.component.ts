@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import Swal from 'sweetalert2';
 import {
   Appointment,
   Company,
@@ -8,48 +8,46 @@ import {
   Schedule,
   Service,
 } from '../../../interfaces/interfaces';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from '../../../services/local-storage.service';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { FullCalendarModule } from '@fullcalendar/angular';
-import { CommonModule } from '@angular/common';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { NavbarComponent } from '../../commons/navbar/navbar.component';
 import { AdminService } from '../../../services/admin.service';
-import { MatNativeDateModule } from '@angular/material/core';
-import { forkJoin } from 'rxjs';
-import { MatButtonModule } from '@angular/material/button';
-import Swal from 'sweetalert2';
 import { ClientService } from '../../../services/client.service';
+import { forkJoin } from 'rxjs';
 import {
+  MatDatepickerInputEvent,
+  MatDatepickerModule,
+} from '@angular/material/datepicker';
+import {
+  convertTo24HourFormat,
+  formatDate,
+  formatHour,
   generateTimeSlots,
   parseTime,
-  formatHour,
-  formatDate,
-  convertTo24HourFormat,
 } from '../../../helpers/helpers';
+import { CommonModule, DatePipe } from '@angular/common';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { NavbarComponent } from '../../commons/navbar/navbar.component';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-reservation',
+  selector: 'app-court-reservation',
   standalone: true,
   imports: [
-    MatToolbarModule,
-    FullCalendarModule,
     CommonModule,
+    DatePipe,
     MatDatepickerModule,
-    MatFormFieldModule,
-    MatInputModule,
-    NavbarComponent,
-    MatNativeDateModule,
+    MatToolbar,
     MatButtonModule,
+    MatFormFieldModule,
+    NavbarComponent,
+    MatInputModule,
   ],
-  templateUrl: './reservation.component.html',
-  styleUrl: './reservation.component.scss',
-  schemas: [],
+  templateUrl: './court-reservation.component.html',
+  styleUrl: './court-reservation.component.scss',
 })
-export class ReservationComponent implements OnInit {
+export class CourtReservationComponent {
   idCompany: number | undefined;
   service: Service | null = null;
   selectedDate: Date | null = null;
@@ -58,7 +56,7 @@ export class ReservationComponent implements OnInit {
   minDate!: Date;
   dataCompany: Company | undefined;
   employees: Employee[] = [];
-  employeeSelected: Employee | null = null;
+  placeSelected: Place | null = null;
   places: Place[] = [];
 
   schedules: Schedule[] = [];
@@ -122,6 +120,7 @@ export class ReservationComponent implements OnInit {
       if (dayOfWeek == 0) {
         dayOfWeek = 7;
       }
+
       this.updateAvailableSlots(dayOfWeek);
     }
   }
@@ -143,7 +142,7 @@ export class ReservationComponent implements OnInit {
   }
 
   selectEmployee(index: number): void {
-    this.employeeSelected = this.employees[index];
+    this.placeSelected = this.places[index];
 
     if (this.selectedDate) {
       let appointments: Appointment[] = [];
@@ -152,9 +151,9 @@ export class ReservationComponent implements OnInit {
         .subscribe({
           next: (value: Appointment[]) => {
             appointments = value.filter(
-              (appointment) =>
-                this.employeeSelected?.id === appointment.fkEmployee
+              (appointment) => this.placeSelected?.id === appointment.fkPlace
             );
+            
             const hours = appointments.map((appointment) => appointment.hour);
             const hoursNumber = hours.map((h) => parseTime(h));
             const fH = hoursNumber.map((h) => formatHour(h));
@@ -168,8 +167,8 @@ export class ReservationComponent implements OnInit {
   }
 
   selectRandomEmployee(): void {
-    const randomIndex = Math.floor(Math.random() * this.employees.length);
-    this.employeeSelected = this.employees[randomIndex];
+    const randomIndex = Math.floor(Math.random() * this.places.length);
+    this.placeSelected = this.places[randomIndex];
     if (this.selectedDate) {
       let appointments: Appointment[] = [];
       this.clientService
@@ -177,8 +176,7 @@ export class ReservationComponent implements OnInit {
         .subscribe({
           next: (value: Appointment[]) => {
             appointments = value.filter(
-              (appointment) =>
-                this.employeeSelected?.id === appointment.fkEmployee
+              (appointment) => this.placeSelected?.id === appointment.fkPlace
             );
             const hours = appointments.map((appointment) => appointment.hour);
             const hoursNumber = hours.map((h) => parseTime(h));
@@ -193,7 +191,7 @@ export class ReservationComponent implements OnInit {
   }
 
   resetSelection(): void {
-    this.employeeSelected = null;
+    this.placeSelected = null;
     this.selectedSlot = null;
     this.availableSlots = [];
   }
@@ -202,17 +200,19 @@ export class ReservationComponent implements OnInit {
     if (
       this.selectedDate &&
       this.selectedSlot &&
-      this.employeeSelected &&
+      this.placeSelected &&
       this.service
     ) {
       const date = this.selectedDate;
       const hour = convertTo24HourFormat(this.selectedSlot);
       const fkUser = this.localStorageService.getUserId();
-      const fkEmployee = this.employeeSelected.id;
+      const fkPlace = this.placeSelected.id;
       const fkType = this.service.id;
-      const randomIndex = Math.floor(Math.random() * this.places.length);
-      const placeSelected = this.places[randomIndex];
-      const fkPlace = placeSelected.id;
+      const randomIndex = Math.floor(Math.random() * this.employees.length);
+      const selectedEmploye = this.employees[randomIndex];
+      console.log(selectedEmploye);
+      
+      const fkEmployee = selectedEmploye.id;
 
       const body = {
         date,

@@ -17,16 +17,42 @@
 
 <section>
   <div class="container">
+    <h4>
+      Horarios
+    </h4>
+    <div class="table-container">
+      <table class="table is-striped is-fullwidth">
+        <thead>
+          <tr>
+            <th>Día</th>
+            <th>Apertura</th>
+            <th>Cierre</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let schedule of schedules">
+            <td>{{ getDayName(schedule.fkDay) }}</td>
+            <td>{{ schedule.openingTime }}</td>
+            <td>{{ schedule.closingTime }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>    
+  </div>
+</section>
+
+<section>
+  <div class="container">
     <h2 class="title is-2">Servicios</h2>
     
     <div class="columns is-multiline">
-      <div class="column is-one-third" *ngFor="let service of services">
+      <div class="column is-one-third" *ngFor="let service of services; let i = index">
         <div class="box">
           <h3 class="title is-4">{{ service.name }}</h3>
           <p>{{ service.duration }} min</p>
           <p>{{ service.description }}</p>
           <p><strong>{{ service.price | currency:'GTQ':'symbol':'1.2-2' }}</strong></p>
-          <button mat-raised-button color="primary">Reservar</button>
+          <button mat-raised-button color="primary" (click)="goReservation(i)">Reservar</button>
         </div>
       </div>
     </div>

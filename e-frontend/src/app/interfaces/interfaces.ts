@@ -75,3 +75,13 @@ export interface Schedule {
   openingTime: string;
   closingTime: string;
 }
+
+export interface Appointment {
+  id: number;
+  fkUser: number;
+  date: string;
+  hour: string;
+  fkEmployee: number;
+  fkType: number;
+  fkPlace: number;
+}
