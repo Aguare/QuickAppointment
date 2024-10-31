@@ -21,6 +21,7 @@ import { ReservationComponent } from './components/client/reservation/reservatio
 import { CourtReservationComponent } from './components/client/court-reservation/court-reservation.component';
 import { MyReservationComponent } from './components/client/my-reservation/my-reservation.component';
 import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
+import { ResetPasswordComponent } from './components/commons/reset-password/reset-password.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -28,6 +29,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'verify-email/:token/:email', component: VerifyEmailComponent },
+  { path: 'reset-password/:token/:email', component: ResetPasswordComponent },
   {
     path: 'admin',
     children: [
@@ -74,12 +76,12 @@ export const routes: Routes = [
         path: 'reservation',
         component: ReservationComponent
       },
-      
+
       {
         path: 'courtReservation',
         component: CourtReservationComponent
       },
-      
+
       {
         path: 'myReservation',
         component: MyReservationComponent

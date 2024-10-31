@@ -13,6 +13,7 @@ export class AdminService {
   apiEmployee: string = 'http://localhost:8000/employees';
   apiPlace: string = 'http://localhost:8000/places';
   apiEmail: string = 'http://localhost:8000/email';
+  apiUser: string = 'http://localhost:8000/users';
 
   constructor(private http: HttpClient) {}
 
@@ -114,5 +115,21 @@ export class AdminService {
 
   verifyEmailUser(data: any): any {
     return this.http.post(`${this.apiEmail}/verify-email`, data, { responseType: 'text' as 'json' });
+  }
+
+  sendVerificationEmail(data: any): any {
+    return this.http.post(`${this.apiEmail}/sendVerificationEmail`, data, { responseType: 'text' as 'json' });
+  }
+
+  sendRecoveryPasswordEmail(data: any): any {
+    return this.http.post(`${this.apiEmail}/sendRecoveryPasswordEmail`, data, { responseType: 'text' as 'json' });
+  }
+
+  validateEmail(data: any): any {
+    return this.http.post(`${this.apiEmail}/validateEmail`, data, { responseType: 'text' as 'json' });
+  }
+
+  resetPassword(data: any): any {
+    return this.http.post(`${this.apiUser}/resetPassword`, data, { responseType: 'text' as 'json' });
   }
 }

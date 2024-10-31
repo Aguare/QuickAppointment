@@ -5,10 +5,12 @@ import com.example.app_backend.dtos.PageInfoDto;
 import com.example.app_backend.dtos.UserDto;
 import com.example.app_backend.entities.User;
 import com.example.app_backend.entities.UserHasRole;
+import com.example.app_backend.entities.UserVerification;
 import com.example.app_backend.helpers.ApiResponse;
 import com.example.app_backend.helpers.LoginResponse;
 import com.example.app_backend.repositories.UserHasRoleRepository;
 import com.example.app_backend.repositories.UserRepository;
+import com.example.app_backend.repositories.UserVerificationRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,6 +41,9 @@ public class UserController {
 
     @Autowired
     private SendEmailController sendEmailController;
+
+    @Autowired
+    private UserVerificationRepository userVerificationRepository;
 
     @Transactional
     @PostMapping("/register")
@@ -129,6 +135,45 @@ public class UserController {
         }
 
         return ResponseEntity.ok(pageInfoList);
+    }
+
+    @Transactional
+    @PostMapping("/resetPassword")
+    public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String token = request.get("token");
+        String newPassword = request.get("password");
+        String confirmPassword = request.get("confirmPassword");
+
+        if (email == null || token == null || newPassword == null || confirmPassword == null) {
+            return ResponseEntity.badRequest().body("Faltan parámetros: 'email', 'token', 'password' o 'confirmPassword'.");
+        }
+
+        if (newPassword.length() < 6 || newPassword.length() > 30) {
+            return ResponseEntity.badRequest().body("La contraseña debe tener entre 6 y 30 caracteres.");
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            return ResponseEntity.badRequest().body("Las contraseñas no coinciden.");
+        }
+
+        Optional<UserVerification> userVerificationOpt = userVerificationRepository.findByEmailTokenAndToken(email, token);
+        if (userVerificationOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Token no válido o enlace expirado.");
+        }
+
+        UserVerification userVerification = userVerificationOpt.get();
+        userVerificationRepository.deleteAllByEmail(userVerification.getEmail());
+
+        User user = userRepository.findByEmail(userVerification.getEmail());
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Usuario no encontrado.");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        return ResponseEntity.ok("¡Contraseña restablecida correctamente!");
     }
 }
 

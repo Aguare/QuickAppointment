@@ -89,4 +89,41 @@ public class EmailController {
 
         return ResponseEntity.ok("{ message: \"¡Email de verificación enviado correctamente!\"}");
     }
+
+    @PostMapping("/validateEmail")
+    public ResponseEntity<String> validateEmail(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+
+        if (email == null) {
+            return ResponseEntity.badRequest().body("Falta el parámetro 'email'.");
+        }
+
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("El usuario no existe.");
+        }
+
+        return ResponseEntity.ok("{ message: \"¡Email válido!\", success: true }");
+    }
+
+    @PostMapping("/sendRecoveryPasswordEmail")
+    public ResponseEntity<String> sendRecoveryPasswordEmail(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+
+        if (email == null) {
+            return ResponseEntity.badRequest().body("Falta el parámetro 'email'.");
+        }
+
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("El usuario no existe.");
+        }
+
+        sendEmailController.sendRecoveryPasswordEmail(email);
+
+        return ResponseEntity.ok("{ message: \"¡Email de recuperación de contraseña enviado correctamente!\"}");
+    }
+
 }

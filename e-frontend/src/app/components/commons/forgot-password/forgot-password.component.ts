@@ -5,6 +5,7 @@ import { NavbarGuestComponent } from '../navbar-guest/navbar-guest.component';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { log } from 'console';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,6 +18,7 @@ export class ForgotPasswordComponent {
   email: string = '';
 
   constructor(
+    private _emailService: AdminService,
     private _router: Router
   ) { }
 
@@ -38,14 +40,52 @@ export class ForgotPasswordComponent {
         confirmButtonText: 'Ok',
       });
     } else {
-      console.log('Correo enviado...');
-      
+      this._emailService.validateEmail({ email: this.email }).subscribe({
+        next: (response: any) => {
+          this.sendRecoveryEmail();
+        },
+        error: (error: any) => {
+          if (error.status === 500) {
+            Swal.fire({
+              title: 'Error',
+              text: 'Hubo un error al validar el correo electrónico. Por favor, intenta de nuevo.',
+              icon: 'error',
+              confirmButtonText: 'Ok',
+            });
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text: 'El correo electrónico ingresado no está registrado.',
+              icon: 'error',
+              confirmButtonText: 'Ok',
+            });
+          }
+        }
+      });
     }
   }
 
   sendRecoveryEmail(): void {
     if (this.canSubmit()) {
-      
+      this._emailService.sendRecoveryPasswordEmail({ email: this.email }).subscribe({
+        next: (response: any) => {
+          Swal.fire({
+            title: 'Correo de recuperación enviado',
+            text: 'Por favor, revisa tu correo para continuar con el proceso de recuperación.',
+            icon: 'success',
+            confirmButtonText: 'Ok',
+          });
+          this._router.navigate(['/login']);
+        },
+        error: (error: any) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo un error al enviar el correo de recuperación. Por favor, intenta de nuevo.',
+            icon: 'error',
+            confirmButtonText: 'Ok',
+          });
+        }
+      });
     } else {
       Swal.fire({
         title: 'Error',
