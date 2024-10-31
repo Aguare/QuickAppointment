@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${DB_URL}
+    url: jdbc:mysql://${DB_URL}:3306
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
