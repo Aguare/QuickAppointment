@@ -19,6 +19,7 @@ import { ClientHomeComponent } from './components/client/client-home/client-home
 import { CompanyComponent } from './components/client/company/company.component';
 import { ReservationComponent } from './components/client/reservation/reservation.component';
 import { CourtReservationComponent } from './components/client/court-reservation/court-reservation.component';
+import { MyReservationComponent } from './components/client/my-reservation/my-reservation.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -75,6 +76,11 @@ export const routes: Routes = [
       {
         path: 'courtReservation',
         component: CourtReservationComponent
+      },
+      
+      {
+        path: 'myReservation',
+        component: MyReservationComponent
       },
       {
         path: '**',

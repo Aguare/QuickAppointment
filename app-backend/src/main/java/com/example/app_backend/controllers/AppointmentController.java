@@ -2,6 +2,8 @@ package com.example.app_backend.controllers;
 
 import com.example.app_backend.dtos.AppointmentDto;
 import com.example.app_backend.dtos.EmployeeDto;
+import com.example.app_backend.dtos.MyAppointmentsDto;
+import com.example.app_backend.dtos.PageInfoDto;
 import com.example.app_backend.entities.Appointment;
 import com.example.app_backend.helpers.ApiResponse;
 import com.example.app_backend.repositories.AppointmentRepository;
@@ -11,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,5 +79,29 @@ public class AppointmentController {
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(appointmentDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/myReservations")
+    public ResponseEntity<List<MyAppointmentsDto>> getMyAppointments() {
+        List<Object[]> results = appointmentRepository.findReservations();
+
+        List<MyAppointmentsDto> myAppointments  = results.stream()
+                .map(result -> new MyAppointmentsDto(
+                        (Integer) result[0],         // id
+                        (java.sql.Date) result[1],          // date
+                        (Time) result[2],          // hour
+                        (String) result[3],         // service
+                        (Double) result[4],           // price
+                        (String) result[5],           // first_name
+                        (String) result[6],           // last_name
+                        (String) result[7]           // price// price
+                ))
+                .collect(Collectors.toList());
+
+        if (myAppointments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(myAppointments);
     }
 }

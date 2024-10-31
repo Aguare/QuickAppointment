@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.*;
 
 import com.example.app_backend.dtos.AppointmentDto;
+import com.example.app_backend.dtos.MyAppointmentsDto;
 import com.example.app_backend.entities.Appointment;
 import com.example.app_backend.helpers.ApiResponse;
 import com.example.app_backend.repositories.AppointmentRepository;
@@ -15,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -211,5 +213,81 @@ public class AppointmentControllerTest {
         assertTrue(response.getBody().isEmpty());
 
         verify(appointmentRepository).findByDate(date);
+    }
+
+    @Test
+    void testGetMyAppointments_Success() {
+        // Arrange
+        Object[] reservation1 = {
+                1,                             // id
+                Date.valueOf("2024-10-30"),    // date
+                Time.valueOf("10:30:00"),      // hour
+                "Service A",                   // service
+                100.0,                         // price
+                "John",                        // first_name
+                "Doe",                         // last_name
+                "Location A"                   // place
+        };
+
+        Object[] reservation2 = {
+                2,                             // id
+                Date.valueOf("2024-11-01"),    // date
+                Time.valueOf("14:00:00"),      // hour
+                "Service B",                   // service
+                150.0,                         // price
+                "Jane",                        // first_name
+                "Smith",                       // last_name
+                "Location B"                   // place
+        };
+
+        List<Object[]> results = Arrays.asList(reservation1, reservation2);
+
+        when(appointmentRepository.findReservations()).thenReturn(results);
+
+        // Act
+        ResponseEntity<List<MyAppointmentsDto>> response = appointmentController.getMyAppointments();
+
+        // Assert
+        assertEquals(OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(2, response.getBody().size());
+
+        MyAppointmentsDto dto1 = response.getBody().get(0);
+        assertEquals(1, dto1.getId());
+        assertEquals(Date.valueOf("2024-10-30"), dto1.getDate());
+        assertEquals(Time.valueOf("10:30:00"), dto1.getHour());
+        assertEquals("Service A", dto1.getService());
+        assertEquals(100.0, dto1.getPrice());
+        assertEquals("John", dto1.getFirst_name());
+        assertEquals("Doe", dto1.getLast_name());
+        assertEquals("Location A", dto1.getPlace());
+
+        // Verificar los detalles de la segunda reserva
+        MyAppointmentsDto dto2 = response.getBody().get(1);
+        assertEquals(2, dto2.getId());
+        assertEquals(Date.valueOf("2024-11-01"), dto2.getDate());
+        assertEquals(Time.valueOf("14:00:00"), dto2.getHour());
+        assertEquals("Service B", dto2.getService());
+        assertEquals(150.0, dto2.getPrice());
+        assertEquals("Jane", dto2.getFirst_name());
+        assertEquals("Smith", dto2.getLast_name());
+        assertEquals("Location B", dto2.getPlace());
+
+        verify(appointmentRepository).findReservations();
+    }
+
+    @Test
+    void testGetMyAppointments_NoReservations() {
+        // Arrange
+        when(appointmentRepository.findReservations()).thenReturn(Collections.emptyList());
+
+        // Act
+        ResponseEntity<List<MyAppointmentsDto>> response = appointmentController.getMyAppointments();
+
+        // Assert
+        assertEquals(NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+
+        verify(appointmentRepository).findReservations();
     }
 }

@@ -85,3 +85,14 @@ export interface Appointment {
   fkType: number;
   fkPlace: number;
 }
+
+export interface MyAppointment {
+  id: number;
+  date: string;
+  hour: string;
+  service: string;
+  price: number;
+  first_name: string;
+  last_name: string;
+  place: string
+}

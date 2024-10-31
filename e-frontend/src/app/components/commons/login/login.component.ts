@@ -40,7 +40,7 @@ export class LoginComponent {
   hide = true;
   isModalVisible = false;
   registerModalTitle = '¡Regístrate!';
-  logoUrl = '';
+  logoUrl = 'https://cdn-icons-png.flaticon.com/512/942/942759.png';
   hidePassword = true;
   isLoading = false;
   isLoginMode = false;

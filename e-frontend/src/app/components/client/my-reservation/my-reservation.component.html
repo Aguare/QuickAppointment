@@ -1,0 +1,33 @@
+<app-navbar></app-navbar>
+<div class="container">
+  <mat-toolbar color="primary">
+    <span class="title">Mis proximas citas</span>
+    <span class="spacer"></span>
+  </mat-toolbar>
+
+  <div class="table-container">
+    <table class="table is-striped is-fullwidth is-hoverable">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Servicio</th>
+          <th>Precio</th>
+          <th>Colaborador</th>
+          <th>Lugar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appointment of appointments">
+          <td>{{ appointment.date }}</td>
+          <td>{{ appointment.hour }}</td>
+          <td>{{ appointment.service }}</td>
+          <td>{{ appointment.price | currency: 'GTQ' }}</td>
+          <td>{{ appointment.first_name }} {{ appointment.last_name }}</td>
+          <td>{{ appointment.place }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+</div>

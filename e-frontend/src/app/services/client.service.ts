@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Appointment } from '../interfaces/interfaces';
+import { Appointment, MyAppointment } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,10 @@ export class ClientService {
   
   getAppointmetsByDate(date: string){
     return this.http.get<Appointment[]>(`${this.apiAppointments}/date/${date}`);
+  }
+  
+  getMyAppointments(){
+    return this.http.get<MyAppointment[]>(`${this.apiAppointments}/myReservations`);
   }
 
 }
