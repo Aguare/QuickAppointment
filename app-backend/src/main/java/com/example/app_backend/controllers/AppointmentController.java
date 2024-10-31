@@ -1,9 +1,6 @@
 package com.example.app_backend.controllers;
 
-import com.example.app_backend.dtos.AppointmentDto;
-import com.example.app_backend.dtos.EmployeeDto;
-import com.example.app_backend.dtos.MyAppointmentsDto;
-import com.example.app_backend.dtos.PageInfoDto;
+import com.example.app_backend.dtos.*;
 import com.example.app_backend.entities.Appointment;
 import com.example.app_backend.helpers.ApiResponse;
 import com.example.app_backend.repositories.AppointmentRepository;
@@ -95,6 +92,24 @@ public class AppointmentController {
                         (String) result[5],           // first_name
                         (String) result[6],           // last_name
                         (String) result[7]           // price// price
+                ))
+                .collect(Collectors.toList());
+
+        if (myAppointments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(myAppointments);
+    }
+
+    @GetMapping("/appointmentByYear")
+    public ResponseEntity<List<AppointmentsByYear>> getAppointmentsByYear() {
+        List<Object[]> results = appointmentRepository.getAppointmentByYear();
+
+        List<AppointmentsByYear> myAppointments = results.stream()
+                .map(result -> new AppointmentsByYear(
+                        ((Number) result[0]).intValue(),
+                        ((Number) result[1]).intValue()   
                 ))
                 .collect(Collectors.toList());
 

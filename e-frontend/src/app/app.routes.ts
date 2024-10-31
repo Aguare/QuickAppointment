@@ -20,6 +20,7 @@ import { CompanyComponent } from './components/client/company/company.component'
 import { ReservationComponent } from './components/client/reservation/reservation.component';
 import { CourtReservationComponent } from './components/client/court-reservation/court-reservation.component';
 import { MyReservationComponent } from './components/client/my-reservation/my-reservation.component';
+import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -54,6 +55,7 @@ export const routes: Routes = [
       { path: 'users/new', component: UserFormComponent },
       { path: 'users/edit/:id', component: UserFormComponent },
       { path: 'config', component: ConfigScheduleComponent },
+      { path: 'dashboard', component: DashboardComponent },
       { path: '**', redirectTo: 'init' },
     ],
   },

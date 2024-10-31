@@ -1,1 +1,54 @@
-<p>dashboard works!</p>
+<app-navbar></app-navbar>
+
+<div class="container">
+    <section class="section">
+        <h1 class="title is-3 has-text-centered">
+          Dashboard de Reportes y Estadísticas
+        </h1>
+        <p class="subtitle is-5 has-text-centered">
+          Visualización de datos clave para la gestión de la tienda
+        </p>
+      </section>
+    
+      <section class="section ar">
+        <div class="columns">
+          <div class="column is-12">
+            <div class="box">
+              <h4 class="title is-4 has-text-primary">Productos mas vendidos</h4>
+              <div class="content">
+                <canvas *ngIf="isBrowser"
+                  baseChart
+                  [datasets]="barChartData"
+                  [labels]="barChartLabels"
+                  [options]="barChartOptions"
+                  [legend]="true"
+                  [type]="'bar'"
+                >
+                </canvas>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+        
+        <div class="columns">
+          <div class="column is-12">
+            <div class="box">
+              <h4 class="title is-4 has-text-primary">Productos con mas stock</h4>
+              <div class="content">
+                <canvas *ngIf="isBrowser"
+                  baseChart
+                  [datasets]="barChartData1"
+                  [labels]="barChartLabels1"
+                  [options]="barChartOptions1"
+                  [legend]="true"
+                  [type]="'bar'"
+                >
+                </canvas>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+      </section>
+</div>
