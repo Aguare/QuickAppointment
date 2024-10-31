@@ -58,7 +58,7 @@ export class ResetPasswordComponent {
         token: this.token,
         email: this.email,
         password: this.newPassword,
-         confirmPassword: this.confirmPassword
+        confirmPassword: this.confirmPassword
       };
       this._emailService.resetPassword(data).subscribe({
         next: (res: any) => {
