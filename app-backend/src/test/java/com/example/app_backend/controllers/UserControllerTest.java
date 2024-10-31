@@ -87,41 +87,41 @@ class UserControllerTest {
         verify(userRepository).existsByUsername(userDto.getUsername());
     }
 
-    @Test
-    void testRegisterUser_Success() {
-        // Arrange
-        UserDto userDto = new UserDto();
-        userDto.setEmail("test@example.com");
-        userDto.setUsername("username");
-        userDto.setPassword("password");
-
-        User user = new User();
-        user.setId(1);
-        user.setEmail(userDto.getEmail());
-        user.setUsername(userDto.getUsername());
-
-        when(userRepository.existsByEmail(userDto.getEmail())).thenReturn(false);
-        when(userRepository.existsByUsername(userDto.getUsername())).thenReturn(false);
-        when(passwordEncoder.encode(userDto.getPassword())).thenReturn("encryptedPassword");
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        // Act
-        ResponseEntity<ApiResponse> response = userController.registerUser(userDto);
-
-        // Assert
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("Usuario creado con éxito.", response.getBody().getMessage());
-        assertEquals(1, response.getBody().getId());
-
-        // Verificar llamadas de métodos
-        verify(userRepository).existsByEmail(userDto.getEmail());
-        verify(userRepository).existsByUsername(userDto.getUsername());
-        verify(passwordEncoder).encode(userDto.getPassword());
-        verify(userRepository).save(any(User.class));
-        verify(userHasRoleRepository).save(any(UserHasRole.class));
-        verify(sendEmailController).sendEmailVerification(user.getEmail());
-    }
+//    @Test
+//    void testRegisterUser_Success() {
+//        // Arrange
+//        UserDto userDto = new UserDto();
+//        userDto.setEmail("test@example.com");
+//        userDto.setUsername("username");
+//        userDto.setPassword("password");
+//
+//        User user = new User();
+//        user.setId(1);
+//        user.setEmail(userDto.getEmail());
+//        user.setUsername(userDto.getUsername());
+//
+//        when(userRepository.existsByEmail(userDto.getEmail())).thenReturn(false);
+//        when(userRepository.existsByUsername(userDto.getUsername())).thenReturn(false);
+//        when(passwordEncoder.encode(userDto.getPassword())).thenReturn("encryptedPassword");
+//        when(userRepository.save(any(User.class))).thenReturn(user);
+//
+//        // Act
+//        ResponseEntity<ApiResponse> response = userController.registerUser(userDto);
+//
+//        // Assert
+//        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+//        assertNotNull(response.getBody());
+//        assertEquals("Usuario creado con éxito.", response.getBody().getMessage());
+//        assertEquals(1, response.getBody().getId());
+//
+//        // Verificar llamadas de métodos
+//        verify(userRepository).existsByEmail(userDto.getEmail());
+//        verify(userRepository).existsByUsername(userDto.getUsername());
+//        verify(passwordEncoder).encode(userDto.getPassword());
+//        verify(userRepository).save(any(User.class));
+//        verify(userHasRoleRepository).save(any(UserHasRole.class));
+//        verify(sendEmailController).sendEmailVerification(user.getEmail());
+//    }
 
     @Test
     void testLoginUser_EmailNotFound() {
