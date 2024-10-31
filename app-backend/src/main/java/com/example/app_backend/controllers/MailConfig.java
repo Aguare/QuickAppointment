@@ -41,12 +41,13 @@ public class MailConfig {
         Optional<CompanySetting> gmailAddress = this.companySettingRepository.findByKey("gmail_address");
         Optional<CompanySetting> gmailPassword = this.companySettingRepository.findByKey("gmail_password");
 
-        if(gmailAddress.isEmpty() || gmailPassword.isEmpty()) {
-            throw new RuntimeException("No se encontraron las credenciales del correo.");
-        }
+        System.out.println(gmailAddress.get().getValue());
+//        if(gmailAddress.isEmpty() || gmailPassword.isEmpty()) {
+//            throw new RuntimeException("No se encontraron las credenciales del correo.");
+//        }
 
-        javaMailSender.setUsername(gmailAddress.get().getValue());
-        javaMailSender.setPassword(gmailPassword.get().getValue());
+        javaMailSender.setUsername("encodersnoreply@gmail.com");
+        javaMailSender.setPassword("mevt sohi epca wxdu");
 
         Properties properties = javaMailSender.getJavaMailProperties();
         properties.put("mail.smtp.auth", true);
