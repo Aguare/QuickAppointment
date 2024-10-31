@@ -28,10 +28,9 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-  
-    const idUser = this.locaStorageService.getUserId();    
+    const idUser = this.locaStorageService.getUserId();
 
-    if(idUser){
+    if (idUser) {
       this.userService.getPages(idUser).subscribe({
         next: (value: Page[]) => {
           this.pages = value;
@@ -42,7 +41,6 @@ export class NavbarComponent implements OnInit {
         },
       });
     }
-
   }
 
   /**
@@ -85,5 +83,13 @@ export class NavbarComponent implements OnInit {
 
   myAccount() {
     this._router.navigate([`/account/${this.userName}`]);
+  }
+
+  goInit() {
+    if (this.locaStorageService.getUserRole() == 2) {
+      this._router.navigate([`/client/init`]);
+    } else {
+      this._router.navigate([`/admin/init`]);
+    }
   }
 }

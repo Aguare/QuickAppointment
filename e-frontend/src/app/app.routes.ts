@@ -15,6 +15,11 @@ import { RoleFormComponent } from './components/admin/role-form/role-form.compon
 import { UsersComponent } from './components/admin/users/users.component';
 import { UserFormComponent } from './components/admin/user-form/user-form.component';
 import { ConfigScheduleComponent } from './components/admin/config-schedule/config-schedule.component';
+import { ClientHomeComponent } from './components/client/client-home/client-home.component';
+import { CompanyComponent } from './components/client/company/company.component';
+import { ReservationComponent } from './components/client/reservation/reservation.component';
+import { CourtReservationComponent } from './components/client/court-reservation/court-reservation.component';
+import { MyReservationComponent } from './components/client/my-reservation/my-reservation.component';
 import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
 
 export const routes: Routes = [
@@ -53,6 +58,37 @@ export const routes: Routes = [
       { path: 'config', component: ConfigScheduleComponent },
       { path: '**', redirectTo: 'init' },
     ],
+  },
+  {
+    path: 'client',
+    children: [
+      {
+        path: 'init',
+        component: ClientHomeComponent
+      },
+      {
+        path: 'company',
+        component: CompanyComponent
+      },
+      {
+        path: 'reservation',
+        component: ReservationComponent
+      },
+      
+      {
+        path: 'courtReservation',
+        component: CourtReservationComponent
+      },
+      
+      {
+        path: 'myReservation',
+        component: MyReservationComponent
+      },
+      {
+        path: '**',
+        redirectTo: 'init'
+      }
+    ]
   },
   { path: '**', component: NotFoundComponent },
 ];

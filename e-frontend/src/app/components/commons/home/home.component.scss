@@ -1,0 +1,15 @@
+.container {
+  margin-top: 20px;
+}
+
+.card {
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.button {
+  margin-top: 1rem;
+}

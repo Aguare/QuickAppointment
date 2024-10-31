@@ -80,7 +80,6 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginDto loginDto) {
         User user = null;
-
         if (loginDto.getUsername().contains("@")) {
 
             user = userRepository.findByEmail(loginDto.getUsername());

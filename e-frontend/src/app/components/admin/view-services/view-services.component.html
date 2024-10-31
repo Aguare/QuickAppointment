@@ -4,6 +4,7 @@
       <th>Nombre</th>
       <th>Descripcion</th>
       <th>Duracion (min)</th>
+      <th>Precio</th>
       <th>Acciones</th>
     </tr>
   </thead>
@@ -12,6 +13,7 @@
       <td>{{ service.name }}</td>
       <td>{{ service.description }}</td>
       <td>{{ service.duration }}</td>
+      <td>Q.{{ service.price }}</td>
       <td class="actions">
         <button class="button is-small is-primary" (click)="editService(i)">
           <span class="icon"><i class="fas fa-edit"></i></span>

@@ -5,6 +5,7 @@ public class TypeAppointmentDto {
     private String name;
     private String description;
     private Integer duration;
+    private Double price;
     private Integer fkCompany;
 
     // Getters y Setters
@@ -39,6 +40,14 @@ public class TypeAppointmentDto {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public Integer getFkCompany() {

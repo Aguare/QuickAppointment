@@ -5,13 +5,15 @@ public class CompanyResponseDto {
     private String name;
     private String description;
     private String logo;
+    private Boolean courtRental;
 
     // Constructor
-    public CompanyResponseDto(Integer id, String name, String description, String logo) {
+    public CompanyResponseDto(Integer id, String name, String description, String logo, Boolean courtRental) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.logo = logo;
+        this.courtRental = courtRental;
     }
 
     // Getters y Setters
@@ -45,6 +47,10 @@ public class CompanyResponseDto {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public Boolean getCourtRental() {
+        return courtRental;
     }
 }
 

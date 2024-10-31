@@ -22,6 +22,7 @@ export interface Company {
   name: string;
   description: string;
   logo: string;
+  courtRental: boolean;
 }
 
 export interface Service {
@@ -29,6 +30,7 @@ export interface Service {
   name: string;
   description: string;
   duration: number; // In Minutes
+  price: number; // In Minutes
   fkCompany: number;
 }
 
@@ -72,4 +74,25 @@ export interface Schedule {
   fkDay: number;
   openingTime: string;
   closingTime: string;
+}
+
+export interface Appointment {
+  id: number;
+  fkUser: number;
+  date: string;
+  hour: string;
+  fkEmployee: number;
+  fkType: number;
+  fkPlace: number;
+}
+
+export interface MyAppointment {
+  id: number;
+  date: string;
+  hour: string;
+  service: string;
+  price: number;
+  first_name: string;
+  last_name: string;
+  place: string
 }

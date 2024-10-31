@@ -56,6 +56,7 @@ export class HomeCompanyComponent {
     description:
       'Esta es la descripción de tu negocio. Aquí puedes hablar sobre lo que ofreces.',
     logo: 'https://marketplace.canva.com/EAGD9V5Eoeg/1/0/1600w/canva-logo-club-de-futbol-sencillo-deportivo-azul-CwnW56rMPJ8.jpg',
+    courtRental: false
   };
 
   constructor(
@@ -127,6 +128,7 @@ export class HomeCompanyComponent {
       data: {
         name: this.company.name,
         description: this.company.description,
+        courtRental: this.company.courtRental
       },
     });
 
@@ -170,6 +172,7 @@ export class HomeCompanyComponent {
         const body = {
           name: result.name,
           description: result.description,
+          courtRental: result.courtRental
         };
 
         this.adminService

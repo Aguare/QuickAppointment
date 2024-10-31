@@ -27,6 +27,7 @@ public class TypeAppointmentController {
         typeAppointment.setName(typeAppointmentDto.getName());
         typeAppointment.setDescription(typeAppointmentDto.getDescription());
         typeAppointment.setDuration(typeAppointmentDto.getDuration());
+        typeAppointment.setPrice(typeAppointmentDto.getPrice());
         typeAppointment.setFkCompany(typeAppointmentDto.getFkCompany());
 
         TypeAppointment savedTypeAppointment = typeAppointmentRepository.save(typeAppointment);
@@ -47,6 +48,7 @@ public class TypeAppointmentController {
                     dto.setName(typeAppointment.getName());
                     dto.setDescription(typeAppointment.getDescription());
                     dto.setDuration(typeAppointment.getDuration());
+                    dto.setPrice(typeAppointment.getPrice());
                     dto.setFkCompany(typeAppointment.getFkCompany());
                     return dto;
                 })
@@ -66,6 +68,7 @@ public class TypeAppointmentController {
             dto.setName(typeAppointment.getName());
             dto.setDescription(typeAppointment.getDescription());
             dto.setDuration(typeAppointment.getDuration());
+            dto.setPrice(typeAppointment.getPrice());
             dto.setFkCompany(typeAppointment.getFkCompany());
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } else {
@@ -85,6 +88,7 @@ public class TypeAppointmentController {
             typeAppointment.setName(updateTypeAppointmentDto.getName());
             typeAppointment.setDescription(updateTypeAppointmentDto.getDescription());
             typeAppointment.setDuration(updateTypeAppointmentDto.getDuration());
+            typeAppointment.setPrice(updateTypeAppointmentDto.getPrice());
 
             typeAppointmentRepository.save(typeAppointment);
 

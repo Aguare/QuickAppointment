@@ -1,0 +1,32 @@
+<app-navbar></app-navbar>
+
+<mat-toolbar color="primary">
+  <span class="title">Directiorio de Negocios</span>
+  <span class="spacer"></span>
+</mat-toolbar>
+
+<div class="container">
+  <div class="columns is-multiline">
+    <div class="column is-one-third" *ngFor="let business of companies">
+      <mat-card class="business-card" (click)="goToBusiness(business.id)">
+        <mat-card-header>
+          <div mat-card-avatar>
+            <img
+              [src]="business.logo | image"
+              alt="{{ business.name }}"
+              class="business-logo"
+            />
+          </div>
+          <mat-card-title>{{ business.name }}</mat-card-title>
+          <mat-card-subtitle>Ver Detalles</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="description">
+            {{ business.description | slice : 0 : 100 }}
+            {{ business.description.length > 100 ? "..." : "" }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,142 @@
+<app-navbar></app-navbar>
+
+<div class="container has-text-centered" *ngIf="isAvailable == false">
+  <div class="columns is-vcentered">
+    <div class="column is-half is-offset-one-quarter">
+      <div class="box">
+        <h1 class="title is-1 has-text-danger">401</h1>
+        <p class="subtitle is-4">Error al Agendar cita</p>
+        <p class="has-text-grey">
+          La pagina no está configurada para realizar citas
+        </p>
+        <div class="mt-5">
+          <button class="button is-link" (click)="goBack()">
+            Ir al Negocio
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="isAvailable == true">
+  <div class="columns">
+    <div class="column is-two-thirds">
+      <mat-toolbar color="primary">
+        <span class="title">Reservacion de: {{ service?.name }}</span>
+        <span class="spacer"></span>
+        <button class="button is-link" (click)="goBack()">Regresar</button>
+      </mat-toolbar>
+
+      <h2 class="title">Selecciona un día:</h2>
+      <mat-form-field appearance="fill">
+        <mat-label>Seleccionar fecha</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          (dateChange)="onDateChange($event)"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <div *ngIf="!placeSelected && selectedDate">
+        <mat-toolbar color="primary">
+          <span class="title">Lugares Disponibles</span>
+        </mat-toolbar>
+        <div class="columns is-multiline">
+          <div
+            class="column is-one-third"
+            *ngFor="let place of places; let i = index"
+          >
+            <div class="box">
+              <h3 class="title is-4">
+                {{ place.name }} 
+              </h3>
+              <p>
+                Ubicacion
+                {{ place.place }} 
+              </p>
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="selectEmployee(i)"
+              >
+                Seleccionar
+              </button>
+            </div>
+          </div>
+
+          <div class="column is-one-third" *ngIf="places.length > 1">
+            <div class="box has-background-info-light">
+              <h3 class="title is-4">Seleccionar Aleatorio</h3>
+              <p>Haz clic para seleccionar un empleado de manera aleatoria</p>
+              <button
+                mat-raised-button
+                color="accent"
+                (click)="selectRandomEmployee()"
+              >
+                Aleatorio
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div *ngIf="availableSlots.length > 0 && placeSelected">
+          <h3 class="subtitle">Horas disponibles:</h3>
+
+          <div class="columns is-multiline">
+            <div
+              class="column is-one-quarter"
+              *ngFor="let slot of availableSlots"
+            >
+              <button
+                mat-raised-button
+                color="primary"
+                class="button is-fullwidth"
+                (click)="setSchedule(slot)"
+              >
+                {{ slot }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="availableSlots.length === 0 && selectedDate">
+          <p>No hay horarios disponibles para este día.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="column is-one-third">
+      <div class="box has-background-light">
+        <h3 class="title is-4">Resumen de la Reservación</h3>
+        <p>
+          <strong>Lugar Seleccionado:</strong>
+          {{placeSelected?.name}}
+        </p>
+        <p><strong>Hora Seleccionada:</strong> {{ selectedSlot }}</p>
+        <p>
+          <strong>Fecha Seleccionada:</strong>
+          {{ selectedDate | date : "longDate" }}
+        </p>
+        <p><strong>Servicio:</strong> {{ service?.name }}</p>
+        <p><strong>Precio:</strong> Q.{{ service?.price }}</p>
+        <p><strong>Duración:</strong> {{ service?.duration }} minutos</p>
+        <button mat-raised-button color="success" (click)="saveReservation()">
+          Reservar
+        </button>
+        <button
+          mat-raised-button
+          color="warn"
+          class="mx-2"
+          (click)="resetSelection()"
+        >
+          Reiniciar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -21,6 +21,9 @@ public class Company {
     @Column(name = "logo", columnDefinition = "TEXT")
     private String logo;
 
+    @Column(name = "court_rental", nullable = false)
+    private Boolean courtRental;
+
     @Column(name = "is_available", nullable = false)
     private Boolean isAvailable = true;
 
@@ -55,6 +58,14 @@ public class Company {
 
     public String getLogo() {
         return logo;
+    }
+
+    public Boolean getCourtRental() {
+        return courtRental;
+    }
+
+    public void setCourtRental(Boolean courtRental) {
+        this.courtRental = courtRental;
     }
 
     public void setLogo(String logo) {

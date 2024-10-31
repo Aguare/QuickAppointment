@@ -39,6 +39,7 @@ export class AddCompanyComponent {
     this.companyForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(30)]],
       description: ['', [Validators.required]],
+      courtRental: [false, [Validators.required]]
     });
   }
 

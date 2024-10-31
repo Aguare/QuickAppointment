@@ -4,6 +4,7 @@ public class CompanyDto {
     private String name;
     private String description;
     private String logo;
+    private Boolean courtRental;
 
     // Getters y Setters
 
@@ -29,6 +30,14 @@ public class CompanyDto {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public Boolean getCourtRental() {
+        return courtRental;
+    }
+
+    public void setCourtRental(Boolean courtRental) {
+        this.courtRental = courtRental;
     }
 }
 
