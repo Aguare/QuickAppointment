@@ -19,9 +19,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             "    left join type_appointment ty on a.FK_Type = ty.id\n" +
             "    left join employee e on a.FK_Employee = e.id\n" +
             "    left join place p on a.FK_Place = p.id\n" +
-            "    where a.date > current_date",
+            "    where a.date > current_date && a.FK_User = :fkUser",
             nativeQuery = true)
-    List<Object[]> findReservations();
+    List<Object[]> findReservations(Integer fkUser);
 
     @Query(value = "SELECT YEAR(date) AS year, COUNT(*) AS appointments\n" +
             "FROM appointment\n" +

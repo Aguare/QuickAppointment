@@ -78,9 +78,9 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/myReservations")
-    public ResponseEntity<List<MyAppointmentsDto>> getMyAppointments() {
-        List<Object[]> results = appointmentRepository.findReservations();
+    @GetMapping("/myReservations/{fkUser}")
+    public ResponseEntity<List<MyAppointmentsDto>> getMyAppointments(@PathVariable Integer fkUser) {
+        List<Object[]> results = appointmentRepository.findReservations(fkUser);
 
         List<MyAppointmentsDto> myAppointments  = results.stream()
                 .map(result -> new MyAppointmentsDto(

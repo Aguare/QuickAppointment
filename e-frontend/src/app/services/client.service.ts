@@ -23,8 +23,8 @@ export class ClientService {
     return this.http.get<Appointment[]>(`${this.apiAppointments}/date/${date}`);
   }
   
-  getMyAppointments(){
-    return this.http.get<MyAppointment[]>(`${this.apiAppointments}/myReservations`);
+  getMyAppointments(fkUser: number){
+    return this.http.get<MyAppointment[]>(`${this.apiAppointments}/myReservations/${fkUser}`);
   }
   
   getAppointmentsByYear(){

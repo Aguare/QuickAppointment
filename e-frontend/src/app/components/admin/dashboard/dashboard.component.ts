@@ -28,27 +28,13 @@ export class DashboardComponent implements OnInit {
   barChartData1: any = [];
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: any,
-    private clientService: ClientService
+    @Inject(PLATFORM_ID) private platformId: any
   ) {}
 
   ngOnInit(): void {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
-    this.clientService.getAppointmentsByYear().subscribe({
-      next: (value: any) => {
-        const data = this.dataArray(value);
-        this.barChartLabels = data.namesArray;
-        this.barChartData = [{
-          data: data.dataArray,
-          label: 'Citas por año',
-        }]
-        
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    
   }
 
   dataArray(array: any) {

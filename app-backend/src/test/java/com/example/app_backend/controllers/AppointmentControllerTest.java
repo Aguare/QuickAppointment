@@ -242,10 +242,10 @@ public class AppointmentControllerTest {
 
         List<Object[]> results = Arrays.asList(reservation1, reservation2);
 
-        when(appointmentRepository.findReservations()).thenReturn(results);
+        when(appointmentRepository.findReservations(1)).thenReturn(results);
 
         // Act
-        ResponseEntity<List<MyAppointmentsDto>> response = appointmentController.getMyAppointments();
+        ResponseEntity<List<MyAppointmentsDto>> response = appointmentController.getMyAppointments(1);
 
         // Assert
         assertEquals(OK, response.getStatusCode());
@@ -273,21 +273,21 @@ public class AppointmentControllerTest {
         assertEquals("Smith", dto2.getLast_name());
         assertEquals("Location B", dto2.getPlace());
 
-        verify(appointmentRepository).findReservations();
+        verify(appointmentRepository).findReservations(1);
     }
 
     @Test
     void testGetMyAppointments_NoReservations() {
         // Arrange
-        when(appointmentRepository.findReservations()).thenReturn(Collections.emptyList());
+        when(appointmentRepository.findReservations(1)).thenReturn(Collections.emptyList());
 
         // Act
-        ResponseEntity<List<MyAppointmentsDto>> response = appointmentController.getMyAppointments();
+        ResponseEntity<List<MyAppointmentsDto>> response = appointmentController.getMyAppointments(1);
 
         // Assert
         assertEquals(NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
 
-        verify(appointmentRepository).findReservations();
+        verify(appointmentRepository).findReservations(1);
     }
 }
