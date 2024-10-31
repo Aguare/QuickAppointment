@@ -1,9 +1,15 @@
 package com.example.app_backend.controllers;
 
+import com.example.app_backend.entities.User;
+import com.example.app_backend.entities.UserVerification;
 import com.example.app_backend.repositories.UserRepository;
+import com.example.app_backend.repositories.UserVerificationRepository;
 import com.example.app_backend.services.SendEmailService;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.apache.tomcat.util.json.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
@@ -26,48 +34,59 @@ public class EmailController {
 
     @Autowired
     private UserRepository userRepository;
-    public static final String WEBSITE = "https://www.ejemplo.com";
-    public static final String TOKEN_GENERATED = "tokenGenerado123";
-    public static final String EMAIL_ENCRYPT = "emailEncriptado123";
-    public static final String COMPANY_LOGO_URL = "https://lh3.googleusercontent.com/a/ACg8ocLJq2dZdn1Py5pwjkNjI5G_OlenzSzDAOnxZ9B05WorrxO1Yx8=s576-c-no";
-    public static final String COMPANY_NAME = "NombreDeLaEmpresa";
 
-    private String getEmailTemplate() {
-        return "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; border-radius: 10px;\">" +
-                "<h2 style=\"text-align: center; color: #333;\">¡Bienvenido a nuestro sitio!</h2>" +
-                "<p style=\"color: #555; font-size: 16px;\">Gracias por registrarte. Para completar el proceso, por favor verifica tu correo electrónico haciendo clic en el botón de abajo.</p>" +
+    @Autowired
+    private UserVerificationRepository userVerificationRepository;
 
-                "<div style=\"text-align: center; margin: 30px 0;\">" +
-                "<a href=\"" + WEBSITE + "/" + TOKEN_GENERATED + "/" + EMAIL_ENCRYPT + "\" " +
-                "style=\"display: inline-block; padding: 15px 25px; font-size: 18px; color: #fff; background-color: #28a745; text-decoration: none; border-radius: 5px;\">" +
-                "Verificar correo electrónico" +
-                "</a>" +
-                "</div>" +
+    private SendEmailController sendEmailController;
 
-                "<p style=\"color: #555; font-size: 14px;\">Si no solicitaste este correo, simplemente ignóralo.</p>" +
+    @Transactional
+    @PostMapping("/verify-email")
+    public ResponseEntity<String> verificationEmail(@RequestBody Map<String, String> request) {
 
-                "<hr style=\"border: none; border-top: 1px solid #ddd; margin: 20px 0;\">" +
+        String email = request.get("email");
+        String token = request.get("token");
 
-                "<div style=\"text-align: center;\">" +
-                "<img src=\"" + COMPANY_LOGO_URL + "\" alt=\"Logo de la empresa\" style=\"max-width: 100px; margin-bottom: 10px;\">" +
-                "</div>" +
+        if (email == null || token == null) {
+            return ResponseEntity.badRequest().body("Faltan parámetros: 'email' o 'token'.");
+        }
 
-                "<p style=\"color: #999; font-size: 12px; text-align: center;\">&copy; 2024 " + COMPANY_NAME + ". Todos los derechos reservados.</p>" +
-                "</div>";
+        Optional<UserVerification> userVerification = userVerificationRepository.findByEmailTokenAndToken(email, token);
+        if (userVerification.isEmpty()) {
+            return ResponseEntity.badRequest().body("Token no válido.");
+        }
+
+        UserVerification userVerificationData = userVerification.get();
+
+        userVerificationRepository.deleteAllByEmail(userVerificationData.getEmail());
+
+        User user = userRepository.findByEmail(userVerificationData.getEmail());
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Usuario no encontrado.");
+        }
+
+        user.setIdVerified(true);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("¡Email verificado correctamente!");
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(EmailController.class);
+    @PostMapping("/sendVerificationEmail")
+    public ResponseEntity<String> sendEmailVerification(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
 
-    private final SendEmailService sendEmailService;
-
-    @PostMapping("/send")
-    ResponseEntity<String> sendEmail(@RequestBody Map<String, String> request) {
-        try {
-            String response = sendEmailService.sendEmail(request.get("email"), getEmailTemplate());
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            logger.error("Error al enviar el email a {}: {}", request.get("email"), e.getMessage());
-            return ResponseEntity.badRequest().body("Error al enviar el email: " + e.getMessage());
+        if (email == null) {
+            return ResponseEntity.badRequest().body("Falta el parámetro 'email'.");
         }
+
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("El usuario no existe.");
+        }
+
+        sendEmailController.sendEmailVerification(email);
+
+        return ResponseEntity.ok("{ message: \"¡Email de verificación enviado correctamente!\"}");
     }
 }

@@ -15,12 +15,14 @@ import { RoleFormComponent } from './components/admin/role-form/role-form.compon
 import { UsersComponent } from './components/admin/users/users.component';
 import { UserFormComponent } from './components/admin/user-form/user-form.component';
 import { ConfigScheduleComponent } from './components/admin/config-schedule/config-schedule.component';
+import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'verify-email/:token/:email', component: VerifyEmailComponent },
   {
     path: 'admin',
     children: [

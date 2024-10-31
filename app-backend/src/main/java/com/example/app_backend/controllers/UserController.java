@@ -9,6 +9,7 @@ import com.example.app_backend.helpers.ApiResponse;
 import com.example.app_backend.helpers.LoginResponse;
 import com.example.app_backend.repositories.UserHasRoleRepository;
 import com.example.app_backend.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,9 +32,14 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private UserHasRoleRepository userHasRoleRepository;
 
+    @Autowired
+    private SendEmailController sendEmailController;
+
+    @Transactional
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> registerUser(@RequestBody UserDto userDto) {
 
@@ -66,6 +72,7 @@ public class UserController {
         userHasRoleRepository.save(userHasRole);
 
         // success message
+        sendEmailController.sendEmailVerification(user.getEmail());
         ApiResponse response = new ApiResponse("Usuario creado con éxito.", savedUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

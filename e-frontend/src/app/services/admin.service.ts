@@ -12,6 +12,7 @@ export class AdminService {
   apiTypeAppointment: string = 'http://localhost:8000/type-appointments';
   apiEmployee: string = 'http://localhost:8000/employees';
   apiPlace: string = 'http://localhost:8000/places';
+  apiEmail: string = 'http://localhost:8000/email';
 
   constructor(private http: HttpClient) {}
 
@@ -22,23 +23,23 @@ export class AdminService {
   saveCompany(body: any){
     return this.http.post(`${this.apiCompany}/create`, body);
   }
-  
+
   getCompanies(){
     return this.http.get<Company[]>(`${this.apiCompany}/all`);
   }
-  
+
   getCompanyById(id:number){
     return this.http.get<Company>(`${this.apiCompany}/${id}`);
   }
-  
+
   updateNameDescCompany(id:number, body: any){
     return this.http.put(`${this.apiCompany}/update/${id}`,body);
   }
-  
+
   updateLogoCompany(id:number, body: any){
     return this.http.put(`${this.apiCompany}/updateLogo/${id}`,body);
   }
-  
+
   deleteCompany(id:number){
     return this.http.delete(`${this.apiCompany}/${id}`);
   }
@@ -46,19 +47,19 @@ export class AdminService {
   saveTypeAppointment(body: any){
     return this.http.post(`${this.apiTypeAppointment}/create`, body);
   }
-  
+
   getTypeAppointemstCompany(fkCompany: number){
     return this.http.get<Service[]>(`${this.apiTypeAppointment}/company/${fkCompany}`);
   }
-  
+
   getTypeAppointemById(id: number){
     return this.http.get<Service>(`${this.apiTypeAppointment}/${id}`);
   }
-  
+
   updateTypeAppointment(id: number, body: any){
     return this.http.put(`${this.apiTypeAppointment}/update/${id}`, body);
   }
-  
+
   deleteTypeAppointment(id: number){
     return this.http.delete(`${this.apiTypeAppointment}/${id}`);
   }
@@ -106,8 +107,12 @@ export class AdminService {
   getScheduleCompany(fkCompany: number){
     return this.http.get<Schedule[]>(`${this.apiCompany}/schedule/${fkCompany}`);
   }
-  
+
   saveSchedule(fkCompany: number, schedule: Schedule[]){
     return this.http.post(`${this.apiCompany}/addSchedule/${fkCompany}`, schedule);
+  }
+
+  verifyEmailUser(data: any): any {
+    return this.http.post(`${this.apiEmail}/verify-email`, data, { responseType: 'text' as 'json' });
   }
 }

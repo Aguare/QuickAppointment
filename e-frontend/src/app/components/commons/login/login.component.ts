@@ -98,11 +98,12 @@ export class LoginComponent {
       this.userService.register(data).subscribe({
         next: (data: any) => {
           Swal.fire({
-            position: 'top-end',
+            position: 'center',
             icon: 'success',
-            title: data.message,
+            title: '¡Registro exitoso!',
+            text: 'Por favor, verifica tu correo electrónico',
             showConfirmButton: false,
-            timer: 1500,
+            timer: 2500,
           });
           this.closeRegisterModal();
         },
@@ -151,12 +152,12 @@ export class LoginComponent {
         if (resp.idRole == 2) {
         } else {
           Swal.fire({
-            position: 'top-end',
+            position: 'center',
             icon: 'success',
             title: resp.message,
             showConfirmButton: false,
             timer: 1500,
-          });          
+          });
 
           this.localStorageService.setUserId(resp.idUser);
           this.localStorageService.setUserRole(resp.idRole);

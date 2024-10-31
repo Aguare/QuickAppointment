@@ -12,14 +12,14 @@ public class SendEmailService {
 
     private final JavaMailSender mailSender;
 
-    public String sendEmail(String email, String message) {
+    public String sendEmail(String email, String subject, String message) {
 
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
 
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             helper.setTo(email);
-            helper.setSubject("Verificación de correo electrónico");
+            helper.setSubject(subject);
             helper.setText(message, true);
 
             mailSender.send(mimeMessage);
