@@ -22,6 +22,7 @@ import { CourtReservationComponent } from './components/client/court-reservation
 import { MyReservationComponent } from './components/client/my-reservation/my-reservation.component';
 import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
 import { ResetPasswordComponent } from './components/commons/reset-password/reset-password.component';
+import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -58,6 +59,7 @@ export const routes: Routes = [
       { path: 'users/new', component: UserFormComponent },
       { path: 'users/edit/:id', component: UserFormComponent },
       { path: 'config', component: ConfigScheduleComponent },
+      { path: 'dashboard', component: DashboardComponent },
       { path: '**', redirectTo: 'init' },
     ],
   },

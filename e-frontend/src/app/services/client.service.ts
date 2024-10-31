@@ -26,5 +26,9 @@ export class ClientService {
   getMyAppointments(){
     return this.http.get<MyAppointment[]>(`${this.apiAppointments}/myReservations`);
   }
+  
+  getAppointmentsByYear(){
+    return this.http.get(`${this.apiAppointments}/appointmentByYear`);
+  }
 
 }
