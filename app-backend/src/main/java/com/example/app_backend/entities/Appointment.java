@@ -21,8 +21,8 @@ public class Appointment {
     @Column(name = "date", nullable = false)
     private Date date;
 
-    @Column(name = "hour", nullable = false)
-    private LocalTime hour;
+    @Column(name = "appointment_hour", nullable = false)
+    private LocalTime appointment_hour;
 
     @Column(name = "is_confirmated", nullable = false, columnDefinition = "TINYINT")
     private Boolean isConfirmated;
@@ -64,11 +64,11 @@ public class Appointment {
     }
 
     public LocalTime getHour() {
-        return hour;
+        return appointment_hour;
     }
 
     public void setHour(LocalTime hour) {
-        this.hour = hour;
+        this.appointment_hour = hour;
     }
 
     public Boolean getConfirmated() {

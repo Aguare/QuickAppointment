@@ -34,17 +34,19 @@ public class MailConfig {
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
-        javaMailSender.setHost(host);;
+        javaMailSender.setHost(host);
         javaMailSender.setPort(port);
         javaMailSender.setProtocol(protocol);
 
         Optional<CompanySetting> gmailAddress = this.companySettingRepository.findByKey("gmail_address");
         Optional<CompanySetting> gmailPassword = this.companySettingRepository.findByKey("gmail_password");
 
-        if(gmailAddress.isEmpty() || gmailPassword.isEmpty()) {
-            throw new RuntimeException("No se encontraron las credenciales del correo.");
+        // Verificar si las credenciales están presentes
+        if (gmailAddress.isEmpty() || gmailPassword.isEmpty()) {
+            throw new RuntimeException("No se encontraron las credenciales del correo (gmail_address o gmail_password ausentes en la configuración).");
         }
 
+        // Asignar las credenciales obtenidas de la base de datos
         javaMailSender.setUsername(gmailAddress.get().getValue());
         javaMailSender.setPassword(gmailPassword.get().getValue());
 
@@ -55,4 +57,5 @@ public class MailConfig {
 
         return javaMailSender;
     }
+
 }

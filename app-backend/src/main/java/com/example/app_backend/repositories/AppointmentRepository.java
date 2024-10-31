@@ -22,4 +22,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             "    where a.date > current_date",
             nativeQuery = true)
     List<Object[]> findReservations();
+
+    @Query(value = "SELECT YEAR(date) AS year, COUNT(*) AS appointments\n" +
+            "FROM appointment\n" +
+            "GROUP BY YEAR(date)\n" +
+            "ORDER BY YEAR(date)",
+            nativeQuery = true)
+    List<Object[]> getAppointmentByYear();
 }
