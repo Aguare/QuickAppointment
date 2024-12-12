@@ -60,6 +60,7 @@ export class ReservationComponent implements OnInit {
   employees: Employee[] = [];
   employeeSelected: Employee | null = null;
   places: Place[] = [];
+  
 
   schedules: Schedule[] = [];
   isAvailable: boolean = true;
