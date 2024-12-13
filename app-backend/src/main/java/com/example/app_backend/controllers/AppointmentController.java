@@ -78,9 +78,12 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/myReservations")
-    public ResponseEntity<List<MyAppointmentsDto>> getMyAppointments() {
-        List<Object[]> results = appointmentRepository.findReservations();
+    @GetMapping("/myReservations/{fkUser}")
+    public ResponseEntity<List<MyAppointmentsDto>> getMyAppointments(@PathVariable Integer fkUser) {
+
+
+
+        List<Object[]> results = appointmentRepository.findReservations(fkUser);
 
         List<MyAppointmentsDto> myAppointments  = results.stream()
                 .map(result -> new MyAppointmentsDto(
@@ -91,7 +94,8 @@ public class AppointmentController {
                         (Double) result[4],           // price
                         (String) result[5],           // first_name
                         (String) result[6],           // last_name
-                        (String) result[7]           // price// price
+                        (String) result[7],           // price// price
+                        (Integer) result[8]           // fkCompany
                 ))
                 .collect(Collectors.toList());
 

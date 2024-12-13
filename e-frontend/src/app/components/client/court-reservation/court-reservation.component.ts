@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import {
   Appointment,
+  Billing,
   Company,
   Employee,
   Place,
@@ -233,6 +234,20 @@ export class CourtReservationComponent {
         if (result.isConfirmed) {
           this.clientService.saveAppointment(body).subscribe({
             next: (value: any) => {
+
+              const nameEmployee =
+                selectedEmploye.first_name + " " + 
+                selectedEmploye.last_name;
+              const billBody = {
+                date,
+                fkUser,
+                hour,
+                employee: nameEmployee,
+                type: this.service?.name,
+                place: this.placeSelected!.name,
+                price: this.service?.price,
+                idCompany: this.idCompany,
+              };
               Swal.fire({
                 position: 'top-end',
                 icon: 'success',
@@ -242,9 +257,7 @@ export class CourtReservationComponent {
               });
 
               setTimeout(() => {
-                this.router.navigate(['/client/company'], {
-                  queryParams: { id: this.idCompany },
-                });
+                this.saveBill(billBody);
               }, 1500);
             },
             error: (err) => {
@@ -268,4 +281,66 @@ export class CourtReservationComponent {
       });
     }
   }
+
+  // new code
+  
+    saveBill(body: any) {
+  
+      const idUser = this.localStorageService.getItem('id_user');
+      this.clientService.getBillingsByUser(idUser).subscribe({
+        next: (value: Billing) => {
+          if (value) {
+            body.cui = value.cui;
+            body.nit = value.nit;
+            body.direction = value.direction;
+          } else {
+            body.cui = '0000000000';
+            body.nit = 'Consumidor Final';
+            body.direction = 'Ciudad';
+          }
+          this.localStorageService.setItem('bill', body);
+  
+          Swal.fire({
+            title: 'Tu factura se ha generado, ¿Deseas verla?',
+            showDenyButton: true,
+            confirmButtonText: 'Si',
+            denyButtonText: `Mas tarde`,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.router.navigate(['/client/bill'], {
+                queryParams: { id: this.idCompany },
+              });
+            } else {
+              this.router.navigate(['/client/company'], {
+                queryParams: { id: this.idCompany },
+              });
+            }
+          });
+        },
+        error: (err) => {
+          body.cui = '0000000000';
+          body.nit = 'Consumidor Final';
+          body.direction = 'Ciudad';
+          this.localStorageService.setItem('bill', body);
+  
+          Swal.fire({
+            title: 'Tu factura se ha generado, ¿Deseas verla?',
+            showDenyButton: true,
+            confirmButtonText: 'Si',
+            denyButtonText: `Mas tarde`,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.router.navigate(['/client/bill'], {
+                queryParams: { id: this.idCompany },
+              });
+            } else {
+              this.router.navigate(['/client/company'], {
+                queryParams: { id: this.idCompany },
+              });
+            }
+          });
+        },
+      });
+  
+    }
 }

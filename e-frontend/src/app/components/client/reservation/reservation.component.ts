@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Appointment,
+  Billing,
   Company,
   Employee,
   Place,
@@ -233,6 +234,20 @@ export class ReservationComponent implements OnInit {
         if (result.isConfirmed) {
           this.clientService.saveAppointment(body).subscribe({
             next: (value: any) => {
+              const nameEmployee =
+                this.employeeSelected!.first_name + " " + 
+                this.employeeSelected!.last_name;
+              const billBody = {
+                date,
+                fkUser,
+                hour,
+                employee: nameEmployee,
+                type: this.service?.name,
+                place: placeSelected.name,
+                price: this.service?.price,
+                idCompany: this.idCompany,
+              };
+
               Swal.fire({
                 position: 'top-end',
                 icon: 'success',
@@ -240,11 +255,9 @@ export class ReservationComponent implements OnInit {
                 showConfirmButton: false,
                 timer: 1500,
               });
-
+              
               setTimeout(() => {
-                this.router.navigate(['/client/company'], {
-                  queryParams: { id: this.idCompany },
-                });
+                this.saveBill(billBody);
               }, 1500);
             },
             error: (err) => {
@@ -267,5 +280,67 @@ export class ReservationComponent implements OnInit {
         }
       });
     }
+  }
+
+  // new code
+
+  saveBill(body: any) {
+
+    const idUser = this.localStorageService.getItem('id_user');
+    this.clientService.getBillingsByUser(idUser).subscribe({
+      next: (value: Billing) => {
+        if (value) {
+          body.cui = value.cui;
+          body.nit = value.nit;
+          body.direction = value.direction;
+        } else {
+          body.cui = '0000000000';
+          body.nit = 'Consumidor Final';
+          body.direction = 'Ciudad';
+        }
+        this.localStorageService.setItem('bill', body);
+
+        Swal.fire({
+          title: 'Tu factura se ha generado, ¿Deseas verla?',
+          showDenyButton: true,
+          confirmButtonText: 'Si',
+          denyButtonText: `Mas tarde`,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.router.navigate(['/client/bill'], {
+              queryParams: { id: this.idCompany },
+            });
+          } else {
+            this.router.navigate(['/client/company'], {
+              queryParams: { id: this.idCompany },
+            });
+          }
+        });
+      },
+      error: (err) => {
+        body.cui = '0000000000';
+        body.nit = 'Consumidor Final';
+        body.direction = 'Ciudad';
+        this.localStorageService.setItem('bill', body);
+
+        Swal.fire({
+          title: 'Tu factura se ha generado, ¿Deseas verla?',
+          showDenyButton: true,
+          confirmButtonText: 'Si',
+          denyButtonText: `Mas tarde`,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.router.navigate(['/client/bill'], {
+              queryParams: { id: this.idCompany },
+            });
+          } else {
+            this.router.navigate(['/client/company'], {
+              queryParams: { id: this.idCompany },
+            });
+          }
+        });
+      },
+    });
+
   }
 }

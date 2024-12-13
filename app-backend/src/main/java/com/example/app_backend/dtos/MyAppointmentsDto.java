@@ -13,11 +13,12 @@ public class MyAppointmentsDto {
     private String first_name;
     private String last_name;
     private String place;
+    private Integer fkCompany;
 
     public MyAppointmentsDto() {
     }
 
-    public MyAppointmentsDto(Integer id, Date date, Time hour, String service, Double price, String first_name, String last_name, String place) {
+    public MyAppointmentsDto(Integer id, Date date, Time hour, String service, Double price, String first_name, String last_name, String place, Integer fkCompany) {
         this.id = id;
         this.date = date;
         this.hour = hour;
@@ -26,6 +27,7 @@ public class MyAppointmentsDto {
         this.first_name = first_name;
         this.last_name = last_name;
         this.place = place;
+        this.fkCompany = fkCompany;
     }
 
     public Integer getId() {
@@ -90,5 +92,13 @@ public class MyAppointmentsDto {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public Integer getFkCompany() {
+        return fkCompany;
+    }
+
+    public void setFkCompany(Integer fkCompany) {
+        this.fkCompany = fkCompany;
     }
 }

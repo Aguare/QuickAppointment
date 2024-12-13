@@ -94,5 +94,14 @@ export interface MyAppointment {
   price: number;
   first_name: string;
   last_name: string;
-  place: string
+  place: string;
+  fkCompany: number
+}
+
+export interface Billing {
+  id: number;
+  nit: string;
+  cui: string;
+  direction: string;
+  fkUser: number;
 }

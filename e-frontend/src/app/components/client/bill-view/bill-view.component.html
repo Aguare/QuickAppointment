@@ -1,0 +1,79 @@
+<app-navbar></app-navbar>
+
+<div
+  id="invoice"
+>
+  <div
+    class="container mt-5"
+    style="
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+    "
+  >
+    <!-- Encabezado de la factura -->
+    <section class="has-text-centered">
+      <img
+        [src]="companyLogo | image"
+        alt="Logo del negocio"
+        style="max-height: 100px"
+      />
+      <h1 class="title is-4">{{companyName}}</h1>
+      <p class="subtitle is-6">Dirección del negocio: Ciudad</p>
+    </section>
+
+    <hr />
+
+    <!-- Información del cliente y factura -->
+    <div class="columns">
+      <div class="column">
+        <h2 class="title is-5">Factura</h2>
+        <p><strong>Fecha:</strong> {{data?.date | date}}</p>
+        <p><strong>Hora: </strong>{{data?.hour}}</p>
+        <p><strong>NIT: </strong> {{data?.nit}}</p>
+      </div>
+      <div class="column">
+        <h2 class="title is-5">Detalles del Cliente</h2>
+        <p><strong>CUI:</strong>{{data?.cui}}</p>
+        <p><strong>Empleado:</strong> {{data?.employee}}</p>
+        <p><strong>Dirección:</strong> {{data?.direction}}</p>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- Detalles del servicio -->
+    <table class="table is-striped is-fullwidth">
+      <thead>
+        <tr>
+          <th>Servicio</th>
+          <th>Precio</th>
+          <th>Ubicación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{data?.type}}</td>
+          <td>{{data?.price | currency: 'GTQ' }}</td>
+          <td>{{data?.place}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr />
+
+    <!-- Total -->
+    <div class="has-text-right">
+      <p class="title is-5">Total: <strong>{{data?.price | currency: 'GTQ' }}</strong></p>
+    </div>
+
+    <hr />
+
+    <!-- Pie de factura -->
+    <p class="has-text-centered">Gracias por su preferencia.</p>
+  </div>
+</div>
+<button mat-raised-button color="primary" class="m-5" (click)="downloadPDF()">
+  Descargar PDF
+</button>

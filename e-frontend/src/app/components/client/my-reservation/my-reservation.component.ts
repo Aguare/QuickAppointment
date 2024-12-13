@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../commons/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ClientService } from '../../../services/client.service';
-import { MyAppointment } from '../../../interfaces/interfaces';
+import { Billing, MyAppointment } from '../../../interfaces/interfaces';
 import { CommonModule } from '@angular/common';
+import { LocalStorageService } from '../../../services/local-storage.service';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-my-reservation',
@@ -15,15 +18,64 @@ import { CommonModule } from '@angular/common';
 export class MyReservationComponent implements OnInit {
   appointments: MyAppointment[] = [];
 
-  constructor(private clientService: ClientService) {}
+  constructor(
+    private clientService: ClientService,
+    private localStorageService: LocalStorageService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.clientService.getMyAppointments().subscribe({
+    const fkUser = this.localStorageService.getItem('id_user');
+
+    this.clientService.getMyAppointments(+fkUser).subscribe({
       next: (value: MyAppointment[]) => {
         this.appointments = value;
       },
       error: (err) => {
         console.log(err);
+      },
+    });
+  }
+
+  viewBill(appointment: MyAppointment) {
+    const billBody = {
+      date: appointment.date,
+      fkUser: 1,
+      hour: appointment.hour,
+      employee: appointment.first_name + '' + appointment.last_name,
+      type: appointment.service,
+      place: appointment.place,
+      price: appointment.price,
+      idCompany: appointment.fkCompany,
+    };
+
+    this.saveBill(billBody);
+
+    
+  }
+
+  saveBill(body: any) {
+    const idUser = this.localStorageService.getItem('id_user');
+    this.clientService.getBillingsByUser(idUser).subscribe({
+      next: (value: Billing) => {
+        if (value) {
+          body.cui = value.cui;
+          body.nit = value.nit;
+          body.direction = value.direction;
+        } else {
+          body.cui = '0000000000';
+          body.nit = 'Consumidor Final';
+          body.direction = 'Ciudad';
+        }
+        this.localStorageService.setItem('bill', body);
+        this.router.navigate(['/client/bill']);
+      },
+      error: (err) => {
+        body.cui = '0000000000';
+        body.nit = 'Consumidor Final';
+        body.direction = 'Ciudad';
+        this.localStorageService.setItem('bill', body);
+        this.router.navigate(['/client/bill']);
       },
     });
   }

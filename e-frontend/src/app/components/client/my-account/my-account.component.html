@@ -1,0 +1,61 @@
+<app-navbar></app-navbar>
+
+<div class="box mt-3">
+    <h2 class="title is-4">Informacion de Facturación</h2>
+  
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label class="label">NIT</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Ingrese el NIT"
+            formControlName="nit"
+          />
+        </div>
+        <p class="help is-danger" *ngIf="form.get('nit')?.invalid && form.get('nit')?.touched">
+          El NIT es obligatorio.
+        </p>
+      </div>
+  
+      <div class="field">
+        <label class="label">CUI</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Ingrese el CUI"
+            formControlName="cui"
+          />
+        </div>
+        <p class="help is-danger" *ngIf="form.get('cui')?.invalid && form.get('cui')?.touched">
+          El CUI es obligatorio.
+        </p>
+      </div>
+  
+      <div class="field">
+        <label class="label">Dirección</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Ingrese la dirección"
+            formControlName="direction"
+          />
+        </div>
+        <p class="help is-danger" *ngIf="form.get('direction')?.invalid && form.get('direction')?.touched">
+          La dirección es obligatoria.
+        </p>
+      </div>
+  
+      <div class="field is-grouped mt-3">
+        <div class="control">
+          <button class="button is-primary" type="submit" [disabled]="form.invalid">
+            Guardar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  

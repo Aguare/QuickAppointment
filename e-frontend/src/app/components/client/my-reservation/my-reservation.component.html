@@ -25,6 +25,7 @@
           <td>{{ appointment.price | currency: 'GTQ' }}</td>
           <td>{{ appointment.first_name }} {{ appointment.last_name }}</td>
           <td>{{ appointment.place }}</td>
+          <td><button class="button is-primary" (click)="viewBill(appointment)">Ver Factura</button></td>
         </tr>
       </tbody>
     </table>
