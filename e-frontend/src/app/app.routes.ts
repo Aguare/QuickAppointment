@@ -24,6 +24,7 @@ import { VerifyEmailComponent } from './components/commons/verify-email/verify-e
 import { ResetPasswordComponent } from './components/commons/reset-password/reset-password.component';
 import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
 import { BillViewComponent } from './components/client/bill-view/bill-view.component';
+import { MyAccountComponent } from './components/client/my-account/my-account.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -92,6 +93,10 @@ export const routes: Routes = [
       {
         path: 'bill',
         component: BillViewComponent
+      },
+      {
+        path: 'account',
+        component: MyAccountComponent
       },
       {
         path: '**',

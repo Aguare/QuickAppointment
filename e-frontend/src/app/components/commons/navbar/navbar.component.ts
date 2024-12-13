@@ -20,6 +20,7 @@ export class NavbarComponent implements OnInit {
   userName: any;
   isActive: boolean = false;
   activeModule: string | null = null;
+  isClient: boolean = true;
 
   constructor(
     private _router: Router,
@@ -29,6 +30,11 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     const idUser = this.locaStorageService.getUserId();
+    const idRol = this.locaStorageService.getItem('role_user')
+
+    if(idRol != '2'){
+      this.isClient = false;
+    }
 
     if (idUser) {
       this.userService.getPages(idUser).subscribe({
@@ -82,7 +88,7 @@ export class NavbarComponent implements OnInit {
   }
 
   myAccount() {
-    this._router.navigate([`/account/${this.userName}`]);
+    this._router.navigate([`/client/account`]);
   }
 
   goInit() {

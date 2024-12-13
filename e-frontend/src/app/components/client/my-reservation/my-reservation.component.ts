@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../commons/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ClientService } from '../../../services/client.service';
-import { MyAppointment } from '../../../interfaces/interfaces';
+import { Billing, MyAppointment } from '../../../interfaces/interfaces';
 import { CommonModule } from '@angular/common';
 import { LocalStorageService } from '../../../services/local-storage.service';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-my-reservation',
@@ -37,8 +38,6 @@ export class MyReservationComponent implements OnInit {
   }
 
   viewBill(appointment: MyAppointment) {
-    console.log(appointment);
-
     const billBody = {
       date: appointment.date,
       fkUser: 1,
@@ -52,19 +51,32 @@ export class MyReservationComponent implements OnInit {
 
     this.saveBill(billBody);
 
-    this.router.navigate(['/client/bill'])
     
   }
 
   saveBill(body: any) {
-    const dataBill = this.localStorageService.getItem('data_bill');
-    if (dataBill) {
-    } else {
-      body.cui = '0000000000';
-      body.nit = 'Consumidor Final';
-      body.direction = 'Ciudad';
-
-      this.localStorageService.setItem('bill', body);
-    }
+    const idUser = this.localStorageService.getItem('id_user');
+    this.clientService.getBillingsByUser(idUser).subscribe({
+      next: (value: Billing) => {
+        if (value) {
+          body.cui = value.cui;
+          body.nit = value.nit;
+          body.direction = value.direction;
+        } else {
+          body.cui = '0000000000';
+          body.nit = 'Consumidor Final';
+          body.direction = 'Ciudad';
+        }
+        this.localStorageService.setItem('bill', body);
+        this.router.navigate(['/client/bill']);
+      },
+      error: (err) => {
+        body.cui = '0000000000';
+        body.nit = 'Consumidor Final';
+        body.direction = 'Ciudad';
+        this.localStorageService.setItem('bill', body);
+        this.router.navigate(['/client/bill']);
+      },
+    });
   }
 }

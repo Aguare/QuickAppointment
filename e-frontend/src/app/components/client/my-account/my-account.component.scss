@@ -1,0 +1,29 @@
+.box {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .button {
+    &.is-primary {
+      background-color: #005792;
+      border-color: #005792;
+      color: #fff;
+  
+      &:hover {
+        background-color: #003f5c;
+        border-color: #003f5c;
+      }
+    }
+  
+    &.is-light {
+      background-color: #f6f6f6;
+      border-color: #ddd;
+      color: #333;
+  
+      &:hover {
+        background-color: #eaeaea;
+        border-color: #ccc;
+      }
+    }
+  }
+  

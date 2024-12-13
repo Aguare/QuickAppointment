@@ -97,3 +97,11 @@ export interface MyAppointment {
   place: string;
   fkCompany: number
 }
+
+export interface Billing {
+  id: number;
+  nit: string;
+  cui: string;
+  direction: string;
+  fkUser: number;
+}
