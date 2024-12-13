@@ -29,15 +29,15 @@
     <div class="columns">
       <div class="column">
         <h2 class="title is-5">Factura</h2>
-        <p><strong>Fecha:</strong> {{data.date | date}}</p>
-        <p><strong>Hora: </strong>{{data.hour}}</p>
-        <p><strong>NIT: </strong> {{data.nit}}</p>
+        <p><strong>Fecha:</strong> {{data?.date | date}}</p>
+        <p><strong>Hora: </strong>{{data?.hour}}</p>
+        <p><strong>NIT: </strong> {{data?.nit}}</p>
       </div>
       <div class="column">
         <h2 class="title is-5">Detalles del Cliente</h2>
-        <p><strong>CUI:</strong>{{data.cui}}</p>
-        <p><strong>Empleado:</strong> {{data.employee}}</p>
-        <p><strong>Dirección:</strong> {{data.direction}}</p>
+        <p><strong>CUI:</strong>{{data?.cui}}</p>
+        <p><strong>Empleado:</strong> {{data?.employee}}</p>
+        <p><strong>Dirección:</strong> {{data?.direction}}</p>
       </div>
     </div>
 
@@ -54,9 +54,9 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{data.type}}</td>
-          <td>{{data.price | currency: 'GTQ' }}</td>
-          <td>{{data.place}}</td>
+          <td>{{data?.type}}</td>
+          <td>{{data?.price | currency: 'GTQ' }}</td>
+          <td>{{data?.place}}</td>
         </tr>
       </tbody>
     </table>
@@ -65,7 +65,7 @@
 
     <!-- Total -->
     <div class="has-text-right">
-      <p class="title is-5">Total: <strong>{{data.price | currency: 'GTQ' }}</strong></p>
+      <p class="title is-5">Total: <strong>{{data?.price | currency: 'GTQ' }}</strong></p>
     </div>
 
     <hr />
