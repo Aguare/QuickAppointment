@@ -15,7 +15,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
     List<Appointment> findByDate(Date date);
 
-    @Query(value = "select a.id, a.date, a.hour, ty.name, ty.price, e.first_name, e.last_name, p.name from appointment a\n" +
+    @Query(value = "select a.id, a.date, a.hour, ty.name, ty.price, e.first_name, e.last_name, p.name, e.FK_Company from appointment a\n" +
             "    left join type_appointment ty on a.FK_Type = ty.id\n" +
             "    left join employee e on a.FK_Employee = e.id\n" +
             "    left join place p on a.FK_Place = p.id\n" +

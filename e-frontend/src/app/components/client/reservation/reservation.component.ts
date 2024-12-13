@@ -60,7 +60,6 @@ export class ReservationComponent implements OnInit {
   employees: Employee[] = [];
   employeeSelected: Employee | null = null;
   places: Place[] = [];
-  
 
   schedules: Schedule[] = [];
   isAvailable: boolean = true;
@@ -234,6 +233,21 @@ export class ReservationComponent implements OnInit {
         if (result.isConfirmed) {
           this.clientService.saveAppointment(body).subscribe({
             next: (value: any) => {
+              const nameEmployee =
+                this.employeeSelected!.first_name +
+                this.employeeSelected!.last_name;
+              const billBody = {
+                date,
+                fkUser,
+                hour,
+                employee: nameEmployee,
+                type: this.service?.name,
+                place: placeSelected.name,
+                price: this.service?.price,
+                idCompany: this.idCompany
+              };
+
+              this.saveBill(billBody);
               Swal.fire({
                 position: 'top-end',
                 icon: 'success',
@@ -243,8 +257,21 @@ export class ReservationComponent implements OnInit {
               });
 
               setTimeout(() => {
-                this.router.navigate(['/client/company'], {
-                  queryParams: { id: this.idCompany },
+                Swal.fire({
+                  title: 'Tu factura se ha generado, ¿Deseas verla?',
+                  showDenyButton: true,
+                  confirmButtonText: 'Si',
+                  denyButtonText: `Mas tarde`,
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    this.router.navigate(['/client/bill'], {
+                      queryParams: { id: this.idCompany },
+                    });
+                  } else {
+                    this.router.navigate(['/client/company'], {
+                      queryParams: { id: this.idCompany },
+                    });
+                  }
                 });
               }, 1500);
             },
@@ -267,6 +294,20 @@ export class ReservationComponent implements OnInit {
           });
         }
       });
+    }
+  }
+
+  // new code
+
+  saveBill(body: any) {
+    const dataBill = this.localStorageService.getItem('data_bill');
+    if (dataBill) {
+    } else {
+      body.cui = '0000000000';
+      body.nit = 'Consumidor Final';
+      body.direction = 'Ciudad';
+
+      this.localStorageService.setItem('bill', body);
     }
   }
 }

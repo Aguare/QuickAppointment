@@ -94,7 +94,8 @@ public class AppointmentController {
                         (Double) result[4],           // price
                         (String) result[5],           // first_name
                         (String) result[6],           // last_name
-                        (String) result[7]           // price// price
+                        (String) result[7],           // price// price
+                        (Integer) result[8]           // fkCompany
                 ))
                 .collect(Collectors.toList());
 

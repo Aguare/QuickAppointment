@@ -23,6 +23,7 @@ import { MyReservationComponent } from './components/client/my-reservation/my-re
 import { VerifyEmailComponent } from './components/commons/verify-email/verify-email.component';
 import { ResetPasswordComponent } from './components/commons/reset-password/reset-password.component';
 import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
+import { BillViewComponent } from './components/client/bill-view/bill-view.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -87,6 +88,10 @@ export const routes: Routes = [
       {
         path: 'myReservation',
         component: MyReservationComponent
+      },
+      {
+        path: 'bill',
+        component: BillViewComponent
       },
       {
         path: '**',
