@@ -4,45 +4,55 @@ import { Appointment, Billing, MyAppointment } from '../interfaces/interfaces';
 import { log } from 'node:console';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ClientService {
-
   apiAppointments: string = 'http://localhost:8000/appointments';
   apiBilling: string = 'http://localhost:8000/billing';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  saveAppointment(body: any){
+  saveAppointment(body: any) {
     return this.http.post(`${this.apiAppointments}/create`, body);
   }
 
-  getAppointmetsByUser(fkUser: number){
-    return this.http.get<Appointment[]>(`${this.apiAppointments}/user/${fkUser}`);
+  getAppointmetsByUser(fkUser: number) {
+    return this.http.get<Appointment[]>(
+      `${this.apiAppointments}/user/${fkUser}`
+    );
   }
-  
-  getAppointmetsByDate(date: string){
+
+  getAppointmetsByDate(date: string) {
     return this.http.get<Appointment[]>(`${this.apiAppointments}/date/${date}`);
   }
-  
-  getMyAppointments(fkUser: number){
-    return this.http.get<MyAppointment[]>(`${this.apiAppointments}/myReservations/${fkUser}`);
+
+  getAppointmentById(id: number) {
+    return this.http.get<Appointment>(`${this.apiAppointments}/${id}`);
   }
-  
-  getAppointmentsByYear(){
+
+  updateAppointment(id: number, body: any) {
+    return this.http.put(`${this.apiAppointments}/update/${id}`,body);
+  }
+
+  getMyAppointments(fkUser: number) {
+    return this.http.get<MyAppointment[]>(
+      `${this.apiAppointments}/myReservations/${fkUser}`
+    );
+  }
+
+  getAppointmentsByYear() {
     return this.http.get(`${this.apiAppointments}/appointmentByYear`);
   }
 
-  saveBilling(body: any){
+  saveBilling(body: any) {
     return this.http.post(`${this.apiBilling}/create`, body);
   }
 
-  getBillingsByUser(fkUser: number){
+  getBillingsByUser(fkUser: number) {
     return this.http.get<Billing>(`${this.apiBilling}/user/${fkUser}`);
   }
 
-  updateBilling(id:number, body: any){
-    return this.http.put(`${this.apiBilling}/update/${id}`,body);
+  updateBilling(id: number, body: any) {
+    return this.http.put(`${this.apiBilling}/update/${id}`, body);
   }
-
 }

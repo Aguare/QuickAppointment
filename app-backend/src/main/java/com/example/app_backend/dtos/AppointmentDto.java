@@ -13,6 +13,8 @@ public class AppointmentDto {
     private Integer fkEmployee;
     private Integer fkType;
     private Integer fkPlace;
+    private Boolean isConfirmated;
+    private Boolean isCanceled;
 
     public Integer getId() {
         return id;

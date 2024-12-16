@@ -2,11 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../commons/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ClientService } from '../../../services/client.service';
-import { Billing, MyAppointment } from '../../../interfaces/interfaces';
+import {
+  Billing,
+  Company,
+  MyAppointment,
+  Service,
+} from '../../../interfaces/interfaces';
 import { CommonModule } from '@angular/common';
 import { LocalStorageService } from '../../../services/local-storage.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AdminService } from '../../../services/admin.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-my-reservation',
@@ -21,7 +28,8 @@ export class MyReservationComponent implements OnInit {
   constructor(
     private clientService: ClientService,
     private localStorageService: LocalStorageService,
-    private router: Router
+    private router: Router,
+    private adminService: AdminService
   ) {}
 
   ngOnInit(): void {
@@ -33,6 +41,31 @@ export class MyReservationComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
+      },
+    });
+  }
+
+  editBill(appointment: MyAppointment) {
+    forkJoin({
+      company: this.adminService.getCompanyById(appointment.fkCompany),
+      service: this.adminService.getTypeAppointemById(appointment.fkService),
+    }).subscribe({
+      next: ({ company, service }) => {
+        this.localStorageService.setItem('actualService', service);
+  
+        const route = company.courtRental
+          ? '/client/courtReservation'
+          : '/client/reservation';
+  
+        this.router.navigate([route], {
+          queryParams: {
+            id: appointment.fkCompany,
+            appointment: appointment.id,
+          },
+        });
+      },
+      error: (err) => {
+        console.error(err);
       },
     });
   }
@@ -50,8 +83,6 @@ export class MyReservationComponent implements OnInit {
     };
 
     this.saveBill(billBody);
-
-    
   }
 
   saveBill(body: any) {

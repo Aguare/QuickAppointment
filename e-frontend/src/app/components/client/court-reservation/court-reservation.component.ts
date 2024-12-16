@@ -50,6 +50,7 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class CourtReservationComponent {
   idCompany: number | undefined;
+  idAppointment: number | undefined;
   service: Service | null = null;
   selectedDate: Date | null = null;
   selectedSlot: string | null = null;
@@ -74,6 +75,9 @@ export class CourtReservationComponent {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.idCompany = params['id'] ? +params['id'] : undefined;
+      this.idAppointment = params['appointment']
+        ? +params['appointment']
+        : undefined;
     });
 
     this.service = this.localStorageService.getItem('actualService');
@@ -211,7 +215,6 @@ export class CourtReservationComponent {
       const fkType = this.service.id;
       const randomIndex = Math.floor(Math.random() * this.employees.length);
       const selectedEmploye = this.employees[randomIndex];
-      console.log(selectedEmploye);
       
       const fkEmployee = selectedEmploye.id;
 
@@ -224,61 +227,71 @@ export class CourtReservationComponent {
         fkPlace,
       };
 
-      Swal.fire({
-        title: '¿Estas seguro de realizar la reservación?',
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Confirmar',
-        denyButtonText: `No Confirmar`,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.clientService.saveAppointment(body).subscribe({
-            next: (value: any) => {
-
-              const nameEmployee =
-                selectedEmploye.first_name + " " + 
-                selectedEmploye.last_name;
-              const billBody = {
-                date,
-                fkUser,
-                hour,
-                employee: nameEmployee,
-                type: this.service?.name,
-                place: this.placeSelected!.name,
-                price: this.service?.price,
-                idCompany: this.idCompany,
-              };
-              Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: value.message,
-                showConfirmButton: false,
-                timer: 1500,
-              });
-
-              setTimeout(() => {
-                this.saveBill(billBody);
-              }, 1500);
-            },
-            error: (err) => {
-              console.log(err);
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Error al guardar tu reservación',
-              });
-            },
-          });
-        } else if (result.isDenied) {
-          Swal.fire({
-            position: 'top-end',
-            icon: 'warning',
-            title: 'Tu cita no se guardo',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      });
+      const confirmMessage = this.idAppointment
+              ? '¿Estás seguro de modificar esta cita?'
+              : '¿Estás seguro de realizar la reservación?';
+      
+            Swal.fire({
+              title: confirmMessage,
+              showDenyButton: true,
+              showCancelButton: true,
+              confirmButtonText: 'Confirmar',
+              denyButtonText: `No Confirmar`,
+            }).then((result) => {
+              if (result.isConfirmed) {
+                const saveObservable = this.idAppointment
+                  ? this.clientService.updateAppointment(this.idAppointment, body)
+                  : this.clientService.saveAppointment(body);
+      
+                saveObservable.subscribe({
+                  next: (value: any) => {
+                    const successMessage = this.idAppointment
+                      ? 'Cita modificada correctamente'
+                      : 'Reservación realizada con éxito';
+      
+                    Swal.fire({
+                      position: 'top-end',
+                      icon: 'success',
+                      title: successMessage,
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+      
+                    const billBody = {
+                      date,
+                      fkUser,
+                      hour,
+                      employee: `${selectedEmploye.first_name} ${
+                        selectedEmploye.last_name
+                      }`,
+                      type: this.service?.name,
+                      place: this.placeSelected!.name,
+                      price: this.service?.price,
+                      idCompany: this.idCompany,
+                    };
+                    setTimeout(() => {
+                      this.saveBill(billBody);
+                    }, 1500);
+                  },
+                  error: (err) => {
+                    console.log(err);
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Error al guardar la cita.',
+                    });
+                  },
+                });
+              } else if (result.isDenied) {
+                Swal.fire({
+                  position: 'top-end',
+                  icon: 'warning',
+                  title: 'Tu acción no se realizó',
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              }
+            });
     }
   }
 

@@ -52,6 +52,7 @@ import {
 })
 export class ReservationComponent implements OnInit {
   idCompany: number | undefined;
+  idAppointment: number | undefined;
   service: Service | null = null;
   selectedDate: Date | null = null;
   selectedSlot: string | null = null;
@@ -76,6 +77,9 @@ export class ReservationComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.idCompany = params['id'] ? +params['id'] : undefined;
+      this.idAppointment = params['appointment']
+        ? +params['appointment']
+        : undefined;
     });
 
     this.service = this.localStorageService.getItem('actualService');
@@ -107,6 +111,7 @@ export class ReservationComponent implements OnInit {
         },
       });
     }
+
   }
 
   goBack() {
@@ -224,38 +229,48 @@ export class ReservationComponent implements OnInit {
         fkPlace,
       };
 
+      const confirmMessage = this.idAppointment
+        ? '¿Estás seguro de modificar esta cita?'
+        : '¿Estás seguro de realizar la reservación?';
+
       Swal.fire({
-        title: '¿Estas seguro de realizar la reservación?',
+        title: confirmMessage,
         showDenyButton: true,
         showCancelButton: true,
         confirmButtonText: 'Confirmar',
         denyButtonText: `No Confirmar`,
       }).then((result) => {
         if (result.isConfirmed) {
-          this.clientService.saveAppointment(body).subscribe({
+          const saveObservable = this.idAppointment
+            ? this.clientService.updateAppointment(this.idAppointment, body)
+            : this.clientService.saveAppointment(body);
+
+          saveObservable.subscribe({
             next: (value: any) => {
-              const nameEmployee =
-                this.employeeSelected!.first_name + " " + 
-                this.employeeSelected!.last_name;
+              const successMessage = this.idAppointment
+                ? 'Cita modificada correctamente'
+                : 'Reservación realizada con éxito';
+
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: successMessage,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+
               const billBody = {
                 date,
                 fkUser,
                 hour,
-                employee: nameEmployee,
+                employee: `${this.employeeSelected!.first_name} ${
+                  this.employeeSelected!.last_name
+                }`,
                 type: this.service?.name,
                 place: placeSelected.name,
                 price: this.service?.price,
                 idCompany: this.idCompany,
               };
-
-              Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: value.message,
-                showConfirmButton: false,
-                timer: 1500,
-              });
-              
               setTimeout(() => {
                 this.saveBill(billBody);
               }, 1500);
@@ -265,7 +280,7 @@ export class ReservationComponent implements OnInit {
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Error al guardar tu reservación',
+                text: 'Error al guardar la cita.',
               });
             },
           });
@@ -273,7 +288,7 @@ export class ReservationComponent implements OnInit {
           Swal.fire({
             position: 'top-end',
             icon: 'warning',
-            title: 'Tu cita no se guardo',
+            title: 'Tu acción no se realizó',
             showConfirmButton: false,
             timer: 1500,
           });
@@ -285,7 +300,6 @@ export class ReservationComponent implements OnInit {
   // new code
 
   saveBill(body: any) {
-
     const idUser = this.localStorageService.getItem('id_user');
     this.clientService.getBillingsByUser(idUser).subscribe({
       next: (value: Billing) => {
@@ -341,6 +355,5 @@ export class ReservationComponent implements OnInit {
         });
       },
     });
-
   }
 }

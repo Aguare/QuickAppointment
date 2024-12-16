@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,7 +28,7 @@ public class AppointmentController {
         appointment.setFkUser(appointmentDto.getFkUser());
         appointment.setDate(appointmentDto.getDate());
         appointment.setHour(appointmentDto.getHour());
-        appointment.setConfirmated(true);
+        appointment.setConfirmated(false);
         appointment.setCanceled(false);
         appointment.setFkEmployee(appointmentDto.getFkEmployee());
         appointment.setFkType(appointmentDto.getFkType());
@@ -81,8 +81,6 @@ public class AppointmentController {
     @GetMapping("/myReservations/{fkUser}")
     public ResponseEntity<List<MyAppointmentsDto>> getMyAppointments(@PathVariable Integer fkUser) {
 
-
-
         List<Object[]> results = appointmentRepository.findReservations(fkUser);
 
         List<MyAppointmentsDto> myAppointments  = results.stream()
@@ -95,7 +93,9 @@ public class AppointmentController {
                         (String) result[5],           // first_name
                         (String) result[6],           // last_name
                         (String) result[7],           // price// price
-                        (Integer) result[8]           // fkCompany
+                        (Integer) result[8],           // fkCompany
+                        (Boolean) result[9],
+                        (Integer) result[10]
                 ))
                 .collect(Collectors.toList());
 
@@ -122,5 +122,44 @@ public class AppointmentController {
         }
 
         return ResponseEntity.ok(myAppointments);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AppointmentDto> getAppointmentById(@PathVariable Integer id) {
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+
+        if(appointmentOptional.isPresent()) {
+            Appointment appointment = appointmentOptional.get();
+            AppointmentDto dto = new AppointmentDto();
+            dto.setId(appointment.getId());
+            dto.setDate(appointment.getDate());
+            dto.setHour(appointment.getHour());
+            dto.setFkEmployee(appointment.getFkEmployee());
+            dto.setFkType(appointment.getFkType());
+            dto.setFkPlace(appointment.getFkPlace());
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("update/{id}")
+    public ResponseEntity<ApiResponse> updateAppointment(@PathVariable Integer id, @RequestBody AppointmentDto appointmentDto) {
+
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+
+        if (appointmentOptional.isPresent()) {
+            Appointment appointment = appointmentOptional.get();
+            appointment.setDate(appointmentDto.getDate());
+            appointment.setHour(appointmentDto.getHour());
+            appointment.setFkEmployee(appointmentDto.getFkEmployee());
+            appointment.setConfirmated(false);
+
+            appointmentRepository.save(appointment);
+            ApiResponse response = new ApiResponse("Cita actualizada con éxito", appointment.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

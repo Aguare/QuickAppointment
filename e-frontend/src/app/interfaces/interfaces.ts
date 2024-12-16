@@ -84,6 +84,8 @@ export interface Appointment {
   fkEmployee: number;
   fkType: number;
   fkPlace: number;
+  isConfirmated: boolean;
+  isCanceled: boolean;
 }
 
 export interface MyAppointment {
@@ -95,7 +97,9 @@ export interface MyAppointment {
   first_name: string;
   last_name: string;
   place: string;
-  fkCompany: number
+  fkCompany: number,
+  is_confirmated: boolean,
+  fkService: number
 }
 
 export interface Billing {
