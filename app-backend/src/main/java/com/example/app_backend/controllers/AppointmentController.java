@@ -162,4 +162,21 @@ public class AppointmentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping("cancel/{id}")
+    public ResponseEntity<ApiResponse> cancelAppointment(@PathVariable Integer id) {
+
+        Optional<Appointment> appointmentOptional = appointmentRepository.findById(id);
+
+        if (appointmentOptional.isPresent()) {
+            Appointment appointment = appointmentOptional.get();
+            appointment.setCanceled(true);
+
+            appointmentRepository.save(appointment);
+            ApiResponse response = new ApiResponse("La cita se canceló", appointment.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

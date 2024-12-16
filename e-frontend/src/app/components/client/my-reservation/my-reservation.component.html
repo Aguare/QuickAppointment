@@ -28,7 +28,7 @@
           <td>{{ appointment.place }}</td>
           <td>{{ appointment.is_confirmated ? 'Confirmada' : 'Pendiente' }}</td>
           <td><button class="button is-info" (click)="editBill(appointment)">Editar</button></td>
-          <td><button class="button is-danger" (click)="viewBill(appointment)">Cancelar</button></td>
+          <td><button class="button is-danger" (click)="cancelBill(appointment)">Cancelar</button></td>
           <td><button class="button is-primary" (click)="viewBill(appointment)">Ver Factura</button></td>
         </tr>
       </tbody>

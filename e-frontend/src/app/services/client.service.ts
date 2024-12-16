@@ -33,6 +33,10 @@ export class ClientService {
   updateAppointment(id: number, body: any) {
     return this.http.put(`${this.apiAppointments}/update/${id}`,body);
   }
+  
+  cancelAppointment(id: number) {
+    return this.http.put(`${this.apiAppointments}/cancel/${id}`,null);
+  }
 
   getMyAppointments(fkUser: number) {
     return this.http.get<MyAppointment[]>(

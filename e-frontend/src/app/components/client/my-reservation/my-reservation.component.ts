@@ -52,11 +52,11 @@ export class MyReservationComponent implements OnInit {
     }).subscribe({
       next: ({ company, service }) => {
         this.localStorageService.setItem('actualService', service);
-  
+
         const route = company.courtRental
           ? '/client/courtReservation'
           : '/client/reservation';
-  
+
         this.router.navigate([route], {
           queryParams: {
             id: appointment.fkCompany,
@@ -67,6 +67,37 @@ export class MyReservationComponent implements OnInit {
       error: (err) => {
         console.error(err);
       },
+    });
+  }
+
+  cancelBill(appointment: MyAppointment) {
+    Swal.fire({
+      title: '¿Quieres cancelar tu cita?',
+      text: 'No habrá posibilidad de recuperarla',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.clientService.cancelAppointment(appointment.id).subscribe({
+          next: (value:any) => {
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: value.message,
+              showConfirmButton: false,
+              timer: 1500
+            });
+
+            setTimeout(()=>{window.location.reload()}, 1500)
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+      }
     });
   }
 

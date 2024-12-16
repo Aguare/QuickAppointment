@@ -19,7 +19,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             "    left join type_appointment ty on a.FK_Type = ty.id\n" +
             "    left join employee e on a.FK_Employee = e.id\n" +
             "    left join place p on a.FK_Place = p.id\n" +
-            "    where a.date >= current_date and a.FK_User = :fkUser order by a.date asc",
+            "    where a.date >= current_date and a.FK_User = :fkUser and a.is_canceled = false order by a.date asc",
             nativeQuery = true)
     List<Object[]> findReservations(Integer fkUser);
 
