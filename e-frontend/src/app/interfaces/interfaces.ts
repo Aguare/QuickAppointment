@@ -109,3 +109,13 @@ export interface Billing {
   direction: string;
   fkUser: number;
 }
+
+export interface AppointmentReport{
+  id: number;
+  username: string,
+  email: string;
+  date: string;
+  hour: string,
+  service: string,
+  price: number
+}

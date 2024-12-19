@@ -29,4 +29,44 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             "ORDER BY YEAR(date)",
             nativeQuery = true)
     List<Object[]> getAppointmentByYear();
+
+    @Query(value = "select a.id, u.username, u.email, a.date, a.hour, ty.name as service, ty.price from appointment a\n" +
+            "                left join type_appointment ty on a.FK_Type = ty.id\n" +
+            "                left join user u on a.FK_User = u.id\n" +
+            "                order by a.date asc",
+            nativeQuery = true)
+    List<Object[]> allAppointments();
+
+    @Query(value = "select a.id, u.username, u.email, a.date, a.hour, ty.name as service, ty.price from appointment a\n" +
+            "                left join type_appointment ty on a.FK_Type = ty.id\n" +
+            "                left join user u on a.FK_User = u.id\n" +
+            "                left join company c on ty.FK_Company = c.id\n" +
+            "                where c.id = :fkCompany \n" +
+            "                order by a.date asc",
+            nativeQuery = true)
+    List<Object[]> appointmentsByCompany(Integer fkCompany);
+
+    @Query(value = "select a.id, u.username, u.email, a.date, a.hour, ty.name as service, ty.price from appointment a\n" +
+            "                left join type_appointment ty on a.FK_Type = ty.id\n" +
+            "                left join user u on a.FK_User = u.id\n" +
+            "                where a.is_confirmated = :status and a.is_canceled = false\n" +
+            "                order by a.date asc",
+            nativeQuery = true)
+    List<Object[]> appointmentsByStatus(Boolean status);
+
+    @Query(value = "select a.id, u.username, u.email, a.date, a.hour, ty.name as service, ty.price from appointment a\n" +
+            "                left join type_appointment ty on a.FK_Type = ty.id\n" +
+            "                left join user u on a.FK_User = u.id\n" +
+            "                where  a.is_canceled = :isCanceled \n" +
+            "                order by a.date asc",
+            nativeQuery = true)
+    List<Object[]> appointmentsCanceled(Boolean isCanceled);
+
+    @Query(value = "select a.id, u.username, u.email, a.date, a.hour, ty.name as service, ty.price from appointment a\n" +
+            "                left join type_appointment ty on a.FK_Type = ty.id\n" +
+            "                left join user u on a.FK_User = u.id\n" +
+            "                where a.date >= :startDate and a.date <= :endDate \n" +
+            "                order by a.date asc",
+            nativeQuery = true)
+    List<Object[]> appointmentsByDate(Date startDate, Date endDate);
 }

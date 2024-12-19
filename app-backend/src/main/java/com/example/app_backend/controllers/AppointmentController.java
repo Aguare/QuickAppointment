@@ -179,4 +179,124 @@ public class AppointmentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/appointmentReport")
+    public ResponseEntity<List<AppointmentReportDto>> getAllAppointments() {
+
+        List<Object[]> results = appointmentRepository.allAppointments();
+
+        List<AppointmentReportDto> myAppointments  = results.stream()
+                .map(result -> new AppointmentReportDto(
+                        (Integer) result[0],
+                        (String) result[1],
+                        (String) result[2],
+                        (Date) result[3],
+                        (Time) result[4],
+                        (String) result[5],
+                        (Double) result[6]
+                ))
+                .collect(Collectors.toList());
+
+        if (myAppointments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(myAppointments);
+    }
+
+    @GetMapping("/appointmentsCompany/{fkCompany}")
+    public ResponseEntity<List<AppointmentReportDto>> getAppointmentsByCompany(@PathVariable Integer fkCompany) {
+
+        List<Object[]> results = appointmentRepository.appointmentsByCompany(fkCompany);
+
+        List<AppointmentReportDto> myAppointments  = results.stream()
+                .map(result -> new AppointmentReportDto(
+                        (Integer) result[0],
+                        (String) result[1],
+                        (String) result[2],
+                        (Date) result[3],
+                        (Time) result[4],
+                        (String) result[5],
+                        (Double) result[6]
+                ))
+                .collect(Collectors.toList());
+
+        if (myAppointments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(myAppointments);
+    }
+
+    @GetMapping("/appointmentsStatus/{status}")
+    public ResponseEntity<List<AppointmentReportDto>> getAppointmentsByCompany(@PathVariable Boolean status) {
+
+        List<Object[]> results = appointmentRepository.appointmentsByStatus(status);
+
+        List<AppointmentReportDto> myAppointments  = results.stream()
+                .map(result -> new AppointmentReportDto(
+                        (Integer) result[0],
+                        (String) result[1],
+                        (String) result[2],
+                        (Date) result[3],
+                        (Time) result[4],
+                        (String) result[5],
+                        (Double) result[6]
+                ))
+                .collect(Collectors.toList());
+
+        if (myAppointments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(myAppointments);
+    }
+
+    @GetMapping("/appointmentsCanceled/{isCanceled}")
+    public ResponseEntity<List<AppointmentReportDto>> getAppointmentsCanceled(@PathVariable Boolean isCanceled) {
+
+        List<Object[]> results = appointmentRepository.appointmentsCanceled(isCanceled);
+
+        List<AppointmentReportDto> myAppointments  = results.stream()
+                .map(result -> new AppointmentReportDto(
+                        (Integer) result[0],
+                        (String) result[1],
+                        (String) result[2],
+                        (Date) result[3],
+                        (Time) result[4],
+                        (String) result[5],
+                        (Double) result[6]
+                ))
+                .collect(Collectors.toList());
+
+        if (myAppointments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(myAppointments);
+    }
+
+    @GetMapping("/appointmentsByDate/{startDate}/{endDate}")
+    public ResponseEntity<List<AppointmentReportDto>> getAppointmentsByDate(@PathVariable Date startDate, @PathVariable Date endDate) {
+
+        List<Object[]> results = appointmentRepository.appointmentsByDate(startDate, endDate);
+
+        List<AppointmentReportDto> myAppointments  = results.stream()
+                .map(result -> new AppointmentReportDto(
+                        (Integer) result[0],
+                        (String) result[1],
+                        (String) result[2],
+                        (Date) result[3],
+                        (Time) result[4],
+                        (String) result[5],
+                        (Double) result[6]
+                ))
+                .collect(Collectors.toList());
+
+        if (myAppointments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(myAppointments);
+    }
 }

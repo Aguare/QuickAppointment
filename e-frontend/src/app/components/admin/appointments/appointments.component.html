@@ -1,0 +1,94 @@
+<app-navbar></app-navbar>
+
+<mat-toolbar color="primary">
+  <span class="title">Reportes Personalizados</span>
+  <span class="spacer"></span>
+</mat-toolbar>
+
+<div class="container">
+  <!-- Botones de Filtros -->
+  <div class="buttons">
+    <button class="button is-info" (click)="toggleDateFilter()">
+      Filtrar por Fecha
+    </button>
+    <button class="button is-primary" (click)="toggleBusinessFilter()">
+      Filtrar por Negocio
+    </button>
+    <button class="button is-warning" (click)="toggleStatusFilter()">
+      Filtrar por Estado
+    </button>
+    <button class="button is-dark" (click)="toggleAllAppointments()">
+      Ver Todo
+    </button>
+
+  </div>
+
+  <!-- Filtro por Fecha -->
+  <div *ngIf="showDateFilter" class="box mt-5">
+    <label class="label">Desde:</label>
+    <input class="input" type="date" [(ngModel)]="startDate" />
+    <label class="label">Hasta:</label>
+    <input class="input" type="date" [(ngModel)]="endDate" />
+    <button class="button is-success mt-2" (click)="filterByDate()">
+      Buscar
+    </button>
+  </div>
+
+  <!-- Filtro por Negocio -->
+  <div *ngIf="showBusinessFilter" class="box mt-5">
+    <label class="label">Selecciona un Negocio:</label>
+    <div class="select">
+      <select [(ngModel)]="selectedBusiness" (change)="filterByBusiness()">
+        <option value="" disabled selected>Elige un negocio</option>
+        <option *ngFor="let company of companies" [value]="company.id">
+          {{ company.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Filtro por Estado -->
+  <div *ngIf="showStatusFilter" class="box mt-5">
+    <label class="label">Selecciona un Estado:</label>
+    <div class="select">
+      <select [(ngModel)]="selectedStatus" (change)="filterByStatus()">
+        <option value="" disabled selected>Elige un estado</option>
+        <option value="1">Pendiente</option>
+        <option value="2">Confirmada</option>
+        <option value="3">Cancelada</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Tabla de Datos -->
+  <div class="mt-5">
+    <mat-toolbar color="primary">
+      <span class="title">Reporte de Citas</span>
+      <span class="spacer"></span>
+      
+    <button (click)="exportToPDF()" class="button is-success m-5">Exportar a PDF</button>
+    </mat-toolbar>
+    <table class="table is-fullwidth is-striped is-hoverable ">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Servicio</th>
+          <th>Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of appointmens">
+          <td>{{ item.username }}</td>
+          <td>{{ item.email }}</td>
+          <td>{{ item.date }}</td>
+          <td>{{ item.hour }}</td>
+          <td>{{ item.service }}</td>
+          <td>{{ item.price }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
