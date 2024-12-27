@@ -11,6 +11,7 @@ import { Role } from '../../../interfaces/interfaces';
 import { NavbarComponent } from '../../commons/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AdminService } from '../../../services/admin.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-role-form',
@@ -72,7 +73,13 @@ export class RoleFormComponent {
       if (this.isEditMode) {
         this.adminService.updateRole(this.roleId!, formValue).subscribe({
           next: (value: any) => {
-            console.log(value);
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Rol actualizado con exito",
+              showConfirmButton: false,
+              timer: 1500
+            });
           },
           error: (err) => {
             console.log(err);
@@ -81,13 +88,21 @@ export class RoleFormComponent {
       } else {
         this.adminService.saveRole(formValue).subscribe({
           next: (value: any) => {
-            console.log(value);
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Rol guardado con exito",
+              showConfirmButton: false,
+              timer: 1500
+            });
           },
           error: (err) => {
             console.log(err);
           },
         });
       }
+
+      setTimeout(() => {this.router.navigate(['/admin/roles']);}, 1500)
     }
   }
 

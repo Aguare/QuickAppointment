@@ -149,4 +149,8 @@ export class AdminService {
   updateRole(roleId: number, body: any){
     return this.http.put(`${this.apiRole}/update/${roleId}`, body);
   }
+  
+  deleteRole(roleId: number){
+    return this.http.delete(`${this.apiRole}/delete/${roleId}`);
+  }
 }

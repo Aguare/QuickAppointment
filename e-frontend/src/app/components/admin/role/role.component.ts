@@ -16,7 +16,6 @@ import { AdminService } from '../../../services/admin.service';
   styleUrl: './role.component.scss',
 })
 export class RoleComponent implements OnInit {
-
   roles: Role[] = [];
 
   constructor(private router: Router, private adminService: AdminService) {}
@@ -24,14 +23,13 @@ export class RoleComponent implements OnInit {
   ngOnInit(): void {
     this.adminService.getRoles().subscribe({
       next: (value: Role[]) => {
-        this.roles = value;
+        this.roles = value.filter(rol => rol.id !== 1 && rol.id !== 2);
       },
       error: (err) => {
         console.log(err);
       },
     });
   }
-
 
   editRole(role: Role) {
     this.router.navigate([`/admin/roles/edit/${role.id}`]);
@@ -48,10 +46,19 @@ export class RoleComponent implements OnInit {
       confirmButtonText: 'Borrar Rol',
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Deleted!',
-          text: 'El rol se elimino ',
-          icon: 'success',
+        this.adminService.deleteRole(role.id).subscribe({
+          next: (value: any) => {
+            console.log(value);
+            
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'El rol se elimino ',
+              icon: 'success',
+            });
+          },
+          error: (err) => {
+            console.log(err);
+          },
         });
       }
     });

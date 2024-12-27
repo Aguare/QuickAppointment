@@ -132,4 +132,22 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @Transactional
+    @DeleteMapping("/delete/{roleId}")
+    public ResponseEntity<ApiResponse> deleteRole(@PathVariable Integer roleId) {
+        Optional<Role> existingRoleOpt = roleRepository.findById(roleId);
+        if (!existingRoleOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse("Rol no encontrado", null));
+        }
+
+        roleHasPageRepository.deleteByFkRole(roleId);
+
+        roleRepository.deleteById(roleId);
+
+        ApiResponse response = new ApiResponse("Rol eliminado con éxito", roleId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
 }
