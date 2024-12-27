@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Role } from '../../../interfaces/interfaces';
 import { NavbarComponent } from '../../commons/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-role',
@@ -14,36 +15,23 @@ import Swal from 'sweetalert2';
   templateUrl: './role.component.html',
   styleUrl: './role.component.scss',
 })
-export class RoleComponent {
+export class RoleComponent implements OnInit {
 
-  constructor(private router: Router){}
+  roles: Role[] = [];
 
-  roles: Role[] = [
-    {
-      id: 1,
-      name: 'Administrador',
-      description: 'Acceso completo al sistema',
-      allowCreate: true,
-      allowEdit: true,
-      allowDelete: true,
-    },
-    {
-      id: 2,
-      name: 'Editor',
-      description: 'Permisos de edición de contenido',
-      allowCreate: true,
-      allowEdit: true,
-      allowDelete: false,
-    },
-    {
-      id: 3,
-      name: 'Lector',
-      description: 'Solo puede leer el contenido',
-      allowCreate: false,
-      allowEdit: false,
-      allowDelete: false,
-    },
-  ];
+  constructor(private router: Router, private adminService: AdminService) {}
+
+  ngOnInit(): void {
+    this.adminService.getRoles().subscribe({
+      next: (value: Role[]) => {
+        this.roles = value;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
 
   editRole(role: Role) {
     this.router.navigate([`/admin/roles/edit/${role.id}`]);
@@ -73,7 +61,7 @@ export class RoleComponent {
     console.log('Asignar rol:', role);
   }
 
-  addRole(){
+  addRole() {
     this.router.navigate(['/admin/roles/new']);
   }
 }

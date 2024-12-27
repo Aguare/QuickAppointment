@@ -299,4 +299,22 @@ public class AppointmentController {
 
         return ResponseEntity.ok(myAppointments);
     }
+
+    @GetMapping("/appointmentByCompanyReport")
+    public ResponseEntity<List<AppointmentByCompanyDto>> getAppointmentsByCompanyReport() {
+        List<Object[]> results = appointmentRepository.getAppointmentsByCompanyReport();
+
+        List<AppointmentByCompanyDto> myAppointments = results.stream()
+                .map(result -> new AppointmentByCompanyDto(
+                        (String) result[0],
+                        ((Number) result[1]).intValue()
+                ))
+                .collect(Collectors.toList());
+
+        if (myAppointments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(myAppointments);
+    }
 }

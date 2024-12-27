@@ -39,10 +39,28 @@ export class DashboardComponent implements OnInit {
       next: (value: any) => {
         const data = this.dataArray(value);
         this.barChartLabels = data.namesArray;
-        this.barChartData = [{
-          data: data.dataArray,
-          label: 'Citas por año',
-        }]
+        this.barChartData = [
+          {
+            data: data.dataArray,
+            label: 'Citas por año',
+          },
+        ];
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+    
+    this.clientService.getAppointmentsByCompany().subscribe({
+      next: (value: any) => {
+        const data = this.dataArray1(value);
+        this.barChartLabels1 = data.namesArray;
+        this.barChartData1 = [
+          {
+            data: data.dataArray,
+            label: 'Citas por negocio',
+          },
+        ];
         
       },
       error: (err) => {
@@ -52,14 +70,26 @@ export class DashboardComponent implements OnInit {
   }
 
   dataArray(array: any) {
-    let namesArray : any= [];
-    let dataArray :any= [];
+    let namesArray: any = [];
+    let dataArray: any = [];
 
-    array.forEach((item:any) => {
-        namesArray.push(item.year);
-        dataArray.push(item.appointments);
+    array.forEach((item: any) => {
+      namesArray.push(item.year);
+      dataArray.push(item.appointments);
     });
 
     return { namesArray, dataArray };
-}
+  }
+  
+  dataArray1(array: any) {
+    let namesArray: any = [];
+    let dataArray: any = [];
+
+    array.forEach((item: any) => {
+      namesArray.push(item.company);
+      dataArray.push(item.total);
+    });
+
+    return { namesArray, dataArray };
+  }
 }

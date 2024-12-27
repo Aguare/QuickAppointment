@@ -54,9 +54,9 @@ export interface Role {
   id: number;
   name: string;
   description: string;
-  allowCreate: boolean;
-  allowEdit: boolean;
-  allowDelete: boolean;
+  allowCreate?: boolean;
+  allowEdit?: boolean;
+  allowDelete?: boolean;
 }
 
 export interface User { 

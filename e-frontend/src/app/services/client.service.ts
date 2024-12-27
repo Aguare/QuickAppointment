@@ -69,29 +69,32 @@ export class ClientService {
       `${this.apiAppointments}/appointmentReport`
     );
   }
-  
+
   getAppointmentsByCompanyReport(fkCompany: number) {
     return this.http.get<AppointmentReport[]>(
       `${this.apiAppointments}/appointmentsCompany/${fkCompany}`
     );
   }
-  
+
   getAppointmentsByStatusReport(status: boolean) {
     return this.http.get<AppointmentReport[]>(
       `${this.apiAppointments}/appointmentsStatus/${status}`
     );
   }
-  
+
   getAppointmentsCanceledReport(isCanceled: boolean) {
     return this.http.get<AppointmentReport[]>(
       `${this.apiAppointments}/appointmentsCanceled/${isCanceled}`
     );
   }
 
-  
-getAppointmentsByDateReport(startDate: string, endDate: string) {
+  getAppointmentsByDateReport(startDate: string, endDate: string) {
     return this.http.get<AppointmentReport[]>(
       `${this.apiAppointments}/appointmentsByDate/${startDate}/${endDate}`
     );
+  }
+
+  getAppointmentsByCompany() {
+    return this.http.get(`${this.apiAppointments}/appointmentByCompanyReport`);
   }
 }

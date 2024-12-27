@@ -69,4 +69,22 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             "                order by a.date asc",
             nativeQuery = true)
     List<Object[]> appointmentsByDate(Date startDate, Date endDate);
+
+    @Query(value = "SELECT \n" +
+            "    c.name AS company,\n" +
+            "    COUNT(*) AS total\n" +
+            "FROM \n" +
+            "    appointment a\n" +
+            "JOIN\n" +
+            "    type_appointment t\n" +
+            "on a.FK_Type = t.id\n" +
+            "join\n" +
+            "    company c\n" +
+            "on t.FK_Company = c.id\n" +
+            "GROUP BY \n" +
+            "    c.name\n" +
+            "ORDER BY \n" +
+            "    total DESC;",
+            nativeQuery = true)
+    List<Object[]> getAppointmentsByCompanyReport();
 }

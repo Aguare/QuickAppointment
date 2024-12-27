@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { File } from 'buffer';
-import { Company, Employee, Place, Schedule, Service } from '../interfaces/interfaces';
+import { Company, Employee, Place, Role, Schedule, Service } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +9,7 @@ import { Company, Employee, Place, Schedule, Service } from '../interfaces/inter
 export class AdminService {
   apiImage: string = 'http://localhost:8000/api/upload';
   apiCompany: string = 'http://localhost:8000/companies';
+  apiRole: string = 'http://localhost:8000/roles';
   apiTypeAppointment: string = 'http://localhost:8000/type-appointments';
   apiEmployee: string = 'http://localhost:8000/employees';
   apiPlace: string = 'http://localhost:8000/places';
@@ -131,5 +132,21 @@ export class AdminService {
 
   resetPassword(data: any): any {
     return this.http.post(`${this.apiUser}/resetPassword`, data, { responseType: 'text' as 'json' });
+  }
+
+  saveRole(body: any){
+    return this.http.post(`${this.apiRole}/create`, body);
+  }
+
+  getRoles(){
+    return this.http.get<Role[]>(`${this.apiRole}/all`);
+  }
+
+  getRoleById(id: number){
+    return this.http.get<Role>(`${this.apiRole}/${id}`);
+  }
+
+  updateRole(roleId: number, body: any){
+    return this.http.put(`${this.apiRole}/update/${roleId}`, body);
   }
 }

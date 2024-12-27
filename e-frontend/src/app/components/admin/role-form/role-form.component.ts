@@ -8,13 +8,19 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Role } from '../../../interfaces/interfaces';
-import { NavbarComponent } from "../../commons/navbar/navbar.component";
+import { NavbarComponent } from '../../commons/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-role-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, NavbarComponent, MatToolbarModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    NavbarComponent,
+    MatToolbarModule,
+  ],
   templateUrl: './role-form.component.html',
   styleUrl: './role-form.component.scss',
 })
@@ -26,9 +32,9 @@ export class RoleFormComponent {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private adminService: AdminService
   ) {
-    // Inicializamos el formulario
     this.roleForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(5)]],
@@ -50,37 +56,42 @@ export class RoleFormComponent {
   }
 
   loadRole(id: number) {
-    const existingRole: Role = {
-      id: id,
-      name: 'Administrador',
-      description: 'Rol con acceso completo al sistema',
-      allowCreate: true,
-      allowEdit: true,
-      allowDelete: false,
-    };
-    this.roleForm.patchValue(existingRole);
+    this.adminService.getRoleById(id).subscribe({
+      next: (value) => {
+        this.roleForm.patchValue(value);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   onSubmit(): void {
     if (this.roleForm.valid) {
       const formValue = this.roleForm.value;
       if (this.isEditMode) {
-        console.log(
-          'Guardar Cambios para el rol con ID:',
-          this.roleId,
-          formValue
-        );
-        // Aquí va la lógica para actualizar el rol en el backend
+        this.adminService.updateRole(this.roleId!, formValue).subscribe({
+          next: (value: any) => {
+            console.log(value);
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
       } else {
-        console.log('Guardar Nuevo Rol:', formValue);
-        // Aquí va la lógica para guardar un nuevo rol en el backend
+        this.adminService.saveRole(formValue).subscribe({
+          next: (value: any) => {
+            console.log(value);
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
       }
-      // Redirigir a otra página después de guardar (opcional)
-      this.router.navigate(['/admin/roles']);
     }
   }
 
-  goBack(){
+  goBack() {
     this.router.navigate(['/admin/roles']);
   }
 }
