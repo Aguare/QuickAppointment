@@ -50,7 +50,7 @@ export interface Place {
   fkCompany: number;
 }
 
-export interface Role { 
+export interface Role {
   id: number;
   name: string;
   description: string;
@@ -59,7 +59,7 @@ export interface Role {
   allowDelete?: boolean;
 }
 
-export interface User { 
+export interface User {
   id: number;
   email: string;
   username: string;
@@ -97,9 +97,9 @@ export interface MyAppointment {
   first_name: string;
   last_name: string;
   place: string;
-  fkCompany: number,
-  is_confirmated: boolean,
-  fkService: number
+  fkCompany: number;
+  is_confirmated: boolean;
+  fkService: number;
 }
 
 export interface Billing {
@@ -110,12 +110,21 @@ export interface Billing {
   fkUser: number;
 }
 
-export interface AppointmentReport{
+export interface AppointmentReport {
   id: number;
-  username: string,
+  username: string;
   email: string;
   date: string;
-  hour: string,
-  service: string,
-  price: number
+  hour: string;
+  service: string;
+  price: number;
+}
+
+export interface UserDto {
+  id: number;
+  email: string;
+  username: string;
+  password: string;
+  rol: string;
+  idRole: number;
 }

@@ -6,10 +6,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '../../../interfaces/interfaces';
+import { Role, User, UserDto } from '../../../interfaces/interfaces';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../commons/navbar/navbar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { AdminService } from '../../../services/admin.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-form',
@@ -28,16 +30,13 @@ export class UserFormComponent {
   isEditMode: boolean = false;
   userId: number | null = null;
 
-  roles = [
-    { id: 1, name: 'Admin' },
-    { id: 2, name: 'Editor' },
-    { id: 3, name: 'Viewer' },
-  ];
+  roles: Role[] = [];
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private adminService: AdminService
   ) {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -48,6 +47,15 @@ export class UserFormComponent {
   }
 
   ngOnInit(): void {
+    this.adminService.getRoles().subscribe({
+      next: (value) => {
+        this.roles = value;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
@@ -59,18 +67,17 @@ export class UserFormComponent {
   }
 
   loadUser(id: number) {
-    const existingUser: User = {
-      id: id,
-      email: 'john@example.com',
-      username: 'john_doe',
-      isClient: false,
-      password: '',
-      idRole: 1,
-      roleName: 'Admin',
-    };
-    this.userForm.patchValue(existingUser);
-    this.userForm.get('password')?.setValidators(null);
-    this.userForm.get('password')?.updateValueAndValidity();
+    this.adminService.getUserById(id).subscribe({
+      next: (value) => {
+        console.log(value);
+      }, error: (err)=>  {
+          console.log(err);
+          
+      },
+    })
+    // this.userForm.patchValue(existingUser);
+    // this.userForm.get('password')?.setValidators(null);
+    // this.userForm.get('password')?.updateValueAndValidity();
   }
 
   onSubmit(): void {
@@ -83,9 +90,22 @@ export class UserFormComponent {
           formValue
         );
       } else {
-        console.log('Guardar Nuevo Usuario:', formValue);
+        this.adminService.createUser(formValue).subscribe({
+          next: (value) => {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: 'Usuario creado con exito',
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
       }
-      this.router.navigate(['/admin/users']);
+      setTimeout(() => {this.router.navigate(['/admin/users']);}, 1500)
     }
   }
 

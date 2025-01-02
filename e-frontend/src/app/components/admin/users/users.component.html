@@ -15,24 +15,13 @@
             <th>Email</th>
             <th>Nombre de Usuario</th>
             <th>Rol</th>
-            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let user of users">
             <td>{{ user.email }}</td>
             <td>{{ user.username }}</td>
-            <td>{{ user.roleName }}</td>
-            <td class="actions">
-              <button class="button is-small is-info" (click)="editUser(user)">
-                <span class="icon"><i class="fas fa-edit"></i></span>
-                <span>Editar</span>
-              </button>
-              <button class="button is-small is-danger" (click)="deleteUser(user)">
-                <span class="icon"><i class="fas fa-trash"></i></span>
-                <span>Eliminar</span>
-              </button>
-            </td>
+            <td>{{ user.rol }}</td>
           </tr>
         </tbody>
       </table>

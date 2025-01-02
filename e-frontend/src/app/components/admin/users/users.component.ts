@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
-import { User } from '../../../interfaces/interfaces';
+import { Component, OnInit } from '@angular/core';
+import { User, UserDto } from '../../../interfaces/interfaces';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { NavbarComponent } from "../../commons/navbar/navbar.component";
 import Swal from 'sweetalert2';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-users',
@@ -14,44 +15,30 @@ import Swal from 'sweetalert2';
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
-export class UsersComponent {
+export class UsersComponent implements OnInit{
   
-  users: User[] = [
-    {
-      id: 1,
-      email: 'john@example.com',
-      username: 'john_doe',
-      isClient: false,
-      idRole: 1,
-      roleName: 'Admin',
-    },
-    {
-      id: 2,
-      email: 'jane@example.com',
-      username: 'jane_smith',
-      isClient: true,
-      idRole: 2,
-      roleName: 'Editor',
-    },
-    {
-      id: 3,
-      email: 'paul@example.com',
-      username: 'paul_brown',
-      isClient: true,
-      idRole: 3,
-      roleName: 'Viewer',
-    },
-  ];
+  users: UserDto[] = [];
 
-  constructor(private router: Router){
+  constructor(private router: Router, private adminService: AdminService){
 
   }
 
-  editUser(user: User) {
+  ngOnInit(): void {
+    this.adminService.getUsers().subscribe({
+      next: (value) => {
+        this.users = value;
+      }, error: (err) => {
+        console.log(err);
+        
+      },
+    })
+  }
+
+  editUser(user: UserDto) {
     this.router.navigate([`/admin/users/edit/${user.id}`]);
   }
 
-  deleteUser(user: User) {
+  deleteUser(user: UserDto) {
     Swal.fire({
       title: '¿Estas seguro de querer eliminar este usuario?',
       text: 'No podras recuperar los datos',

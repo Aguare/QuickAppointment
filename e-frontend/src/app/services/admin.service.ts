@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { File } from 'buffer';
-import { Company, Employee, Place, Role, Schedule, Service } from '../interfaces/interfaces';
+import { Company, Employee, Place, Role, Schedule, Service, UserDto } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -152,5 +152,21 @@ export class AdminService {
   
   deleteRole(roleId: number){
     return this.http.delete(`${this.apiRole}/delete/${roleId}`);
+  }
+
+  getUsers(){
+    return this.http.get<UserDto[]>(`${this.apiUser}/all`);
+  }
+  
+  createUser(body: any){
+    return this.http.post(`${this.apiUser}/create`, body);
+  }
+  
+  updateUser(id: number, body: any){
+    return this.http.put(`${this.apiUser}/update/${id}`, body);
+  }
+
+  getUserById(id: number){
+    return this.http.get<UserDto>(`${this.apiUser}/${id}`);
   }
 }

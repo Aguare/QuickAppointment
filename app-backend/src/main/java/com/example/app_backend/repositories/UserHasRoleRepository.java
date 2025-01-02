@@ -3,7 +3,9 @@ package com.example.app_backend.repositories;
 import com.example.app_backend.dtos.PageInfoDto;
 import com.example.app_backend.entities.UserHasRole;
 import jakarta.persistence.SqlResultSetMapping;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -23,6 +25,10 @@ public interface UserHasRoleRepository extends JpaRepository<UserHasRole, Intege
             nativeQuery = true)
     List<Object[]> findPageInfoByUserId(@Param("userId") Integer userId);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM UserHasRole uhr WHERE uhr.fkUser = :userId")
+    void deleteByFkUser(@Param("userId") Integer userId);
 
 }
 

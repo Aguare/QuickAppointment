@@ -175,5 +175,129 @@ public class UserController {
 
         return ResponseEntity.ok("¡Contraseña restablecida correctamente!");
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<Object[]> users = userRepository.findAllUsers();
+
+        List<UserDto> userDtos = users.stream()
+                .map(user -> new UserDto(
+                        (Integer) user[0],   // id
+                        (String) user[1],    // email
+                        (String) user[2],    // username
+                        (String) user[3]     // rol
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(userDtos);
+    }
+
+    @Transactional
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse> createUser(@RequestBody UserDto userDto) {
+
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            ApiResponse response = new ApiResponse("El email ya está en uso.", null);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        }
+
+        if (userRepository.existsByUsername(userDto.getUsername())) {
+            ApiResponse response = new ApiResponse("El nombre de usuario ya está en uso.", null);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        }
+
+        // create user
+        User user = new User();
+        user.setEmail(userDto.getEmail());
+        user.setUsername(userDto.getUsername());
+        user.setIdVerified(true);
+
+        // encrypt password
+        String encryptedPassword = passwordEncoder.encode(userDto.getPassword());
+        user.setPassword(encryptedPassword);
+
+        // save user
+        User savedUser = userRepository.save(user);
+
+        // Add user has role
+        UserHasRole userHasRole = new UserHasRole();
+        userHasRole.setFkUser(savedUser.getId());
+        userHasRole.setFkRole(userDto.getIdRole());
+        userHasRoleRepository.save(userHasRole);
+
+        ApiResponse response = new ApiResponse("Usuario creado con éxito.", savedUser.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @Transactional
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ApiResponse> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserDto userDto) {
+
+        Optional<User> existingUserOpt = userRepository.findById(id);
+        if (existingUserOpt.isEmpty()) {
+            ApiResponse response = new ApiResponse("Usuario no encontrado.", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        User existingUser = existingUserOpt.get();
+
+        if (!existingUser.getEmail().equals(userDto.getEmail()) &&
+                userRepository.existsByEmail(userDto.getEmail())) {
+            ApiResponse response = new ApiResponse("El email ya está en uso.", null);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        }
+
+        if (!existingUser.getUsername().equals(userDto.getUsername()) &&
+                userRepository.existsByUsername(userDto.getUsername())) {
+            ApiResponse response = new ApiResponse("El nombre de usuario ya está en uso.", null);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        }
+
+        existingUser.setEmail(userDto.getEmail());
+        existingUser.setUsername(userDto.getUsername());
+
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            String encryptedPassword = passwordEncoder.encode(userDto.getPassword());
+            existingUser.setPassword(encryptedPassword);
+        }
+
+        userRepository.save(existingUser);
+
+        if (userDto.getIdRole() != null) {
+            userHasRoleRepository.deleteByFkUser(existingUser.getId());
+
+            UserHasRole userHasRole = new UserHasRole();
+            userHasRole.setFkUser(existingUser.getId());
+            userHasRole.setFkRole(userDto.getIdRole());
+            userHasRoleRepository.save(userHasRole);
+        }
+
+        ApiResponse response = new ApiResponse("Usuario actualizado con éxito.", existingUser.getId());
+        return ResponseEntity.ok(response);
+    }
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+//        Optional<Object[]> userOpt = userRepository.findByIdWithRoles(id);
+//
+//        if (userOpt.isEmpty()) {
+//            ApiResponse response = new ApiResponse("Usuario no encontrado.", null);
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+//        }
+//
+//        Object[] result = userOpt.get();
+//        UserDto userDto = new UserDto();
+//
+//        userDto.setId((Integer) result[0]);
+//        userDto.setEmail((String) result[1]);
+//        userDto.setUsername((String) result[2]);
+//        userDto.setIdRole((Integer) result[4]);
+//
+//        return ResponseEntity.ok(userDto);
+//    }
+
+
 }
 
