@@ -7,9 +7,10 @@ export class LocalStorageService {
 
   USER_ID = 'id_user';
   USER_NAME = 'name_user';
-  USER_ROLE = 'role_user'
+  USER_ROLE = 'role_user';
+  USER_EMAIL = 'email_user';
 
-  constructor() {}
+  constructor() { }
 
   private isLocalStorageAvailable(): boolean {
     return typeof window !== 'undefined' && !!window.localStorage;
@@ -40,7 +41,7 @@ export class LocalStorageService {
     }
     return null;
   }
- 
+
   deleteItem(key: string): any {
     if (this.isLocalStorageAvailable()) {
       localStorage.removeItem(key)
@@ -58,12 +59,19 @@ export class LocalStorageService {
   setUserName(name: string): void {
     this.setItem(this.USER_NAME, name);
   }
-  
+
+  setUserEmail(email: string): void {
+    this.setItem(this.USER_EMAIL, email);
+  }
+
+  getUserEmail(): string {
+    return this.getItem(this.USER_EMAIL);
+  }
 
   getUserId(): number {
     return this.getItem(this.USER_ID);
   }
-  
+
   getUserRole(): number {
     return this.getItem(this.USER_ROLE);
   }

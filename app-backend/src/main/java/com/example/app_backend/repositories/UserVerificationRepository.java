@@ -18,4 +18,5 @@ public interface UserVerificationRepository extends JpaRepository<UserVerificati
     List<UserVerification> findByEmail(String fkUser);
 
     void deleteByToken(String token);
+    void deleteByEmail(String email);
 }

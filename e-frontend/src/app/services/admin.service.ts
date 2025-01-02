@@ -16,101 +16,101 @@ export class AdminService {
   apiEmail: string = 'http://localhost:8000/email';
   apiUser: string = 'http://localhost:8000/users';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   saveImage(file: any) {
     return this.http.post(this.apiImage, file);
   }
 
-  saveCompany(body: any){
+  saveCompany(body: any) {
     return this.http.post(`${this.apiCompany}/create`, body);
   }
 
-  getCompanies(){
+  getCompanies() {
     return this.http.get<Company[]>(`${this.apiCompany}/all`);
   }
 
-  getCompanyById(id:number){
+  getCompanyById(id: number) {
     return this.http.get<Company>(`${this.apiCompany}/${id}`);
   }
 
-  updateNameDescCompany(id:number, body: any){
-    return this.http.put(`${this.apiCompany}/update/${id}`,body);
+  updateNameDescCompany(id: number, body: any) {
+    return this.http.put(`${this.apiCompany}/update/${id}`, body);
   }
 
-  updateLogoCompany(id:number, body: any){
-    return this.http.put(`${this.apiCompany}/updateLogo/${id}`,body);
+  updateLogoCompany(id: number, body: any) {
+    return this.http.put(`${this.apiCompany}/updateLogo/${id}`, body);
   }
 
-  deleteCompany(id:number){
+  deleteCompany(id: number) {
     return this.http.delete(`${this.apiCompany}/${id}`);
   }
 
-  saveTypeAppointment(body: any){
+  saveTypeAppointment(body: any) {
     return this.http.post(`${this.apiTypeAppointment}/create`, body);
   }
 
-  getTypeAppointemstCompany(fkCompany: number){
+  getTypeAppointemstCompany(fkCompany: number) {
     return this.http.get<Service[]>(`${this.apiTypeAppointment}/company/${fkCompany}`);
   }
 
-  getTypeAppointemById(id: number){
+  getTypeAppointemById(id: number) {
     return this.http.get<Service>(`${this.apiTypeAppointment}/${id}`);
   }
 
-  updateTypeAppointment(id: number, body: any){
+  updateTypeAppointment(id: number, body: any) {
     return this.http.put(`${this.apiTypeAppointment}/update/${id}`, body);
   }
 
-  deleteTypeAppointment(id: number){
+  deleteTypeAppointment(id: number) {
     return this.http.delete(`${this.apiTypeAppointment}/${id}`);
   }
 
-  saveEmployee(body: any){
+  saveEmployee(body: any) {
     return this.http.post(`${this.apiEmployee}/create`, body);
   }
 
-  getEmployeesCompany(fkCompany: number){
+  getEmployeesCompany(fkCompany: number) {
     return this.http.get<Employee[]>(`${this.apiEmployee}/company/${fkCompany}`);
   }
 
-  getEmployeeById(id: number){
+  getEmployeeById(id: number) {
     return this.http.get<Employee>(`${this.apiEmployee}/${id}`);
   }
 
-  updateEmployee(id: number, body: any){
+  updateEmployee(id: number, body: any) {
     return this.http.put(`${this.apiEmployee}/update/${id}`, body);
   }
 
-  deleteEmployee(id: number){
+  deleteEmployee(id: number) {
     return this.http.delete(`${this.apiEmployee}/${id}`);
   }
 
-  savePlace(body: any){
+  savePlace(body: any) {
     return this.http.post(`${this.apiPlace}/create`, body);
   }
 
-  getPlacesCompany(fkCompany: number){
+  getPlacesCompany(fkCompany: number) {
     return this.http.get<Place[]>(`${this.apiPlace}/company/${fkCompany}`);
   }
 
-  getPlaceById(id: number){
+  getPlaceById(id: number) {
     return this.http.get<Place>(`${this.apiPlace}/${id}`);
   }
 
-  updatePlace(id: number, body: any){
+  updatePlace(id: number, body: any) {
     return this.http.put(`${this.apiPlace}/update/${id}`, body);
   }
 
-  deletePlace(id: number){
+  deletePlace(id: number) {
     return this.http.delete(`${this.apiPlace}/${id}`);
   }
 
-  getScheduleCompany(fkCompany: number){
+  getScheduleCompany(fkCompany: number) {
     return this.http.get<Schedule[]>(`${this.apiCompany}/schedule/${fkCompany}`);
   }
 
-  saveSchedule(fkCompany: number, schedule: Schedule[]){
+  saveSchedule(fkCompany: number, schedule: Schedule[]) {
     return this.http.post(`${this.apiCompany}/addSchedule/${fkCompany}`, schedule);
   }
 
@@ -134,39 +134,43 @@ export class AdminService {
     return this.http.post(`${this.apiUser}/resetPassword`, data, { responseType: 'text' as 'json' });
   }
 
-  saveRole(body: any){
+  saveRole(body: any) {
     return this.http.post(`${this.apiRole}/create`, body);
   }
 
-  getRoles(){
+  getRoles() {
     return this.http.get<Role[]>(`${this.apiRole}/all`);
   }
 
-  getRoleById(id: number){
+  getRoleById(id: number) {
     return this.http.get<Role>(`${this.apiRole}/${id}`);
   }
 
-  updateRole(roleId: number, body: any){
+  updateRole(roleId: number, body: any) {
     return this.http.put(`${this.apiRole}/update/${roleId}`, body);
   }
-  
-  deleteRole(roleId: number){
+
+  deleteRole(roleId: number) {
     return this.http.delete(`${this.apiRole}/delete/${roleId}`);
   }
 
-  getUsers(){
+  getUsers() {
     return this.http.get<UserDto[]>(`${this.apiUser}/all`);
   }
-  
-  createUser(body: any){
+
+  createUser(body: any) {
     return this.http.post(`${this.apiUser}/create`, body);
   }
-  
-  updateUser(id: number, body: any){
+
+  updateUser(id: number, body: any) {
     return this.http.put(`${this.apiUser}/update/${id}`, body);
   }
 
-  getUserById(id: number){
+  getUserById(id: number) {
     return this.http.get<UserDto>(`${this.apiUser}/${id}`);
+  }
+
+  validateCode2FA(data: any): any {
+    return this.http.post(`${this.apiUser}/validateCode2FA`, data, { responseType: 'text' as 'json' });
   }
 }

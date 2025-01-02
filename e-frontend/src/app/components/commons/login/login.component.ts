@@ -162,6 +162,15 @@ export class LoginComponent {
           return;
         }
 
+        this.localStorageService.setUserId(resp.idUser);
+        this.localStorageService.setUserRole(resp.idRole);
+        this.localStorageService.setUserEmail(resp.email);
+
+        if (resp.is2FAEnabled) {
+          this._router.navigate(['/verify-2fa']);
+          return;
+        }
+
         Swal.fire({
           position: 'top-end',
           icon: 'success',
@@ -169,9 +178,6 @@ export class LoginComponent {
           showConfirmButton: false,
           timer: 1500,
         });
-
-        this.localStorageService.setUserId(resp.idUser);
-        this.localStorageService.setUserRole(resp.idRole);
 
         setTimeout(() => {
           if (resp.idRole == '2') {

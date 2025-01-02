@@ -26,13 +26,13 @@ export class NavbarComponent implements OnInit {
     private _router: Router,
     private locaStorageService: LocalStorageService,
     private userService: UserService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const idUser = this.locaStorageService.getUserId();
     const idRol = this.locaStorageService.getItem('role_user')
 
-    if(idRol != '2'){
+    if (idRol != '2') {
       this.isClient = false;
     }
 
@@ -47,6 +47,20 @@ export class NavbarComponent implements OnInit {
         },
       });
     }
+
+    this.getHave2FA();
+  }
+
+  getHave2FA() {
+    const email = this.locaStorageService.getUserEmail();
+
+    this.userService.getHave2FA(email).subscribe({
+      next: (value: any) => {
+        this._router.navigate(['/verify-2fa']);
+      },
+      error: (err) => {
+      },
+    });
   }
 
   /**

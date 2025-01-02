@@ -2,8 +2,10 @@ package com.example.app_backend.controllers;
 
 import com.example.app_backend.dtos.BillingDto;
 import com.example.app_backend.entities.Billing;
+import com.example.app_backend.entities.User;
 import com.example.app_backend.helpers.ApiResponse;
 import com.example.app_backend.repositories.BillingRepository;
+import com.example.app_backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,9 @@ public class BillingController {
 
     @Autowired
     private BillingRepository billingRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createBilling(@RequestBody BillingDto billingDto) {

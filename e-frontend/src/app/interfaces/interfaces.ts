@@ -108,6 +108,7 @@ export interface Billing {
   cui: string;
   direction: string;
   fkUser: number;
+  auth2FA: boolean;
 }
 
 export interface AppointmentReport {

@@ -26,6 +26,7 @@ import { DashboardComponent } from './components/admin/dashboard/dashboard.compo
 import { BillViewComponent } from './components/client/bill-view/bill-view.component';
 import { MyAccountComponent } from './components/client/my-account/my-account.component';
 import { AppointmentsComponent } from './components/admin/appointments/appointments.component';
+import { Verify2faComponent } from './components/commons/verify2fa/verify2fa.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -34,6 +35,7 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'verify-email/:token/:email', component: VerifyEmailComponent },
   { path: 'reset-password/:token/:email', component: ResetPasswordComponent },
+  { path: 'verify-2fa', component: Verify2faComponent },
   {
     path: 'admin',
     children: [
@@ -113,4 +115,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

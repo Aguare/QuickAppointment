@@ -96,23 +96,27 @@ public class UserController {
         } else {
             user = userRepository.findByUsername(loginDto.getUsername());
             if (user == null) {
-                LoginResponse response = new LoginResponse("El nombre de usuario no existe.",null, null);
+                LoginResponse response = new LoginResponse("El nombre de usuario no existe.", null, null);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
         }
 
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-            LoginResponse response = new LoginResponse("La contraseña es incorrecta.",null, null);
+            LoginResponse response = new LoginResponse("La contraseña es incorrecta.", null, null);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
 
         UserHasRole userRole = userHasRoleRepository.findByFkUser(user.getId());
         if (userRole == null) {
-            LoginResponse response = new LoginResponse("No se encontró un rol asociado al usuario.",null, null);
+            LoginResponse response = new LoginResponse("No se encontró un rol asociado al usuario.", null, null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
 
-        LoginResponse response = new LoginResponse("Login exitoso", user.getId(), userRole.getFkRole(), user.getIdVerified() ? "1" : "0");
+        if (user.getIs2FAEnabled()) {
+            sendEmailController.send2FAEmail(user.getEmail());
+        }
+
+        LoginResponse response = new LoginResponse("Login exitoso", user.getId(), userRole.getFkRole(), user.getIdVerified() ? "1" : "0", user.getEmail(), user.getIs2FAEnabled());
         return ResponseEntity.ok(response);
     }
 
@@ -278,26 +282,79 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-//        Optional<Object[]> userOpt = userRepository.findByIdWithRoles(id);
-//
-//        if (userOpt.isEmpty()) {
-//            ApiResponse response = new ApiResponse("Usuario no encontrado.", null);
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-//        }
-//
-//        Object[] result = userOpt.get();
-//        UserDto userDto = new UserDto();
-//
-//        userDto.setId((Integer) result[0]);
-//        userDto.setEmail((String) result[1]);
-//        userDto.setUsername((String) result[2]);
-//        userDto.setIdRole((Integer) result[4]);
-//
-//        return ResponseEntity.ok(userDto);
-//    }
+    @Transactional
+    @PostMapping("/validateCode2FA")
+    public ResponseEntity<Object> validateCode2FA(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String code = request.get("code");
 
+        if (email == null || code == null) {
+            return ResponseEntity.badRequest().body("Faltan parámetros: 'email' o 'code'.");
+        }
 
+        UserVerification userVerification = userVerificationRepository.findByEmailAndToken(email, code);
+
+        if (userVerification == null) {
+            return ResponseEntity.badRequest().body("{ message: \"Código no válido.\", success: false }");
+        }
+
+        userVerificationRepository.deleteAllByEmail(email);
+
+        return ResponseEntity.ok("{ message: \"¡Código válido!\", success: true }");
+    }
+
+    @PostMapping("/have2FAActivated")
+    public ResponseEntity<Object> have2FAActivated(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+
+        if (email == null) {
+            return ResponseEntity.badRequest().body("Falta el parámetro 'email'.");
+        }
+
+        List<UserVerification> userVerification = userVerificationRepository.findByEmail(email);
+
+        if (userVerification.isEmpty()) {
+            return ResponseEntity.badRequest().body("{ message: \"No tiene 2FA activado.\", success: false }");
+        }
+
+        return ResponseEntity.ok("{ message: \"Tiene 2FA activado.\", success: true }");
+    }
+
+    @PostMapping("/activate2FA")
+    public ResponseEntity<String> activate2FA(@RequestBody Map<String, String> request) {
+        Integer idUser =  Integer.parseInt(request.get("idUser"));
+
+        if (idUser == null) {
+            return ResponseEntity.badRequest().body("Falta el parámetro 'idUser'.");
+        }
+
+        User user = userRepository.findById(idUser);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("El usuario no existe.");
+        }
+
+        user.setIs2FAEnabled(!user.getIs2FAEnabled());
+        userRepository.save(user);
+
+        return ResponseEntity.ok("{ message: \"¡2FA actualizado correctamente!\"}");
+    }
+
+    @PostMapping("/isActivated2FA")
+    public ResponseEntity<Boolean> isActivated2FA(@RequestBody Map<String, String> request) {
+        Integer idUser =  Integer.parseInt(request.get("idUser"));
+
+        if (idUser == null) {
+            return ResponseEntity.badRequest().body(false);
+        }
+
+        User user = userRepository.findById(idUser);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body(false);
+        }
+
+        return ResponseEntity.ok(user.getIs2FAEnabled());
+    }
 }
 

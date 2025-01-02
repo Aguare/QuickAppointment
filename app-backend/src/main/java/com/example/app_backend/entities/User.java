@@ -1,6 +1,7 @@
 package com.example.app_backend.entities;
 
 import jakarta.persistence.*;
+
 import java.sql.Timestamp;
 
 @Entity
@@ -29,8 +30,12 @@ public class User {
     @Column(nullable = false, updatable = false)
     private Timestamp createdAt;
 
+    @Column(nullable = false, name = "is2FAEnabled")
+    private Boolean is2FAEnabled = false;
+
     // Constructor vacío
-    public User() {}
+    public User() {
+    }
 
     // Getters y Setters
     public Integer getId() {
@@ -47,6 +52,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getIs2FAEnabled() {
+        return is2FAEnabled;
+    }
+
+    public void setIs2FAEnabled(Boolean is2FAEnabled) {
+        this.is2FAEnabled = is2FAEnabled;
     }
 
     public String getUsername() {
@@ -94,7 +107,6 @@ public class User {
     protected void onCreate() {
         this.createdAt = new Timestamp(System.currentTimeMillis());
     }
-
 
 
 }

@@ -127,4 +127,23 @@ public class EmailController {
         return ResponseEntity.ok("{ message: \"¡Email de recuperación de contraseña enviado correctamente!\"}");
     }
 
+    @PostMapping("/send2FAEmail")
+    public ResponseEntity<String> send2FAEmail(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+
+        if (email == null) {
+            return ResponseEntity.badRequest().body("Falta el parámetro 'email'.");
+        }
+
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.badRequest().body("El usuario no existe.");
+        }
+
+        sendEmailController.send2FAEmail(email);
+
+        return ResponseEntity.ok("{ message: \"¡Email de verificación de 2FA enviado correctamente!\"}");
+    }
+
 }

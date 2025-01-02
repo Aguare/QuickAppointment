@@ -136,4 +136,51 @@ public class SendEmailController {
 
         sendEmailService.sendEmail(email, "Recuperación de Contraseña", emailBody);
     }
+
+    @Transactional
+    public void send2FAEmail(String email) {
+        Map<String, String> dataCompany = new HashMap<>();
+        companySettingRepository.findAllByKeyIn(
+                List.of("company_name")
+        ).forEach(setting -> dataCompany.put(setting.getKey(), setting.getValue()));
+
+        if (dataCompany.isEmpty()) {
+            throw new RuntimeException("Error al obtener los datos de la empresa.");
+        }
+
+        String companyName = dataCompany.get("company_name");
+        String tokenGenerated = UUID.randomUUID().toString();
+        String code = tokenGenerated.substring(0, 6);
+
+        UserVerification userSave = new UserVerification();
+        userSave.setEmailToken(email);
+        userSave.setEmail(email);
+        userSave.setToken(code);
+        userSave.setVerification(false);
+        userSave.setExpiredAt(LocalDateTime.now().plusMinutes(5));
+
+        userVerificationRepository.save(userSave);
+
+        String emailBody = "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);\">" +
+                "<div style=\"text-align: center; padding-bottom: 20px;\">" +
+                "<img src=\"https://lh3.googleusercontent.com/a/ACg8ocLJq2dZdn1Py5pwjkNjI5G_OlenzSzDAOnxZ9B05WorrxO1Yx8=s576-c-no\" alt=\"Logo de la empresa\" style=\"max-width: 80px; margin-bottom: 20px;\">" +
+                "</div>" +
+                "<h2 style=\"text-align: center; color: #333333; font-size: 24px;\">Código de Verificación</h2>" +
+                "<p style=\"color: #666666; font-size: 16px; text-align: center;\">¡Hola!</p>" +
+                "<p style=\"color: #666666; font-size: 16px; text-align: center;\">" +
+                "Tu código de verificación es:" +
+                "</p>" +
+                "<div style=\"text-align: center; margin: 20px 0;\">" +
+                "<span style=\"font-family: 'Courier New', Courier, monospace; font-size: 32px; color: #4CAF50; font-weight: bold; letter-spacing: 3px;\">" + code + "</span>" +
+                "</div>" +
+                "<p style=\"color: #666666; font-size: 14px; text-align: center;\">Por favor, introduce este código para completar la verificación.</p>" +
+                "<p style=\"color: #999999; font-size: 14px; text-align: center; margin-top: 40px;\">" +
+                "Si no solicitaste este correo, simplemente ignóralo." +
+                "</p>" +
+                "<hr style=\"border: none; border-top: 1px solid #dddddd; margin: 40px 0;\">" +
+                "<p style=\"color: #999999; font-size: 12px; text-align: center;\">&copy; 2024" + companyName + ". Todos los derechos reservados.</p>" +
+                "</div>";
+
+        sendEmailService.sendEmail(email, "Código de Verificación", emailBody);
+    }
 }

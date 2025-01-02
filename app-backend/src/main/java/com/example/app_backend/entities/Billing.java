@@ -26,6 +26,7 @@ public class Billing {
     @Column(name = "fk_user", nullable = false)
     private int fkUser;
 
+
     public Integer getId() {
         return id;
     }
