@@ -10,6 +10,7 @@ import com.example.app_backend.services.SendEmailService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @Service
 public class SendEmailController {
 
+    private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private CompanySettingRepository companySettingRepository;
     private UserVerificationRepository userVerificationRepository;
@@ -33,11 +35,10 @@ public class SendEmailController {
         String tokenGenerated = UUID.randomUUID().toString();
         String website = "http://localhost:4200/verify-email";
 
-        User user = userRepository.findByEmailOrUsername(email, email);
+        User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new RuntimeException("El usuario no existe.");
         }
-        email = user.getEmail();
 
         Map<String, String> dataCompany = new HashMap<>();
         companySettingRepository.findAllByKeyIn(
@@ -49,8 +50,12 @@ public class SendEmailController {
         }
 
         String passwordSalt = dataCompany.get("password_salt");
-        String tokenEncrypted = EncryptUtil.encrypt(tokenGenerated, passwordSalt);
-        String emailEncrypted = EncryptUtil.encrypt(email, passwordSalt);
+
+        System.out.println("TOKEN GENERADO " + tokenGenerated);
+        System.out.println("PASSWORD SALT " + passwordSalt);
+
+        String tokenEncrypted = passwordEncoder.encode(tokenGenerated);
+        String emailEncrypted = passwordEncoder.encode(email);
 
         LocalDateTime expiredAt = LocalDateTime.now().plusHours(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -100,8 +105,8 @@ public class SendEmailController {
         }
 
         String passwordSalt = dataCompany.get("password_salt");
-        String tokenEncrypted = EncryptUtil.encrypt(tokenGenerated, passwordSalt);
-        String emailEncrypted = EncryptUtil.encrypt(email, passwordSalt);
+        String tokenEncrypted = passwordEncoder.encode(tokenGenerated);
+        String emailEncrypted = passwordEncoder.encode(email);
 
         LocalDateTime expiredAt = LocalDateTime.now().plusHours(1);
 

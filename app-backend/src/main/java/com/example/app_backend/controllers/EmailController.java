@@ -38,6 +38,7 @@ public class EmailController {
     @Autowired
     private UserVerificationRepository userVerificationRepository;
 
+    @Autowired
     private SendEmailController sendEmailController;
 
     @Transactional
@@ -70,8 +71,6 @@ public class EmailController {
 
         return ResponseEntity.ok("¡Email verificado correctamente!");
     }
-
-    //AGREGANDO COMENTARIO
 
     @PostMapping("/sendVerificationEmail")
     public ResponseEntity<String> sendEmailVerification(@RequestBody Map<String, String> request) {

@@ -112,7 +112,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
 
-        LoginResponse response = new LoginResponse("Login exitoso", user.getId(), userRole.getFkRole());
+        LoginResponse response = new LoginResponse("Login exitoso", user.getId(), userRole.getFkRole(), user.getIdVerified() ? "1" : "0");
         return ResponseEntity.ok(response);
     }
 

@@ -14,7 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
     User findByEmail(String email);
     User findByUsername(String username);
-    User findByEmailOrUsername(String email, String username);
+
+    User findUserByEmailOrUsername(String email, String username);
 
     @Query(value = "select u.id, u.email, u.username, r.name as rol from user u\n" +
             "left join user_has_role uhs on u.id = uhs.FK_User\n" +

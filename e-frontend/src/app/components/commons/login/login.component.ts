@@ -45,7 +45,7 @@ export class LoginComponent {
   isLoading = false;
   isLoginMode = false;
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   constructor(
     private fb: FormBuilder,
@@ -128,6 +128,7 @@ export class LoginComponent {
   get passwordHasErrorRequired() {
     return this.loginForm.get('password')?.hasError('required');
   }
+
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;
   }
@@ -149,6 +150,18 @@ export class LoginComponent {
 
     this.userService.login(data).subscribe({
       next: (resp: any) => {
+        if (resp.isVerified === '0') {
+          Swal.fire({
+            position: 'center',
+            icon: 'warning',
+            title: '¡Correo no verificado!',
+            text: 'Por favor, verifica tu correo electrónico',
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          return;
+        }
+
         Swal.fire({
           position: 'top-end',
           icon: 'success',

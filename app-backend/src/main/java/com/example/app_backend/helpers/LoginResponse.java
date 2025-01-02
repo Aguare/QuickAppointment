@@ -4,11 +4,20 @@ public class LoginResponse {
     private String message;
     private Integer idUser;
     private Integer idRole;
+    private String isVerified;
+
+    public LoginResponse(String message, Integer idUser, Integer idRole, String isVerified) {
+        this.message = message;
+        this.idUser = idUser;
+        this.idRole = idRole;
+        this.isVerified = isVerified;
+    }
 
     public LoginResponse(String message, Integer idUser, Integer idRole) {
         this.message = message;
         this.idUser = idUser;
         this.idRole = idRole;
+        this.isVerified = "0";
     }
 
     public String getMessage() {
@@ -33,5 +42,13 @@ public class LoginResponse {
 
     public void setIdRole(Integer idRole) {
         this.idRole = idRole;
+    }
+
+    public String getIsVerified() {
+        return this.isVerified;
+    }
+
+    public void setIsVerified(String isVerified) {
+        this.isVerified = isVerified;
     }
 }

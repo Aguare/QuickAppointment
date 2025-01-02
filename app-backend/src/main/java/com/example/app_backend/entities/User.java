@@ -23,7 +23,7 @@ public class User {
     @Column(columnDefinition = "TEXT")
     private String authToken;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "is_verified")
     private Boolean isVerified = false;
 
     @Column(nullable = false, updatable = false)
